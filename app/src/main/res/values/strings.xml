@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">群众天眼</string>
+    <string name="tip_app_slogan">事无巨细，洞察民意</string>
+    <string name="policy_privacy">隐私政策</string>
+    <string name="tip_please_enter_id">请输入账号</string>
+    <string name="tip_please_enter_pass" >请输入密码</string>
+    <string name="login">登陆</string>
+    <string name="register_now">立即注册</string>
+    <string name="forget_pass">忘记密码</string>
+    <string name="agree">同意</string>
+</resources>
