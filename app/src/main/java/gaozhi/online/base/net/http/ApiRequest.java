@@ -23,13 +23,12 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
         void start(int id);
 
         void handle(int id, Result result);
-
         /**
          * @param id
          * @param code
          * @param message
          */
-        void error(int id, int code, String message);
+         void error(int id, int code, String message);
     }
 
     /**

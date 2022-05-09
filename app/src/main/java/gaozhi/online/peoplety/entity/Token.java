@@ -1,5 +1,8 @@
 package gaozhi.online.peoplety.entity;
 
+import io.realm.RealmObject;
+import lombok.Data;
+
 /**
  * @author lfc
  * @title: Token
@@ -14,10 +17,13 @@ package gaozhi.online.peoplety.entity;
  * PRIMARY KEY (`token`)
  * ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
  */
-public class Token {
+@Data
+public class Token extends RealmObject {
+    //设备类型
     public enum Device {
         MOBILE(0),
-        COMPUTER(1);
+        COMPUTER(1),
+        WEB(2);
         private final int device;
 
         Device(int device) {
@@ -38,50 +44,11 @@ public class Token {
         }
     }
 
+    //有效时长
+    public static final long VALIDATE_PERIOD = 24 * 60 * 60 * 1000;
+
     private long userid;
     private int device;
     private String token;
     private long validateTime;
-
-    public long getUserid() {
-        return userid;
-    }
-
-    public void setUserid(long userid) {
-        this.userid = userid;
-    }
-
-    public int getDevice() {
-        return device;
-    }
-
-    public void setDevice(int device) {
-        this.device = device;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public long getValidateTime() {
-        return validateTime;
-    }
-
-    public void setValidateTime(long validateTime) {
-        this.validateTime = validateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Token{" +
-                "userid=" + userid +
-                ", device=" + device +
-                ", token='" + token + '\'' +
-                ", validateTime=" + validateTime +
-                '}';
-    }
 }

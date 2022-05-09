@@ -8,4 +8,10 @@
     <string name="register_now">立即注册</string>
     <string name="forget_pass">忘记密码</string>
     <string name="agree">同意</string>
+    <string name="tip_login_ing">正在登陆…</string>
+    <string name="tip_please_check_privacy">请仔细阅读用户隐私协议</string>
+    <string name="tip_account_cant_empty">账号为空</string>
+    <string name="bottom_me">我</string>
+    <string name="bottom_home">天眼</string>
+    <string name="bottom_publish">发起案件</string>
 </resources>

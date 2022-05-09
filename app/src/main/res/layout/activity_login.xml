@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
         <View
             android:layout_width="0dp"
             android:layout_height="@dimen/logo_big_size"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <View
             android:layout_width="0dp"
@@ -153,6 +153,7 @@
                 android:id="@+id/login_activity_check_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="@string/agree"
                 android:textSize="@dimen/font_size_general" />
 

@@ -11,17 +11,22 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.orm.SugarContext;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * 程序入口
  */
-public class PeopletyApplication extends Application implements Application.ActivityLifecycleCallbacks{
+public class PeopletyApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     private static Context context;
     private static PeopletyApplication application;
     private float fontScale;
     private SharedPreferences preferences;
+
+    //数据库
+    private final String RDB_NAME = "peoplety.realm";
+    private final long RDB_VERSION = 1;
 
     @Override
     public void onCreate() {
@@ -31,16 +36,18 @@ public class PeopletyApplication extends Application implements Application.Acti
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         fontScale = getFontScale();
         registerActivityLifecycleCallbacks(this);
-        SugarContext.init(this);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name(RDB_NAME).schemaVersion(RDB_VERSION).deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(config);
     }
+
     @Override
     public void onTerminate() {
         super.onTerminate();
-        SugarContext.terminate();
     }
 
-    public static Context getContext(){
-        return  context;
+    public static Context getContext() {
+        return context;
     }
 
     public static float getFontScale() {

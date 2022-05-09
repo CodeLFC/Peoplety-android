@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
+apply plugin: 'realm-android'
+
 android {
     compileSdk 31
 
@@ -22,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
@@ -40,10 +42,14 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     //json工具
     implementation 'com.google.code.gson:gson:2.8.6'
-    //orm
-    implementation 'com.github.satyan:sugar:1.5'
     //photoview 图片预览工具
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //图片选择工具
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
+    //lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }

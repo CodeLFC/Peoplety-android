@@ -3,7 +3,7 @@
     package="gaozhi.online.peoplety">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".PeopletyApplication"
         android:icon="@drawable/app_logo_rectangle"
@@ -22,8 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="false" />
     </application>
-
 </manifest>

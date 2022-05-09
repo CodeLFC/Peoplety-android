@@ -2,10 +2,12 @@ package gaozhi.online.peoplety.entity;
 
 
 import gaozhi.online.peoplety.util.StringUtil;
+import lombok.Data;
 
 /**
  * 验证码
  */
+@Data
 public class VerifyCode {
     public enum NotifyMethod {
         SMS("sms"),
@@ -83,56 +85,4 @@ public class VerifyCode {
     private long validateTime;
     private int dailyCount;
 
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public long getValidateTime() {
-        return validateTime;
-    }
-
-    public void setValidateTime(long validateTime) {
-        this.validateTime = validateTime;
-    }
-
-    public int getDailyCount() {
-        return dailyCount;
-    }
-
-    public void setDailyCount(int dailyCount) {
-        this.dailyCount = dailyCount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "VerifyCode{" +
-                "phone='" + phone + '\'' +
-                ", code='" + code + '\'' +
-                ", validateTime=" + validateTime +
-                ", dailyCount=" + dailyCount +
-                ", type='" + type + '\'' +
-                '}';
-    }
 }

@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import gaozhi.online.peoplety.R;
 
-
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     /**
      * 是否沉浸状态栏
@@ -32,10 +31,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      **/
     private boolean isAllowScreenRotate = false;
     /**
-     * 当前Activity渲染的视图View
-     **/
-    private View mContextView = null;
-    /**
      * 日志输出标志
      **/
     protected final String TAG = getClass().getName();
@@ -44,8 +39,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initParams(getIntent());
-
-        mContextView = LayoutInflater.from(this)
+        /**
+         * 当前Activity渲染的视图View
+         **/
+        View mContextView = LayoutInflater.from(this)
                 .inflate(bindLayout(), null);
 
         if (mAllowFullScreen) {
