@@ -9,7 +9,7 @@
     <color name="bg_color">#F5F5F5</color>
     <color name="widget_color">#FFFFFF</color>
     <color name="theme_color">#1296db</color>
-    <color name="shallow_theme_color">#ffe7c8</color>
+    <color name="shallow_theme_color">#1296db</color>
     <color name="pop_menu_bg_color">#7Fececec</color>
     <!--字体颜色-->
     <color name="deep_text_color">#FF000000</color>
@@ -17,6 +17,4 @@
 
     <!--首页底部选择颜色-->
     <color name="bottom_color">#f6f6f6</color>
-    <color name="navigation_selected_color">#1296db</color>
-    <color name="navigation_unselected_color">#8a8a8a</color>
 </resources>

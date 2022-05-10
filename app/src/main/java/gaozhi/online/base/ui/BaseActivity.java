@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     /**
      * 是否沉浸状态栏
      **/
-    private boolean isSetStatusBar = false;
+    private boolean isSetStatusBar = true;
     /**
      * 是否允许全屏
      **/

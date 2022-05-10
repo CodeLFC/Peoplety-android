@@ -6,9 +6,19 @@
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/drawable/bottom_bg.xml" value="0.21875" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/activity_login.xml" value="0.20260416666666667" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/activity_main.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/activity_register.xml" value="0.3625" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/activity_reset_pass.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/activity_web.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/fragment_home.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/fragment_me.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/fragment_publish.xml" value="0.20260416666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/layout_title.xml" value="0.3625" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/menu/main_navigation.xml" value="0.3625" />
       </map>
     </option>
+  </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app/src/main/res/raw/privacy" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

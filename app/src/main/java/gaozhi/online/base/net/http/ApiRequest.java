@@ -27,8 +27,9 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
          * @param id
          * @param code
          * @param message
+         * @param data
          */
-         void error(int id, int code, String message);
+        void error(int id, int code, String message,String data);
     }
 
     /**
@@ -70,8 +71,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
             if (result.getCode() == Result.SUCCESS) {
                 resultHandler.handle(getId(), result);
             } else {
-                resultHandler.error(getId(), result.getCode(), result.getMessage());
-
+                resultHandler.error(getId(), result.getCode(), result.getMessage(),result.getData());
             }
         }
     }
@@ -79,7 +79,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
     @Override
     public void error(int code) {
         if (resultHandler != null) {
-            resultHandler.error(getId(), code, "net error!");
+            resultHandler.error(getId(), code, "net error!","");
         }
     }
 

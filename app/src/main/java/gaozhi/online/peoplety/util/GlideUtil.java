@@ -140,7 +140,6 @@ public class GlideUtil {
         protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
             return ImageUtil.convertGreyImg(toTransform);
         }
-
         @Override
         public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 

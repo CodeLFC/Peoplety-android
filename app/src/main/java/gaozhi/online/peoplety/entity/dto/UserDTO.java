@@ -17,4 +17,7 @@ public class UserDTO extends RealmObject {
     private UserInfo userInfo;
     private Token token;
     private String pass;
+    private long time;
+    //是否是当前登陆用户
+    private boolean current;
 }

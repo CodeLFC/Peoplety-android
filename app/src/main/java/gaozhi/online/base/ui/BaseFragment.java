@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.Gson;
 
 /**
  * base {@link Fragment} class.
@@ -46,6 +45,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             parent.removeView(mContextView);
         }
         return mContextView;
+        //return inflater.inflate(R.layout.fragment_publish, container, false);
     }
 
     /**
@@ -75,5 +75,4 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public abstract void onPageScrolled(float positionOffset, int positionOffsetPixels);
 
     public abstract void onPageSelected();
-
 }

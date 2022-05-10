@@ -12,4 +12,8 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
     </style>
+    <style name="navigation" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/theme_color</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
 </resources>

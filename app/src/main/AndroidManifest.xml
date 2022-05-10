@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".PeopletyApplication"
         android:icon="@drawable/app_logo_rectangle"
@@ -14,10 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Peoplety">
         <activity
+            android:name=".ui.util.WebActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login.ResetPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login.RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,4 +36,5 @@
             android:name=".ui.main.MainActivity"
             android:exported="false" />
     </application>
+
 </manifest>

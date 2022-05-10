@@ -153,7 +153,7 @@
                 android:id="@+id/login_activity_check_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
+                android:checked="false"
                 android:text="@string/agree"
                 android:textSize="@dimen/font_size_general" />
 

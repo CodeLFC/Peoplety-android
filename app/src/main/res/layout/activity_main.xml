@@ -16,9 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_bg"
-        app:itemIconTint="@color/main_navigation_view_background"
-        app:itemTextColor="@color/main_navigation_view_background"
-        app:itemRippleColor="@color/bottom_color"
+        android:theme="@style/navigation"
         app:itemIconSize="@dimen/icon_size_general"
         app:menu="@menu/main_navigation"
         />

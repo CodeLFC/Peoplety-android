@@ -1,4 +1,7 @@
 package gaozhi.online.peoplety.util;
+
+import java.nio.charset.StandardCharsets;
+
 /**
  * @description(字符串工具)
  * @author: gaozhi.online
@@ -41,5 +44,12 @@ public class StringUtil {
              random/=10;
          }
          return String.valueOf(random);
+    }
+
+    /**
+     * 字节数组到String的转换.
+     */
+    public static String bytesToString(byte[] str) {
+        return new String(str, StandardCharsets.UTF_8);
     }
 }

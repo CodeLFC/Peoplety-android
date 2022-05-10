@@ -15,7 +15,7 @@ public class ResetPassService extends ApiRequest {
 
     public void request(String cell_phone, String verify_code, String pass) {
         Map<String, String> params = new HashMap<>();
-        params.put("cell_phone", cell_phone);
+        params.put("phone", cell_phone);
         params.put("verify_code", verify_code);
         params.put("pass", pass);
         request("put/password", params);
