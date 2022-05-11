@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/bg_color">
     <include
         android:layout_width="match_parent"
         android:layout_height="@dimen/logo_big_size"
@@ -18,6 +19,158 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/fragment_me_view_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center|start"
+                android:background="@color/widget_color"
+                android:layout_marginVertical="@dimen/activity_margin">
+                <ImageView
+                    android:id="@+id/fragment_me_image_head"
+                    android:layout_width="@dimen/logo_big_size"
+                    android:layout_height="@dimen/logo_big_size"
+                    android:paddingHorizontal="@dimen/widget_margin"
+                    android:src="@drawable/app_logo"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingVertical="@dimen/widget_margin"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/fragment_me_text_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="@string/app_name"
+                        android:textSize="@dimen/font_size_title"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="start|center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/fragment_me_text_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/tag_bg"
+                            android:paddingHorizontal="@dimen/widget_margin"
+                            android:layout_marginEnd="@dimen/widget_margin"
+                            android:gravity="center"
+                            android:text="@string/app_name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_size_small" />
+                        <TextView
+                            android:id="@+id/fragment_me_text_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/tag_bg"
+                            android:paddingHorizontal="@dimen/widget_margin"
+                            android:layout_marginEnd="@dimen/widget_margin"
+                            android:gravity="center"
+                            android:text="@string/app_name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_size_small" />
+                        <TextView
+                            android:id="@+id/fragment_me_text_vip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/tag_bg"
+                            android:paddingHorizontal="@dimen/widget_margin"
+                            android:layout_marginEnd="@dimen/widget_margin"
+                            android:gravity="center"
+                            android:text="@string/app_name"
+                            android:textColor="@color/gold"
+                            android:textSize="@dimen/font_size_small" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_me_view_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/widget_color"
+                android:layout_marginBottom="1dp">
+                <ImageView
+                    android:layout_width="@dimen/icon_size_general"
+                    android:layout_height="@dimen/icon_size_general"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/settings"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/settings"
+                    android:textSize="@dimen/font_size_title"
+                    />
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/fragment_me_view_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/widget_color"
+                android:layout_marginBottom="1dp">
+                <ImageView
+                    android:layout_width="@dimen/icon_size_general"
+                    android:layout_height="@dimen/icon_size_general"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/about"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/about"
+                    android:textSize="@dimen/font_size_title"
+                    />
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_me_view_change_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/widget_color"
+                android:layout_marginVertical="@dimen/activity_margin">
+                <ImageView
+                    android:layout_width="@dimen/icon_size_general"
+                    android:layout_height="@dimen/icon_size_general"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/change_account"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/change_account"
+                    android:textSize="@dimen/font_size_title"
+                    />
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -26,6 +26,18 @@
             android:text="@string/tip_app_slogan"
             android:textColor="@color/deep_text_color"
             android:textSize="@dimen/font_size_slogan" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/activity_margin"
+            android:text="@string/request_ing"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_small" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +75,7 @@
             <ImageView
                 android:layout_width="@dimen/icon_size_general"
                 android:layout_height="@dimen/icon_size_general"
-                android:layout_gravity="left|center"
+                android:layout_gravity="start|center"
                 android:src="@drawable/login_id" />
 
             <EditText
@@ -72,7 +84,8 @@
                 android:layout_height="@dimen/logo_big_size"
                 android:hint="@string/tip_please_enter_id"
                 android:paddingHorizontal="@dimen/logo_big_size"
-                android:textSize="@dimen/font_size_general" />
+                android:textSize="@dimen/font_size_general"
+                android:autofillHints="phone" />
         </FrameLayout>
 
         <FrameLayout
@@ -83,7 +96,7 @@
             <ImageView
                 android:layout_width="@dimen/icon_size_general"
                 android:layout_height="@dimen/icon_size_general"
-                android:layout_gravity="left|center"
+                android:layout_gravity="start|center"
                 android:src="@drawable/login_pass" />
 
             <EditText
@@ -93,7 +106,8 @@
                 android:hint="@string/tip_please_enter_pass"
                 android:inputType="textPassword"
                 android:paddingHorizontal="@dimen/logo_big_size"
-                android:textSize="@dimen/font_size_general" />
+                android:textSize="@dimen/font_size_general"
+                android:autofillHints="password" />
         </FrameLayout>
 
 

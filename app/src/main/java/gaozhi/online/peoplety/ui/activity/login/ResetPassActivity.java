@@ -1,4 +1,4 @@
-package gaozhi.online.peoplety.ui.login;
+package gaozhi.online.peoplety.ui.activity.login;
 
 
 import android.content.Context;

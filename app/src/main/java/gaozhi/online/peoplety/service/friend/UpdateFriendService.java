@@ -21,7 +21,7 @@ public class UpdateFriendService extends ApiRequest {
 
     public void request(Token token, long friendShipId, String remark) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         Friend friend = new Friend();
         friend.setId(friendShipId);

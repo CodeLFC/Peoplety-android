@@ -20,7 +20,7 @@ public class GetFriendService extends ApiRequest {
 
     public void request(Token token, long userid, long friendId) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         params.put("userid", "" + userid);
         params.put("friendId", "" + friendId);

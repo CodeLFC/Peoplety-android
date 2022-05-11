@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.entity;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import lombok.Data;
 
 /**
@@ -43,10 +44,7 @@ public class Token extends RealmObject {
             return null;
         }
     }
-
-    //有效时长
-    public static final long VALIDATE_PERIOD = 24 * 60 * 60 * 1000;
-
+    @PrimaryKey
     private long userid;
     private int device;
     private String token;

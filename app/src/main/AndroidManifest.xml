@@ -15,16 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Peoplety">
         <activity
+            android:name=".ui.activity.userinfo.UserInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.util.WebActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.ResetPassActivity"
+            android:name=".ui.activity.login.ResetPassActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.RegisterActivity"
+            android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.activity.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.activity.home.MainActivity"
             android:exported="false" />
     </application>
 

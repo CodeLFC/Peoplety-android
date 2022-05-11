@@ -21,7 +21,7 @@ public class GetAttentionService extends ApiRequest {
 
     public void request(Token token, int pageNum) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         params.put("pageNum", "" + pageNum);
         params.put("pageSize", "" + 100);

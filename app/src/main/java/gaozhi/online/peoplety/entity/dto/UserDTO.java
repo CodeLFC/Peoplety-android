@@ -6,6 +6,7 @@ import gaozhi.online.peoplety.entity.UserInfo;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * 用户信息

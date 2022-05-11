@@ -1,34 +1,35 @@
-package gaozhi.online.peoplety.ui.main.fragment;
+package gaozhi.online.peoplety.ui.activity.home.fragment;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.View;
 import android.widget.TextView;
 
-import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.peoplety.R;
-import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import io.realm.Realm;
 
 /**
- * 我
+ * A simple {@link Fragment} subclass.
+ * create an instance of this fragment.
  */
-public class MeFragment extends DBBaseFragment {
+public class PublishFragment extends DBBaseFragment {
     private TextView title;
-    private UserDTO loginUser;
     @Override
     protected void doBusiness(Realm realm) {
-          loginUser = realm.where(UserDTO.class).equalTo("current",true).findFirst();
+
     }
     @Override
     public int bindLayout() {
-        return R.layout.fragment_me;
+        return R.layout.fragment_publish;
     }
 
     @Override
     public void initView(View view) {
-         title = view.findViewById(R.id.title_text);
-         title.setText(R.string.bottom_me);
+        title = view.findViewById(R.id.title_text);
+        title.setText(R.string.bottom_publish);
     }
 
     @Override
@@ -55,5 +56,4 @@ public class MeFragment extends DBBaseFragment {
     public void onClick(View v) {
 
     }
-
 }

@@ -13,9 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
  * 带有上拉加载的下拉刷新框
  */
 /**
- * 自定义View继承SwipeRefreshLayout，添加上拉加载更多的布局属性
+ * 自定义View继承SwipeRefreshLayout，添加上拉加载更多的属性
  */
-
 public class RecycleSwipeRefreshView extends SwipeRefreshLayout{
     private OnLoadListener mOnLoadListener;
     /**

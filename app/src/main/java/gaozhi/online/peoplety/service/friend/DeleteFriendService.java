@@ -21,7 +21,7 @@ public class DeleteFriendService extends ApiRequest {
 
     public void request(Token token, long id) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         params.put("id",""+id);
         request("delete/attention", headers, params);

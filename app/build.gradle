@@ -42,7 +42,7 @@ dependencies {
     //图片glide工具
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     //json工具
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.9'
     //photoview 图片预览工具
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //图片选择工具

@@ -5,14 +5,16 @@
     <dimen name="font_size_title">18sp</dimen>
     <dimen name="font_size_slogan">28sp</dimen>
 
-    <dimen name="icon_size_general">20dp</dimen>
+    <dimen name="icon_size_general">25dp</dimen>
     <dimen name="icon_size_small">16dp</dimen>
 
     <dimen name="logo_big_size">64dp</dimen>
     <dimen name="activity_margin">20dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
+
     <dimen name="btn_big_height">55dp</dimen>
     <dimen name="icon_size_title">25dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="edit_widget_margin">12dp</dimen>
 
 </resources>

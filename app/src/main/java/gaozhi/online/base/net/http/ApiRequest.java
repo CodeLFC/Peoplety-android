@@ -1,7 +1,9 @@
 package gaozhi.online.base.net.http;
 
 import com.google.gson.Gson;
+
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import gaozhi.online.base.net.Result;
 
@@ -9,7 +11,8 @@ import gaozhi.online.base.net.Result;
  * 网络请求
  */
 public class ApiRequest implements HttpRunnable.HttpHandler {
-    private static volatile int idCount = 0;
+    //线程安全
+    private static final AtomicInteger idCount = new AtomicInteger(0);
     private final int id;
 
     public int getId() {
@@ -23,13 +26,14 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
         void start(int id);
 
         void handle(int id, Result result);
+
         /**
          * @param id
          * @param code
          * @param message
          * @param data
          */
-        void error(int id, int code, String message,String data);
+        void error(int id, int code, String message, String data);
     }
 
     /**
@@ -52,16 +56,20 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
         }
     }
 
-    private final Gson gson = new Gson();
+    private final static Gson gson = new Gson();
     private final String baseURL;
     private final Type type;
     private final ResultHandler resultHandler;
 
     public ApiRequest(String baseURL, Type type, ResultHandler resultHandler) {
-        id = (++idCount) % (Integer.MAX_VALUE - 10);
+        id = (idCount.getAndAdd(1)) % (Integer.MAX_VALUE - 10);
         this.baseURL = baseURL;
         this.type = type;
         this.resultHandler = resultHandler;
+    }
+
+    protected Gson getGson() {
+        return gson;
     }
 
     @Override
@@ -71,7 +79,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
             if (result.getCode() == Result.SUCCESS) {
                 resultHandler.handle(getId(), result);
             } else {
-                resultHandler.error(getId(), result.getCode(), result.getMessage(),result.getData());
+                resultHandler.error(getId(), result.getCode(), result.getMessage(), result.getData());
             }
         }
     }
@@ -79,7 +87,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
     @Override
     public void error(int code) {
         if (resultHandler != null) {
-            resultHandler.error(getId(), code, "net error!","");
+            resultHandler.error(getId(), code, "net error!", "");
         }
     }
 

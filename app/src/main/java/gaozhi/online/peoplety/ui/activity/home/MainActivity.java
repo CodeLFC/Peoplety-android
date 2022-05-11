@@ -1,4 +1,4 @@
-package gaozhi.online.peoplety.ui.main;
+package gaozhi.online.peoplety.ui.activity.home;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -15,7 +15,6 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.gson.Gson;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,10 +23,9 @@ import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
-import gaozhi.online.peoplety.entity.dto.UserDTO;
-import gaozhi.online.peoplety.ui.main.fragment.HomeFragment;
-import gaozhi.online.peoplety.ui.main.fragment.MeFragment;
-import gaozhi.online.peoplety.ui.main.fragment.PublishFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.HomeFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.PublishFragment;
 import gaozhi.online.peoplety.util.ToastUtil;
 
 public class MainActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -98,6 +96,7 @@ public class MainActivity extends BaseActivity implements NavigationBarView.OnIt
     protected void initView(View view) {
         bottomNavigationView=$(R.id.main_navigation);
         bottomNavigationView.setOnItemSelectedListener(this);
+        bottomNavigationView.setOnLongClickListener(v -> true);
         fragments=new BaseFragment[]{
                 new HomeFragment(),
                 new PublishFragment(),

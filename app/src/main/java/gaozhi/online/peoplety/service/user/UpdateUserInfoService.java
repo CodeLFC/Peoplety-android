@@ -1,6 +1,8 @@
 package gaozhi.online.peoplety.service.user;
 
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Token;
@@ -11,7 +13,7 @@ import java.util.Map;
 
 /**
  * 更新用户资料
- * "set head_url=#{head_url},nick=#{nick},remark=#{remark},gender=#{gender},birth=#{birth},gps=#{gps},cell_phone=#{cellPhone},wechat=#{wechat},qq=#{qq},visible=#{visible},email=#{email},update_time=#{updateTime} " +
+ *
  */
 public class UpdateUserInfoService extends ApiRequest {
     public UpdateUserInfoService(ResultHandler resultHandler) {
@@ -20,7 +22,8 @@ public class UpdateUserInfoService extends ApiRequest {
 
     public void request(Token token, UserInfo userInfo) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
-        request("put/user_info",headers,null,userInfo);
+        Log.i(getClass().getName(),token.toString());
+        headers.put("token", getGson().toJson(token));
+        request("put/user_info",headers,new HashMap<>(),userInfo);
     }
 }

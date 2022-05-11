@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 
 class RestfulHTTP {
@@ -58,7 +59,9 @@ class RestfulHTTP {
         if (url != null) {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(type);
-            connection.setDoOutput(true);
+            if(!"GET".equals(type.toUpperCase(Locale.ROOT))) {
+                connection.setDoOutput(true);
+            }
             connection.setRequestProperty("Accept", mediaType);
             connection.setRequestProperty("Content-Type", mediaType);
             if (headers != null) {

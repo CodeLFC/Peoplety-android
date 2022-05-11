@@ -24,7 +24,7 @@ public class AddAttentionService extends ApiRequest {
 
     public void request(MediaSession.Token token, long friendId) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("token", new Gson().toJson(token));
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         Friend friend = new Friend();
         friend.setFriendId(friendId);

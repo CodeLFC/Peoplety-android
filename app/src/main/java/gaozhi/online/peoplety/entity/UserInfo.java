@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.entity;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import lombok.Data;
 
 /**
@@ -100,7 +101,7 @@ public class UserInfo extends RealmObject {
             return null;
         }
     }
-
+    @PrimaryKey
     private long id;
     private String headUrl;
     private String nick;
