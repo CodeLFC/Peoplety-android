@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">群众天眼测试版</string>
-
+    <string name="app_name">天眼测试版</string>
+    <!--    链接-->
+    <string name="url_ip">https://www.ip138.com</string>
     <string name="tip_update_success">修改成功</string>
     <!--    登陆界面-->
-    <string name="tip_app_slogan">事无巨细，洞察民意</string>
+    <string name="tip_app_slogan">踏出维权路上的第一公里</string>
     <string name="policy_privacy">隐私政策</string>
     <string name="tip_please_enter_id">请输入账号或手机号</string>
     <string name="tip_please_enter_pass">请输入密码</string>
@@ -48,8 +49,9 @@
     <string name="about">关于</string>
     <string name="user_info">个人信息</string>
     <string name="vip">VIP</string>
+    <string name="ip">IP&#160;</string>
     <string name="id">ID&#160;</string>
-<!--    个人信息-->
+    <!--    个人信息-->
     <string name="head_image">头像</string>
     <string name="nick">名字</string>
     <string name="tip_please_enter_name">请输入名字</string>
@@ -69,4 +71,12 @@
     <string name="tip_please_check_wechat">请检查微信号格式</string>
     <string name="tip_please_check_qq">请检查QQ号格式</string>
     <string name="tip_please_check_email">请检查邮箱格式</string>
+    <string name="tip_drag_crop_head">拖拽裁剪头像</string>
+    <string name="upload_head">修改头像</string>
+    <string name="tip_err_resource_write">资源保存失败</string>
+    <string name="tip_update_fail">修改失败</string>
+    <string name="tip_scan_my_qr_code">扫一扫上面的二维码图案，加我天眼</string>
+    <string name="qr_code_card">二维码名片</string>
+    <string name="official_web">官方网站</string>
+    <string name="copyright">copyright@2022</string>
 </resources>

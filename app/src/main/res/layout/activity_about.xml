@@ -4,10 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.AboutActivity">
+    tools:context=".ui.activity.AboutActivity"
+    android:orientation="vertical">
     <include
         android:layout_width="match_parent"
         android:layout_height="@dimen/logo_big_size"
         layout="@layout/layout_title"
         />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <ImageView
+        android:layout_width="@dimen/logo_big_size"
+        android:layout_height="@dimen/logo_big_size"
+        android:layout_gravity="center"
+        android:src="@drawable/app_logo"/>
+    <TextView
+        android:id="@+id/about_activity_text_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_title" />
+    <TextView
+        android:id="@+id/about_activity_text_version_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_title" />
+    <TextView
+        android:id="@+id/about_activity_text_version_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_title" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"/>
+    <TextView
+        android:id="@+id/about_activity_text_official_web"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/theme_color"
+        android:textSize="@dimen/font_size_title" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/activity_margin"
+        android:layout_gravity="center"
+        android:text="@string/copyright"
+        android:textColor="@color/theme_color"
+        android:textSize="@dimen/font_size_title" />
 </LinearLayout>

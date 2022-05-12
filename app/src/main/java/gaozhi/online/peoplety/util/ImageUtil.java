@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -204,17 +205,17 @@ public class ImageUtil {
      * @param picName
      * @return
      */
-    public static String saveBmp2Gallery(Context context,Bitmap bmp,int quality, String picName) {
+    public static File saveBmp2JPG2Gallery(Context context, Bitmap bmp, int quality, String picName) {
         //系统相册目录
         String galleryPath= Environment.getExternalStorageDirectory()
                 + File.separator + Environment.DIRECTORY_DCIM
                 +File.separator+"Camera"+File.separator;
         // 声明文件对象
-        String fileName=picName+ ".png";
+        String fileName=picName+ ".jpg";
         File file = new File(galleryPath,fileName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, quality, fos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos);
             fos.flush();
             fos.close();
         } catch (IOException e) {
@@ -229,7 +230,7 @@ public class ImageUtil {
         Uri uri = Uri.fromFile(file);
         intent.setData(uri);
         context.sendBroadcast(intent);
-        return file.getPath();
+        return file;
     }
     /**
      * 彩图转换成灰色图片
@@ -273,9 +274,21 @@ public class ImageUtil {
     public static Bitmap decodeBitmap(Context context,int resID){
        return BitmapFactory.decodeResource(context.getResources(), resID);
     }
-    private static Bitmap drawableToBitmap(Drawable drawable)
-    {
-        BitmapDrawable bd = (BitmapDrawable) drawable;
-        return bd.getBitmap();
+    /**
+     * Drawable转换成一个Bitmap
+     *方法一
+     * @param drawable drawable对象
+     * @return
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if(drawable == null){
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap( drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

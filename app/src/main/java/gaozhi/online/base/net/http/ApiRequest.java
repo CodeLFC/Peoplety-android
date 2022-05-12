@@ -97,7 +97,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
      * @date 2022/3/31 18:11
      * @version 1.0
      */
-    public void request(String api, Map<String, String> params) {
+    protected void request(String api, Map<String, String> params) {
         request(api, null, params, null);
     }
 
@@ -107,7 +107,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
      * @date 2022/3/31 18:11
      * @version 1.0
      */
-    public void request(String api, Map<String, String> headers, Map<String, String> params) {
+    protected void request(String api, Map<String, String> headers, Map<String, String> params) {
         request(api, headers, params, null);
     }
 
@@ -117,7 +117,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
      * @date 2022/3/31 18:11
      * @version 1.0
      */
-    public void request(String api, Map<String, String> params, Object body) {
+    protected void request(String api, Map<String, String> params, Object body) {
         request(api, null, params, body);
     }
 
@@ -125,7 +125,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
      * @param api    api名称
      * @param params api参数
      */
-    public void request(String api, Map<String, String> headers, Map<String, String> params, Object body) {
+    protected void request(String api, Map<String, String> headers, Map<String, String> params, Object body) {
         if (resultHandler != null) {
             resultHandler.start(getId());
         }

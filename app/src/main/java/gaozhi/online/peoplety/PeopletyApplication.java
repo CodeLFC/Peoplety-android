@@ -18,7 +18,8 @@ import io.realm.RealmConfiguration;
  * 程序入口
  */
 public class PeopletyApplication extends Application implements Application.ActivityLifecycleCallbacks {
-
+    //软件版本
+    public static final Version version = Version._1_0Beta;
     private static Context context;
     private static PeopletyApplication application;
     private float fontScale;

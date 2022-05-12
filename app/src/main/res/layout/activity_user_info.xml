@@ -22,6 +22,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/userinfo_activity_view_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/widget_margin"
@@ -46,6 +47,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/userinfo_activity_view_qr_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
@@ -72,7 +74,6 @@
                     android:textSize="@dimen/font_size_title" />
 
                 <ImageView
-                    android:id="@+id/userinfo_activity_image_qr_code"
                     android:layout_width="@dimen/icon_size_small"
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_marginHorizontal="@dimen/widget_margin"
@@ -80,6 +81,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/userinfo_activity_view_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
@@ -92,12 +94,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/vip"
+                    android:text="@string/ip"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_title" />
 
                 <TextView
-                    android:id="@+id/userinfo_activity_text_vip"
+                    android:id="@+id/userinfo_activity_text_ip"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -317,14 +319,14 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_title" />
 
-                <TextView
-                    android:id="@+id/userinfo_activity_text_gender"
+                <Spinner
+                    android:id="@+id/userinfo_activity_spinner_gender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@null"
                     android:paddingHorizontal="@dimen/widget_margin"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/font_size_title" />
+                    android:spinnerMode="dropdown" />
 
                 <ImageView
                     android:layout_width="@dimen/icon_size_small"

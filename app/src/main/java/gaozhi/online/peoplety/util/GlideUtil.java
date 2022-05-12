@@ -24,9 +24,10 @@ import java.security.MessageDigest;
  */
 public class GlideUtil {
 
-    public static void loadImage(Context context, String url, ImageView imageView) {
+    public static void loadImage(Context context, String url,@DrawableRes int resId, ImageView imageView) {
         Glide.with(context)
                 .load(url)
+                .placeholder(resId)
                 .into(imageView);
     }
 
@@ -49,6 +50,10 @@ public class GlideUtil {
         Bitmap bitmap = ImageUtil.getRoundBitmapByShader(resource, width, height, height / 8, 0);
         if (bitmap != null)
             imageView.setImageBitmap(bitmap);
+    }
+
+    public static void loadBitmap(Context context, String url,@DrawableRes int resId, CustomTarget<Bitmap> customTarget) {
+        Glide.with(context).asBitmap().load(url).placeholder(resId).into(customTarget);
     }
 
     public static void loadRoundRectangleImage(Context context, String url, ImageView imageView) {

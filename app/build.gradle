@@ -45,12 +45,18 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
     //photoview 图片预览工具
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    //图片选择工具
-    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
+    //zxing工具
+    implementation 'com.google.zxing:core:3.4.1'
     //lombok
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    //腾讯云存储上传工具
+    implementation ('com.qcloud.cos:cos-android:5.7.+'){
+        // 增加这行
+        exclude group: 'com.tencent.qcloud', module: 'beacon-android-release'
+    }
 }

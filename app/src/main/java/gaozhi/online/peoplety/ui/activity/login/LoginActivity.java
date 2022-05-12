@@ -65,6 +65,8 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
 
     @Override
     protected void initParams(Intent intent) {
+        //取消沉浸状态栏
+        setSteepStatusBar(false);
         auto_login = intent.getBooleanExtra(INTENT_TAG_AUTO_LOGIN, true);
     }
 
@@ -75,8 +77,6 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
 
     @Override
     protected void initView(View view) {
-        //取消沉浸状态栏
-        setSteepStatusBar(false);
         layout_bottom = $(R.id.login_activity_start_layout_bottom);
         layout_top = $(R.id.login_activity_start_layout_top);
         edit_id = $(R.id.login_activity_edit_phone);

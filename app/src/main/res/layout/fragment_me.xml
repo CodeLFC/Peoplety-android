@@ -3,173 +3,224 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_color">
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
     <include
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/logo_big_size"
         layout="@layout/layout_title"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/logo_big_size" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/fragment_me_view_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center|start"
+                android:layout_marginTop="@dimen/activity_margin"
+                android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
-                android:layout_marginVertical="@dimen/activity_margin">
+                android:gravity="center|start"
+                android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/fragment_me_image_head"
-                    android:layout_width="@dimen/logo_big_size"
-                    android:layout_height="@dimen/logo_big_size"
+                    android:layout_width="@dimen/logo_bigger_size"
+                    android:layout_height="@dimen/logo_bigger_size"
                     android:paddingHorizontal="@dimen/widget_margin"
-                    android:src="@drawable/app_logo"/>
+                    android:src="@drawable/app_logo" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingVertical="@dimen/widget_margin"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/fragment_me_text_name"
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/widget_margin">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:text="@string/app_name"
-                        android:textSize="@dimen/font_size_title"
-                        />
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/fragment_me_text_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/font_size_name" />
+                        <ImageView
+                            android:id="@+id/fragment_me_image_gender"
+                            android:layout_width="@dimen/icon_size_small"
+                            android:layout_height="@dimen/icon_size_small"
+                            android:layout_marginHorizontal="@dimen/widget_margin"
+                            android:src="@drawable/other_gender" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="start|center"
+                        android:gravity="center"
                         android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/fragment_me_text_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/tag_bg"
-                            android:paddingHorizontal="@dimen/widget_margin"
                             android:layout_marginEnd="@dimen/widget_margin"
+                            android:background="@drawable/tag_bg"
                             android:gravity="center"
+                            android:paddingHorizontal="@dimen/widget_margin"
                             android:text="@string/app_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_size_small" />
-                        <TextView
-                            android:id="@+id/fragment_me_text_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/tag_bg"
-                            android:paddingHorizontal="@dimen/widget_margin"
-                            android:layout_marginEnd="@dimen/widget_margin"
-                            android:gravity="center"
-                            android:text="@string/app_name"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/font_size_small" />
+
                         <TextView
                             android:id="@+id/fragment_me_text_vip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/tag_bg"
-                            android:paddingHorizontal="@dimen/widget_margin"
                             android:layout_marginEnd="@dimen/widget_margin"
+                            android:background="@drawable/tag_bg"
                             android:gravity="center"
+                            android:paddingHorizontal="@dimen/widget_margin"
                             android:text="@string/app_name"
                             android:textColor="@color/gold"
                             android:textSize="@dimen/font_size_small" />
-                    </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/fragment_me_text_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/widget_margin"
+                            android:background="@drawable/tag_bg"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/widget_margin"
+                            android:text="@string/app_name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_size_small" />
+                    </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_me_view_qr_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin"
+                android:background="@color/widget_color"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_general"
+                    android:layout_height="@dimen/icon_size_general"
+                    android:layout_margin="@dimen/widget_margin"
+                    android:src="@drawable/qr_code" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/qr_code_card"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_title" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fragment_me_view_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
-                android:layout_marginBottom="1dp">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_general"
                     android:layout_height="@dimen/icon_size_general"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/settings"/>
+                    android:src="@drawable/settings" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:layout_weight="1"
                     android:text="@string/settings"
-                    android:textSize="@dimen/font_size_title"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_title" />
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_small"
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/arrow_right"/>
+                    android:src="@drawable/arrow_right" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/fragment_me_view_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
-                android:layout_marginBottom="1dp">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_general"
                     android:layout_height="@dimen/icon_size_general"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/about"/>
+                    android:src="@drawable/about" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:layout_weight="1"
                     android:text="@string/about"
-                    android:textSize="@dimen/font_size_title"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_title" />
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_small"
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/arrow_right"/>
+                    android:src="@drawable/arrow_right" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fragment_me_view_change_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:layout_marginVertical="@dimen/activity_margin"
                 android:background="@color/widget_color"
-                android:layout_marginVertical="@dimen/activity_margin">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_general"
                     android:layout_height="@dimen/icon_size_general"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/change_account"/>
+                    android:src="@drawable/change_account" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:layout_weight="1"
                     android:text="@string/change_account"
-                    android:textSize="@dimen/font_size_title"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_title" />
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_small"
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_margin="@dimen/widget_margin"
-                    android:src="@drawable/arrow_right"/>
+                    android:src="@drawable/arrow_right" />
             </LinearLayout>
 
         </LinearLayout>

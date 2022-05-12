@@ -39,22 +39,22 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initParams(getIntent());
-        /**
-         * 当前Activity渲染的视图View
-         **/
-        View mContextView = LayoutInflater.from(this)
-                .inflate(bindLayout(), null);
-
         if (mAllowFullScreen) {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         if (isSetStatusBar) {
             steepStatusBar();
         }
-        setContentView(mContextView);
         if (!isAllowScreenRotate) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
+        /**
+         * 当前Activity渲染的视图View
+         **/
+        View mContextView = LayoutInflater.from(this)
+                .inflate(bindLayout(), null);
+
+        setContentView(mContextView);
         initView(mContextView);
         doBusiness(this);
     }

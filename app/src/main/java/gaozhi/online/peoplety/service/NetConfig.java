@@ -13,6 +13,9 @@ public class NetConfig {
     public static final String friendBaseURL = baseURL + ":8101/friend/";
     //用户常量的获取 constant/get/status
     public static final String userConstantBaseURL = baseURL + ":8101/constant/";
+
+    //对象存储
+    public static final String cosBaseURL = baseURL+":8101/cos/";
     //官方网站
     public static final String officialURL = "http://gaozhi.online?userid=";
 }
