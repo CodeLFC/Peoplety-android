@@ -52,4 +52,14 @@ public class StringUtil {
     public static String bytesToString(byte[] str) {
         return new String(str, StandardCharsets.UTF_8);
     }
+
+    public static String num2Str(int num){
+        if(num<1000){
+            return Integer.toString(num);
+        }
+        if(num<10000){
+            return String.format("%.1fk",num/1000.0);
+        }
+        return String.format("%.1fw",num/10000.0);
+    }
 }

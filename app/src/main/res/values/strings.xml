@@ -2,7 +2,10 @@
     <string name="app_name">天眼测试版</string>
     <!--    链接-->
     <string name="url_ip">https://www.ip138.com</string>
+    <!--    常用-->
     <string name="tip_update_success">修改成功</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确认</string>
     <!--    登陆界面-->
     <string name="tip_app_slogan">踏出维权路上的第一公里</string>
     <string name="policy_privacy">隐私政策</string>
@@ -43,6 +46,7 @@
     <string name="bottom_home">天眼</string>
     <string name="bottom_publish">求助</string>
     <string name="not_permission">申请权限被拒绝，app运行受限</string>
+    <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->
     <string name="change_account">退出登录</string>
     <string name="settings">设置</string>
@@ -51,6 +55,11 @@
     <string name="vip">VIP</string>
     <string name="ip">IP&#160;</string>
     <string name="id">ID&#160;</string>
+    <string name="attention">关注</string>
+    <string name="fans">粉丝</string>
+    <string name="record">卷宗</string>
+    <string name="favorite">收藏夹</string>
+    <string name="default_num">1.1w</string>
     <!--    个人信息-->
     <string name="head_image">头像</string>
     <string name="nick">名字</string>
@@ -79,4 +88,9 @@
     <string name="qr_code_card">二维码名片</string>
     <string name="official_web">官方网站</string>
     <string name="copyright">copyright@2022</string>
+    <!--消息页-->
+    <string name="bottom_message">消息</string>
+    <string name="comment">评论围观</string>
+    <string name="new_fans">新增粉丝</string>
+    <!--发布页-->
 </resources>

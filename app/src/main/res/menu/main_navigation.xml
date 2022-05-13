@@ -9,7 +9,10 @@
         android:id="@+id/main_bottom_publish"
         android:icon="@drawable/bottom_publish"
         android:title="@string/bottom_publish" />
-
+    <item
+        android:id="@+id/main_bottom_message"
+        android:icon="@drawable/bottom_message"
+        android:title="@string/bottom_message" />
     <item
         android:id="@+id/main_bottom_me"
         android:icon="@drawable/bottom_me"

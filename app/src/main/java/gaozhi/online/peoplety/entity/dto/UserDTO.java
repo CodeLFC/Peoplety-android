@@ -18,7 +18,10 @@ public class UserDTO extends RealmObject {
     private UserInfo userInfo;
     private Token token;
     private String pass;
-    private long time;
+    //粉丝数量
+    private int fanNum;
+    //关注数量
+    private int attentionNum;
     //是否是当前登陆用户
     private boolean current;
 }

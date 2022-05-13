@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -49,6 +50,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/fragment_me_text_name"
                             android:layout_width="wrap_content"
@@ -56,6 +58,7 @@
                             android:text="@string/app_name"
                             android:textColor="@color/black"
                             android:textSize="@dimen/font_size_name" />
+
                         <ImageView
                             android:id="@+id/fragment_me_image_gender"
                             android:layout_width="@dimen/icon_size_small"
@@ -83,18 +86,6 @@
                             android:textSize="@dimen/font_size_small" />
 
                         <TextView
-                            android:id="@+id/fragment_me_text_vip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/widget_margin"
-                            android:background="@drawable/tag_bg"
-                            android:gravity="center"
-                            android:paddingHorizontal="@dimen/widget_margin"
-                            android:text="@string/app_name"
-                            android:textColor="@color/gold"
-                            android:textSize="@dimen/font_size_small" />
-
-                        <TextView
                             android:id="@+id/fragment_me_text_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -105,7 +96,129 @@
                             android:text="@string/app_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_size_small" />
+
+                        <TextView
+                            android:id="@+id/fragment_me_text_vip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/widget_margin"
+                            android:background="@drawable/tag_bg"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/widget_margin"
+                            android:text="@string/app_name"
+                            android:textColor="@color/gold"
+                            android:textSize="@dimen/font_size_small" />
                     </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin"
+                android:background="@color/widget_color"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/widget_margin">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_me_text_attention_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/default_num"
+                        android:textStyle="bold"
+                        android:textColor="@color/deep_text_color"
+                        android:textSize="@dimen/font_size_general" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/attention"
+                        android:textColor="@color/shallow_text_color"
+                        android:textSize="@dimen/font_size_small" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_me_text_fans_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/default_num"
+                        android:textStyle="bold"
+                        android:textColor="@color/deep_text_color"
+                        android:textSize="@dimen/font_size_general" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/fans"
+                        android:textColor="@color/shallow_text_color"
+                        android:textSize="@dimen/font_size_small" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_me_text_record_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/default_num"
+                        android:textStyle="bold"
+                        android:textColor="@color/deep_text_color"
+                        android:textSize="@dimen/font_size_general" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/record"
+                        android:textColor="@color/shallow_text_color"
+                        android:textSize="@dimen/font_size_small" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_me_text_favorite_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/default_num"
+                        android:textStyle="bold"
+                        android:textColor="@color/deep_text_color"
+                        android:textSize="@dimen/font_size_general" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/favorite"
+                        android:textColor="@color/shallow_text_color"
+                        android:textSize="@dimen/font_size_small" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -113,7 +226,7 @@
                 android:id="@+id/fragment_me_view_qr_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_margin"
+                android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
                 android:gravity="center"
                 android:orientation="horizontal">

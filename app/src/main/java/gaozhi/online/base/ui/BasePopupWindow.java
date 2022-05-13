@@ -13,11 +13,11 @@ import gaozhi.online.peoplety.R;
 
 
 /**
- * 弹出菜单
+ * 弹出窗口
  */
-public abstract class BasePopupMenu extends PopupWindow {
+public abstract class BasePopupWindow extends PopupWindow {
 
-    public BasePopupMenu(Context context, int resID, boolean fullScreen) {
+    public BasePopupWindow(Context context, int resID, boolean fullScreen) {
         View rootView = LayoutInflater.from(context).inflate(resID, null);
         setContentView(rootView);
 
@@ -39,9 +39,9 @@ public abstract class BasePopupMenu extends PopupWindow {
         doBusiness(context);
     }
 
-    public abstract void initView(View rootView);
+    protected abstract void initView(View rootView);
 
-    public abstract void doBusiness(Context context);
+    protected abstract void doBusiness(Context context);
 
     public void showPopupWindow(View parent) {
         showAsDropDown(parent);

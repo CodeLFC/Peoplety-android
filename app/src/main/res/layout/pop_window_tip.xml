@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/theme_color"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/activity_margin"
+        android:background="@drawable/radius_widget_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_margin">
+
+        <TextView
+            android:id="@+id/pop_widow_tip_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_margin"
+            android:text="@string/app_name"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_title" />
+
+        <TextView
+            android:id="@+id/pop_widow_tip_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/widget_margin"
+            android:lineSpacingMultiplier="1.5"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_general" />
+
+        <Button
+            android:id="@+id/pop_widow_tip_btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/ok"
+            android:textSize="@dimen/font_size_general" />
+    </LinearLayout>
+
+</LinearLayout>

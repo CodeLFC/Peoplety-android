@@ -17,6 +17,7 @@ import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.util.GlideUtil;
+import gaozhi.online.peoplety.util.StringUtil;
 import io.realm.Realm;
 
 /**
@@ -24,6 +25,7 @@ import io.realm.Realm;
  */
 public class MeFragment extends DBBaseFragment {
     private TextView title;
+    private ImageView title_right;
     private UserDTO loginUser;
     private Status status;
     //ui
@@ -33,6 +35,11 @@ public class MeFragment extends DBBaseFragment {
     private TextView textStatus;
     private TextView textId;
     private TextView textVip;
+
+    private TextView textAttentionNum;
+    private TextView textFansNum;
+    private TextView textRecordNum;
+    private TextView textFavoriteNum;
     //ui views
     private View viewUserInfo;
     private View viewQRCode;
@@ -55,6 +62,9 @@ public class MeFragment extends DBBaseFragment {
     public void initView(View view) {
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_me);
+        title_right = view.findViewById(R.id.title_image_right);
+        title_right.setImageResource(R.drawable.scan);
+        title_right.setOnClickListener(this);
         imageHead = view.findViewById(R.id.fragment_me_image_head);
         imageHead.setOnClickListener(this);
         textName = view.findViewById(R.id.fragment_me_text_name);
@@ -62,6 +72,15 @@ public class MeFragment extends DBBaseFragment {
         textStatus = view.findViewById(R.id.fragment_me_text_status);
         textId = view.findViewById(R.id.fragment_me_text_id);
         textVip = view.findViewById(R.id.fragment_me_text_vip);
+
+        textAttentionNum = view.findViewById(R.id.fragment_me_text_attention_num);
+        textAttentionNum.setOnClickListener(this);
+        textFansNum = view.findViewById(R.id.fragment_me_text_fans_num);
+        textFansNum.setOnClickListener(this);
+        textRecordNum = view.findViewById(R.id.fragment_me_text_record_num);
+        textRecordNum.setOnClickListener(this);
+        textFavoriteNum = view.findViewById(R.id.fragment_me_text_favorite_num);
+        textFavoriteNum.setOnClickListener(this);
 
         viewUserInfo = view.findViewById(R.id.fragment_me_view_account);
         viewUserInfo.setOnClickListener(this);
@@ -92,7 +111,7 @@ public class MeFragment extends DBBaseFragment {
         textStatus.setText(status.getName());
         textId.setText(getString(R.string.id) + loginUser.getUserInfo().getId());
         textVip.setText(getString(R.string.vip) + loginUser.getUserInfo().getVip());
-        switch (UserInfo.Gender.getGender(loginUser.getUserInfo().getGender())){
+        switch (UserInfo.Gender.getGender(loginUser.getUserInfo().getGender())) {
             case MALE:
                 imageGender.setImageResource(R.drawable.male);
                 break;
@@ -102,6 +121,8 @@ public class MeFragment extends DBBaseFragment {
             case OTHER:
                 imageGender.setImageResource(R.drawable.other_gender);
         }
+        textAttentionNum.setText(StringUtil.num2Str(loginUser.getAttentionNum()));
+        textFansNum.setText(StringUtil.num2Str(loginUser.getFanNum()));
     }
 
     @Override

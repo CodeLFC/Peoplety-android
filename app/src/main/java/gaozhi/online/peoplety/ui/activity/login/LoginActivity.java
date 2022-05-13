@@ -38,6 +38,8 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHandler {
+    //保护时间
+    private static final long LOGIN_PROTECTED_TIME = 1000*60*60*2;
     // service
     private final LoginService loginService = new LoginService(this);
     private final GetUserConstantService getUserConstantService = new GetUserConstantService(this);
@@ -94,7 +96,7 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).sort("time", Sort.DESCENDING).findFirst();
+        loginUser = realm.where(UserDTO.class).equalTo("current",true).findFirst();
     }
 
     @Override
@@ -103,6 +105,12 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
             edit_id.setText(loginUser.getAccount());
             edit_pass.setText(loginUser.getPass());
             checkBox_agree_privacy.setChecked(true);
+            //token有效期没过，直接进入主页
+            if(auto_login&&loginUser.getToken().getValidateTime()>System.currentTimeMillis()+LOGIN_PROTECTED_TIME){
+                MainActivity.startActivity(LoginActivity.this);
+                finish();
+                return;
+            }
         }
         if (auto_login) {
             login();
@@ -171,7 +179,6 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
                 loginUser = gson.fromJson(result.getData(), UserDTO.class);
                 loginUser.setAccount(account);
                 loginUser.setPass(pass);
-                loginUser.setTime(System.currentTimeMillis());
 
                 RealmResults<UserDTO> allUser = realm.where(UserDTO.class).findAll();
                 for (UserDTO userDTO : allUser) {

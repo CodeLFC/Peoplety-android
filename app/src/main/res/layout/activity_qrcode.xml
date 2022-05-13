@@ -108,7 +108,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/widget_margin"
                         android:text="@string/app_name"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gold"
                         android:textSize="@dimen/font_size_small" />
                 </LinearLayout>
             </LinearLayout>

@@ -7,7 +7,7 @@
     </style>
     <!--自定义弹出对话框-->
     <style name="Dialog" parent="android:style/Theme.Dialog">
-        <item name="android:background">#00000000</item>
+        <item name="android:background">@color/widget_color</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>

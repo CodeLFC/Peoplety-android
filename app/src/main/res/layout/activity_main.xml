@@ -19,5 +19,6 @@
         android:theme="@style/navigation"
         app:itemIconSize="@dimen/icon_size_general"
         app:menu="@menu/main_navigation"
+        android:longClickable="false"
         />
 </LinearLayout>
