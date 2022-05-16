@@ -16,33 +16,39 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserAuth;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
-import gaozhi.online.peoplety.service.constant.GetUserConstantService;
+import gaozhi.online.peoplety.service.constant.GetRecordAreaService;
+import gaozhi.online.peoplety.service.constant.GetRecordTypeService;
+import gaozhi.online.peoplety.service.constant.GetUserStatusService;
+import gaozhi.online.peoplety.service.constant.ResourceRequester;
 import gaozhi.online.peoplety.service.user.LoginService;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
+import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.ResourceUtil;
 import gaozhi.online.peoplety.util.StringUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
-public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHandler {
-    //保护时间
-    private static final long LOGIN_PROTECTED_TIME = 1000*60*60*2;
+public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHandler, BiConsumer<Integer, Boolean> {
+
+    //登陆保护时间
+    private static final long LOGIN_PROTECTED_TIME = 1000 * 60 * 60 * 2;
     // service
     private final LoginService loginService = new LoginService(this);
-    private final GetUserConstantService getUserConstantService = new GetUserConstantService(this);
     //ui
     private LinearLayout layout_bottom;
     private LinearLayout layout_top;
@@ -54,6 +60,8 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
     private TextView text_forget_pass;
     private CheckBox checkBox_agree_privacy;
     private TextView text_privacy;
+    //资源请求进度
+    private TextView textProcess;
     //util
     private final Gson gson = new Gson();
     //intent
@@ -62,14 +70,24 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
     //entity
     private String account;
     private String pass;
+    //db
     private UserDTO loginUser;
+    //资源请求服务
+    private ResourceRequester resourceRequester;
 
+    @Override
+    protected void doBusiness(Realm realm) {
+        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
+        if (loginUser != null)
+            loginUser = realm.copyFromRealm(loginUser);
+    }
 
     @Override
     protected void initParams(Intent intent) {
         //取消沉浸状态栏
         setSteepStatusBar(false);
         auto_login = intent.getBooleanExtra(INTENT_TAG_AUTO_LOGIN, true);
+        resourceRequester = new ResourceRequester(getRealm(), this, this);
     }
 
     @Override
@@ -92,32 +110,39 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
         checkBox_agree_privacy = $(R.id.login_activity_check_agree);
         text_privacy = $(R.id.login_activity_text_privacy);
         text_privacy.setOnClickListener(this);
+        textProcess = $(R.id.login_activity_text_process);
     }
 
-    @Override
-    protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current",true).findFirst();
-    }
+
 
     @Override
     protected void doBusiness(Context mContext) {
-        if (loginUser != null) {
-            edit_id.setText(loginUser.getAccount());
-            edit_pass.setText(loginUser.getPass());
-            checkBox_agree_privacy.setChecked(true);
-            //token有效期没过，直接进入主页
-            if(auto_login&&loginUser.getToken().getValidateTime()>System.currentTimeMillis()+LOGIN_PROTECTED_TIME){
-                MainActivity.startActivity(LoginActivity.this);
-                finish();
-                return;
-            }
+        if (loginUser == null) {//没有用户信息
+            showLoginView();
+            return;
         }
-        if (auto_login) {
+
+        edit_id.setText(loginUser.getAccount());
+        edit_pass.setText(loginUser.getPass());
+
+        checkBox_agree_privacy.setChecked(true);
+
+        if (!auto_login) {//显示登陆部分
+            showLoginView();
+            return;
+        }
+        //token有效期快过了，开始自动登陆
+        if (loginUser.getToken().getValidateTime() < System.currentTimeMillis() + LOGIN_PROTECTED_TIME) {
             login();
-        } else {
-            layout_bottom.setVisibility(View.INVISIBLE);
-            layout_top.setVisibility(View.VISIBLE);
+            return;
         }
+        //常量有效期没过
+        if (loginUser.getResourceValidateTime() > System.currentTimeMillis()) {
+            enterMainWindow();
+            return;
+        }
+        //更新常量
+        resourceRequester.refreshResource(loginUser);
     }
 
     @Override
@@ -148,8 +173,7 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
      */
     private void login() {
         if (!checkBox_agree_privacy.isChecked()) {
-            layout_bottom.setVisibility(View.INVISIBLE);
-            layout_top.setVisibility(View.VISIBLE);
+            showLoginView();
             ToastUtil.showToastLong(getString(R.string.tip_please_check_privacy));
             return;
         }
@@ -176,9 +200,12 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
     public void handle(int id, Result result) {
         if (id == loginService.getId()) {
             getRealm().executeTransactionAsync(realm -> {
+                Area area = loginUser == null ? null : loginUser.getArea();
                 loginUser = gson.fromJson(result.getData(), UserDTO.class);
                 loginUser.setAccount(account);
                 loginUser.setPass(pass);
+                //记忆地址
+                loginUser.setArea(area);
 
                 RealmResults<UserDTO> allUser = realm.where(UserDTO.class).findAll();
                 for (UserDTO userDTO : allUser) {
@@ -186,33 +213,37 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
                 }
                 loginUser.setCurrent(true);
                 realm.copyToRealmOrUpdate(loginUser);
-            }, () -> {//success
-                getUserConstantService.request(loginUser.getToken());
-            });
-            return;
-        }
-        if (id == getUserConstantService.getId()) {
-            getRealm().executeTransactionAsync(realm -> {
-                List<Status> statuses = gson.fromJson(result.getData(), new TypeToken<List<Status>>() {
-                }.getType());
-                for (Status status : statuses) {
-                    realm.copyToRealmOrUpdate(status);
-                    Log.i(TAG,status.toString());
+            }, () -> {//success 登陆成功
+                if (System.currentTimeMillis() > loginUser.getResourceValidateTime()) {
+                    textProcess.setText(R.string.request_ing);
+                    //请求资源
+                    resourceRequester.refreshResource(loginUser);
+                } else {
+                    enterMainWindow();
                 }
-            }, () -> {//请求资源成功
-                MainActivity.startActivity(LoginActivity.this);
-                finish();
             });
         }
+    }
+
+    /**
+     * 进入主页面
+     */
+    private void enterMainWindow() {
+        MainActivity.startActivity(LoginActivity.this);
+        finish();
+    }
+    //显示登陆界面
+    private void showLoginView() {
+        layout_bottom.setVisibility(View.INVISIBLE);
+        layout_top.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         btn_login.setText(R.string.login);
         btn_login.setEnabled(true);
-        layout_bottom.setVisibility(View.INVISIBLE);
-        layout_top.setVisibility(View.VISIBLE);
-        ToastUtil.showToastLong(message + data);
+        showLoginView();
+        new TipPopWindow(this, true).setMessage(message + data).showPopupWindow(this);
     }
 
     /**
@@ -226,4 +257,11 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
         context.startActivity(intent);
     }
 
+    @Override
+    public void accept(Integer integer, Boolean aBoolean) {
+        textProcess.setText(getString(R.string.request_ing) + integer + "/" + resourceRequester.getResourceSize());
+        if (aBoolean) {//资源请求完成
+            enterMainWindow();
+        }
+    }
 }

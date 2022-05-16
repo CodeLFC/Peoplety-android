@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     android:orientation="vertical">
     <include
         android:layout_width="match_parent"
         android:layout_height="@dimen/logo_big_size"
         layout="@layout/layout_title"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+            android:id="@+id/fragment_publish_recycler_record_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/widget_margin"
+            android:paddingHorizontal="@dimen/widget_margin"
+            android:layout_margin="@dimen/activity_margin"
+            android:paddingVertical="@dimen/activity_margin"
+            android:background="@drawable/radius_widget_bg"
+            />
+        <ImageView
+            android:id="@+id/fragment_publish_image_pre_step"
+            android:layout_width="@dimen/logo_size"
+            android:layout_height="@dimen/logo_size"
+            android:src="@drawable/btn_arrow_left"
+            android:background="@drawable/circle_bg"
+            android:padding="@dimen/widget_margin"
+            />
+    </LinearLayout>
 </LinearLayout>

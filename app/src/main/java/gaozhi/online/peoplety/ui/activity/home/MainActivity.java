@@ -10,13 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarMenu;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 
@@ -33,7 +31,7 @@ import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.home.fragment.HomeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MessageFragment;
-import gaozhi.online.peoplety.ui.activity.home.fragment.PublishFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
@@ -141,7 +139,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         viewPager = $(R.id.main_view_pager);
         viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(this);
-        viewPager.setCurrentItem(ME);
+        viewPager.setCurrentItem(PUBLISH);
         //请求权限
         requestPermission();
     }
@@ -218,7 +216,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
             userInfo.setToken(loginUser.getToken());
             realm.copyToRealmOrUpdate(userInfo);
         }, () -> {//success
-            ToastUtil.showToastShort(R.string.welcome);
+           // ToastUtil.showToastShort(R.string.welcome);
         });
     }
 

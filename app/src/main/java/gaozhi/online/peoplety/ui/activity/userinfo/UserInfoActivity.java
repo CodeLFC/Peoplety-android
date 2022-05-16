@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -24,9 +22,7 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
@@ -272,16 +268,18 @@ public class UserInfoActivity extends DBBaseActivity implements ApiRequest.Resul
             ShowImageActivity.startActivity(this, loginUser.getUserInfo().getHeadUrl());
             return;
         }
-        if(v.getId() == ipView.getId()){
-            WebActivity.startActivity(this,getString(R.string.url_ip),loginUser.getUserInfo().getIp());
+        if (v.getId() == ipView.getId()) {
+            WebActivity.startActivity(this, getString(R.string.url_ip), loginUser.getUserInfo().getIp());
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         doBusiness(getRealm());
         doBusiness(this);
     }
+
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, UserInfoActivity.class);
         context.startActivity(intent);
@@ -325,16 +323,25 @@ public class UserInfoActivity extends DBBaseActivity implements ApiRequest.Resul
     /**
      * 性别选择器
      */
-    public static class GenderSpinnerAdapter extends ArrayAdapter<UserInfo.Gender> {
+    private static class GenderSpinnerAdapter extends ArrayAdapter<UserInfo.Gender> {
 
         public GenderSpinnerAdapter(@NonNull Context context, @NonNull UserInfo.Gender[] objects) {
-            super(context, R.layout.user_info_gender_item, objects);
+            super(context, R.layout.spinner_item_general_view, objects);
+            setDropDownViewResource(R.layout.spinner_item_general_dropdown_view);
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             TextView text = (TextView) super.getView(position, convertView, parent);
+            text.setGravity(Gravity.LEFT);
+            text.setText(getItem(position).getDescription());
+            return text;
+        }
+
+        @Override
+        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            TextView text = (TextView) super.getDropDownView(position, convertView, parent);
             text.setText(getItem(position).getDescription());
             return text;
         }

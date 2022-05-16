@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.entity.dto;
 
 
+import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import io.realm.RealmObject;
@@ -24,4 +25,10 @@ public class UserDTO extends RealmObject {
     private int attentionNum;
     //是否是当前登陆用户
     private boolean current;
+    //资源有效时间
+    private long resourceValidateTime;
+
+    //选择的地区
+    private Area area;
+
 }

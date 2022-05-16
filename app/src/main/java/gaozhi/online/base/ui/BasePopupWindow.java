@@ -35,10 +35,14 @@ public abstract class BasePopupWindow extends PopupWindow {
         setOutsideTouchable(true);
         // 设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.PopupAnimation);
+        initParam();
         initView(rootView);
         doBusiness(context);
     }
 
+    protected void initParam(){
+
+    }
     protected abstract void initView(View rootView);
 
     protected abstract void doBusiness(Context context);

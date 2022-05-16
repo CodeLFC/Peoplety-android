@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--颜色-->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="red">#F44336</color>
     <color name="pink">#db639b</color>
     <color name="gold">#f4ea2a</color>
@@ -12,7 +12,7 @@
     <color name="shallow_theme_color">#1296db</color>
     <color name="pop_menu_bg_color">#7Fececec</color>
     <!--字体颜色-->
-    <color name="deep_text_color">#FF000000</color>
+    <color name="deep_text_color">@color/black</color>
     <color name="shallow_text_color">#808080</color>
 
     <!--首页底部选择颜色-->

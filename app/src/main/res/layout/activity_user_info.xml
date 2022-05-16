@@ -326,7 +326,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:paddingHorizontal="@dimen/widget_margin"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dialog" />
 
                 <ImageView
                     android:layout_width="@dimen/icon_size_small"
