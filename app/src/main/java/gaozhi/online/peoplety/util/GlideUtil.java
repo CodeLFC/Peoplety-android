@@ -19,6 +19,8 @@ import com.bumptech.glide.request.transition.Transition;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
+import gaozhi.online.peoplety.R;
+
 /**
  * Glide工具
  */
@@ -30,7 +32,12 @@ public class GlideUtil {
                 .placeholder(resId)
                 .into(imageView);
     }
-
+    public static void loadImage(Context context, String url, ImageView imageView) {
+        Glide.with(context)
+                .load(url)
+                .placeholder(R.drawable.app_logo)
+                .into(imageView);
+    }
     public static void loadGrayImage(Context context, String url, ImageView imageView) {
         Glide.with(context)
                 .load(url)

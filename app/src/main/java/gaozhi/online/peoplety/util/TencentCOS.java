@@ -119,4 +119,12 @@ public class TencentCOS {
         putObjectWithPath(cosPath, srcPath, cosXmlProgressListener, cosXmlResultListener);
         return linkPre+cosPath;
     }
+    public static String getRecordImageURL(String imageName){
+        String cosPath = "record/" + imageName;
+        return linkPre +cosPath;
+    }
+    public static String getHeadImageURL(String imageName){
+        String cosPath = "head/" + imageName;
+        return linkPre+cosPath;
+    }
 }

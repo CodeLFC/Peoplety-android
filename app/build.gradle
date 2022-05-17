@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //zxing工具
     implementation 'com.google.zxing:core:3.4.1'
+    //图片选择工具
+    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
     //pageHelper分页工具
     implementation 'com.github.pagehelper:pagehelper:5.3.0'
     //lombok

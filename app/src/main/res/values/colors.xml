@@ -6,7 +6,10 @@
     <color name="red">#F44336</color>
     <color name="pink">#db639b</color>
     <color name="gold">#f4ea2a</color>
+    <color name="edit_bolder">#F1F1F1</color>
     <color name="bg_color">#F5F5F5</color>
+    <color name="alpha_50_bg_color">#20000000</color>
+
     <color name="widget_color">#FFFFFF</color>
     <color name="theme_color">#1296db</color>
     <color name="shallow_theme_color">#1296db</color>

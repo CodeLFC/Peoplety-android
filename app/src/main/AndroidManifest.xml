@@ -3,10 +3,11 @@
     package="gaozhi.online.peoplety">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:name=".PeopletyApplication"
         android:icon="@drawable/app_logo_rectangle"
@@ -16,6 +17,9 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Peoplety">
+        <activity
+            android:name=".ui.activity.PublishRecordActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.userinfo.ShowUpdateHeadActivity"
             android:exported="false" />

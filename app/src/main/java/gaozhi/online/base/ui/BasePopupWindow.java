@@ -20,7 +20,7 @@ public abstract class BasePopupWindow extends PopupWindow {
     public BasePopupWindow(Context context, int resID, boolean fullScreen) {
         View rootView = LayoutInflater.from(context).inflate(resID, null);
         setContentView(rootView);
-
+        rootView.setOnClickListener(v -> dismiss());
         //设置宽与高
         if (!fullScreen) {
             setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);

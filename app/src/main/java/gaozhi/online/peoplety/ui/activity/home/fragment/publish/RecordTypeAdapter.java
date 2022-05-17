@@ -17,7 +17,7 @@ public class RecordTypeAdapter extends NoAnimatorRecyclerView.BaseAdapter<Record
     @NonNull
     @Override
     public RecordTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RecordTypeViewHolder(layoutInflate(parent,R.layout.recycler_adapter_record_type_item_view));
+        return new RecordTypeViewHolder(layoutInflate(parent,R.layout.item_recycler_record_type));
     }
     public int getParentId() {
         if (getItemCount() == 0) {

@@ -93,7 +93,29 @@
     <string name="comment">评论围观</string>
     <string name="new_fans">新增粉丝</string>
 
+    <!--    首页-->
     <!--发布页-->
-<!--    首页-->
-    <string name="inspect_area">巡查地区:</string>
+    <string name="super_record">父卷宗</string>
+    <string name="title">标题</string>
+    <string name="record_title_hint">一句话突出主要内容</string>
+    <string name="description">摘要</string>
+    <string name="record_description_hint">几句话描述问题的关键，如:\n\txx公司产品经理陈先生与AI工程师小明发生争执，陈先生提出无理需求：“实现一个自动打标签的系统。”。当事人小明称此需求是左脚踩右脚上天，无法实现</string>
+    <string name="content">详情</string>
+    <string name="record_content_hint">详细客观的描述事件内容。\n\t时间、地点、人物、过程、结果等</string>
+    <string name="addition_url">附加链接和图片</string>
+    <string name="record_url_hint">补充证据链接</string>
+    <string name="area">地区</string>
+    <string name="record_area_hint">选择事件发生的地区</string>
+    <string name="tip_upload_fail">上传失败！请重试</string>
+    <string name="tip_upload_image_too_much">上传图片太多</string>
+    <string name="tip_upload_ing">上传中…</string>
+    <string name="tip_upload_success">上传成功</string>
+    <string name="tip_publish_success">发布成功</string>
+    <string name="tip_please_select_area">请选择地区</string>
+    <string name="tip_please_enter_right_url">请输入正确的链接地址</string>
+    <string name="is_top">置顶</string>
+    <string name="tip_record_loss">返回将会丢失编辑内容，确认退出编辑吗？点击确认退出编辑</string>
+    <string name="request_ing_cos_secret">正在请求临时密钥</string>
+    <string name="delete">删除</string>
+    <string name="preview">预览</string>
 </resources>

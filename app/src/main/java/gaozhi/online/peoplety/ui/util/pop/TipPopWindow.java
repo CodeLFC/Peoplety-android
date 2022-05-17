@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.StringRes;
+
 import gaozhi.online.base.ui.BasePopupWindow;
 import gaozhi.online.peoplety.R;
 
@@ -12,7 +14,6 @@ import gaozhi.online.peoplety.R;
  *
  */
 public class TipPopWindow extends BasePopupWindow {
-    private TextView textTitle;
     private TextView textContent;
     private Button btnOk;
 
@@ -22,7 +23,6 @@ public class TipPopWindow extends BasePopupWindow {
 
     @Override
     public void initView(View rootView) {
-        textTitle = rootView.findViewById(R.id.pop_widow_tip_title_text);
         textContent = rootView.findViewById(R.id.pop_widow_tip_message);
         btnOk = rootView.findViewById(R.id.pop_widow_tip_btn_ok);
         btnOk.setOnClickListener(v -> dismiss());
@@ -43,8 +43,8 @@ public class TipPopWindow extends BasePopupWindow {
         return this;
     }
 
-    public TipPopWindow setTitle(String title) {
-        textTitle.setText(title);
+    public TipPopWindow setMessage(@StringRes int resId) {
+        textContent.setText(resId);
         return this;
     }
 }

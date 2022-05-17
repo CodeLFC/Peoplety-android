@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.ui.activity.home.fragment.publish;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
@@ -15,6 +16,9 @@ import java.util.function.Consumer;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.RecordType;
+import gaozhi.online.peoplety.entity.Status;
+import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.ui.activity.PublishRecordActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
@@ -28,12 +32,17 @@ public class PublishFragment extends DBBaseFragment implements Consumer<RecordTy
     private RecyclerView recordTypeRecyclerView;
     private RecordTypeAdapter recordTypeAdapter;
     private ImageView imagePreStep;
-
+    //db
+    private UserDTO loginUser;
+    private Status status;
     //service
     //类型
     @Override
     protected void doBusiness(Realm realm) {
-
+        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
+        //build一个没有Realm绑定的副本
+        loginUser = realm.copyFromRealm(loginUser);
+        status = realm.where(Status.class).equalTo("id", loginUser.getUserInfo().getStatus()).findFirst();
     }
 
     @Override
@@ -46,9 +55,10 @@ public class PublishFragment extends DBBaseFragment implements Consumer<RecordTy
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_publish);
         recordTypeRecyclerView = view.findViewById(R.id.fragment_publish_recycler_record_type);
+        recordTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recordTypeAdapter = new RecordTypeAdapter();
         recordTypeRecyclerView.setAdapter(recordTypeAdapter);
-        List<RecordType> recordTypes = getRealm().where(RecordType.class).equalTo("parentId", 0).findAll();
+        List<RecordType> recordTypes = getRealm().where(RecordType.class).equalTo("parentId", 0).lessThan("grade",status.getGrade()).findAll();
         recordTypeAdapter.add(recordTypes);
 
         imagePreStep = view.findViewById(R.id.fragment_publish_image_pre_step);
@@ -83,7 +93,7 @@ public class PublishFragment extends DBBaseFragment implements Consumer<RecordTy
             RecordType parentRecord = getRealm().where(RecordType.class).equalTo("id", parentId).findFirst();
             if (parentRecord != null) {
                 title.setText(parentRecord.getName());
-                List<RecordType> parents = getRealm().where(RecordType.class).equalTo("parentId", parentRecord.getParentId()).findAll();
+                List<RecordType> parents = getRealm().where(RecordType.class).equalTo("parentId", parentRecord.getParentId()).lessThan("grade",status.getGrade()).findAll();
                 if (parents.size() > 0) {
                     recordTypeAdapter.clear();
                     recordTypeAdapter.add(parents);
@@ -105,6 +115,6 @@ public class PublishFragment extends DBBaseFragment implements Consumer<RecordTy
             return;
         }
         //是最终节点
-        ToastUtil.showToastShort("打开发布页面");
+        PublishRecordActivity.startActivity(getContext(),recordType);
     }
 }

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class AreaPopWindow extends DBBasePopWindow implements View.OnClickListen
     @Override
     protected void initView(View rootView) {
         recyclerView = rootView.findViewById(R.id.pop_window_recycler_area);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         areaAdapter = new AreaAdapter();
         recyclerView.setAdapter(areaAdapter);
         List<Area> zero = getRealm().where(Area.class).equalTo("parentId", 0).findAll();
@@ -53,6 +55,7 @@ public class AreaPopWindow extends DBBasePopWindow implements View.OnClickListen
                 areaAdapter.clear();
                 areaAdapter.add(areas);
             }else {
+                dismiss();
                 if (onItemClickedListener != null) {
                     onItemClickedListener.accept(area);
                 }
@@ -80,7 +83,7 @@ public class AreaPopWindow extends DBBasePopWindow implements View.OnClickListen
         @NonNull
         @Override
         public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new AreaViewHolder(layoutInflate(parent, R.layout.recycler_adapter_text_item_view));
+            return new AreaViewHolder(layoutInflate(parent, R.layout.item_recycler_text));
         }
 
         public int getParentId() {

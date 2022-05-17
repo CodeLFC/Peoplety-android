@@ -16,20 +16,11 @@
         android:paddingTop="@dimen/activity_margin">
 
         <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
-            android:id="@+id/pop_window_recycler_area"
+            android:id="@+id/pop_window_recycler_options"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginVertical="@dimen/widget_margin"
             />
-        <ImageView
-            android:id="@+id/pop_window_image_pre_step"
-            android:layout_width="@dimen/logo_size"
-            android:layout_height="@dimen/logo_size"
-            android:src="@drawable/btn_arrow_left"
-            android:background="@drawable/circle_bg"
-            android:padding="@dimen/widget_margin"
-            android:layout_margin="@dimen/widget_margin"
-            android:layout_gravity="center"/>
     </LinearLayout>
 </LinearLayout>

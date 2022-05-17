@@ -31,7 +31,7 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         loginUser = realm.copyFromRealm(loginUser);
         if (loginUser.getArea() ==null){
-            loginUser.setArea(realm.where(Area.class).equalTo("minimum",true).findFirst());
+            loginUser.setArea(realm.where(Area.class).findFirst());
         }
     }
 
@@ -89,7 +89,6 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
             realm.copyToRealmOrUpdate(loginUser);
         }, () -> {
             titleTextRight.setText(area.getName());
-            areaPopWindow.dismiss();
         });
     }
 }
