@@ -20,6 +20,7 @@ import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
@@ -157,6 +158,8 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiR
             recordAdapter.clear();
             //装入数据库
             getRealm().executeTransactionAsync(realm -> {
+                realm.delete(Record.class);
+                realm.delete(Comment.class);
                 List<Record> records = currentRecordPageInfo.getList();
                 for (Record record : records) {
                     realm.copyToRealmOrUpdate(record);

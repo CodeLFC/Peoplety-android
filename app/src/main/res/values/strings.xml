@@ -98,7 +98,7 @@
     <string name="super_record">父卷宗</string>
     <string name="title">标题</string>
     <string name="record_title_hint">一句话突出主要内容</string>
-    <string name="description">摘要</string>
+    <string name="description">摘要&#160;</string>
     <string name="record_description_hint">几句话描述问题的关键，如:\n\txx公司产品经理陈先生与AI工程师小明发生争执，陈先生提出无理需求：“实现一个自动打标签的系统。”。当事人小明称此需求是左脚踩右脚上天，无法实现</string>
     <string name="content">详情</string>
     <string name="record_content_hint">详细客观的描述事件内容。\n\t时间、地点、人物、过程、结果等</string>

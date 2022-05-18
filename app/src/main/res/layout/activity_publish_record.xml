@@ -55,7 +55,7 @@
                 android:background="@drawable/rectangle_bg"
                 android:hint="@string/record_title_hint"
                 android:padding="@dimen/widget_margin"
-                android:maxLength="120"
+                android:maxLength="15"
                 android:layout_marginVertical="@dimen/widget_margin"
                 />
             <TextView
@@ -75,7 +75,7 @@
                 android:hint="@string/record_description_hint"
                 android:gravity="top"
                 android:minLines="3"
-                android:maxLength="500"
+                android:maxLength="120"
                 android:padding="@dimen/widget_margin"
                 android:layout_marginVertical="@dimen/widget_margin"
                 />
