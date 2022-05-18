@@ -33,8 +33,15 @@ public class TipPopWindow extends BasePopupWindow {
         setOutsideTouchable(false);
     }
 
-    public TipPopWindow setOkClickListener(View.OnClickListener listener) {
-        btnOk.setOnClickListener(listener);
+    public TipPopWindow setOkClickListener(OnPopWindowClickListener listener) {
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClick(TipPopWindow.this, v);
+                }
+            }
+        });
         return this;
     }
 

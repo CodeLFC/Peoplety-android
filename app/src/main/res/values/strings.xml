@@ -120,4 +120,7 @@
     <string name="preview">预览</string>
     <string name="no_more">没有更多了</string>
     <string name="record_url">附加链接</string>
+    <string name="tip_enter_title_short">标题最短字符长度为：</string>
+    <string name="tip_enter_description_short">摘要最短字符长度为：</string>
+    <string name="tip_enter_content_short">内容最短字符长度为：</string>
 </resources>

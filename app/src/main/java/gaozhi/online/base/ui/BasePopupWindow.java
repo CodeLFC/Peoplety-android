@@ -54,4 +54,7 @@ public abstract class BasePopupWindow extends PopupWindow {
     public void showPopupWindow(Activity activity) {
         showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
     }
+    public interface OnPopWindowClickListener{
+        void onClick(BasePopupWindow basePopupWindow,View view);
+    }
 }

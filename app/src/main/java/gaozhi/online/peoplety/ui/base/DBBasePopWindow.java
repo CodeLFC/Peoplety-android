@@ -9,13 +9,18 @@ import io.realm.Realm;
 /**
  * 带有数据库的
  */
-public abstract class DBBasePopWindow extends BasePopupWindow implements PopupWindow.OnDismissListener {
+public abstract class DBBasePopWindow extends BasePopupWindow{
     //db
     private Realm realm;
 
     public DBBasePopWindow(Context context, int resID, boolean fullScreen) {
         super(context, resID, fullScreen);
-        setOnDismissListener(this);
+        setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                realm.close();
+            }
+        });
     }
 
     @Override
@@ -27,8 +32,4 @@ public abstract class DBBasePopWindow extends BasePopupWindow implements PopupWi
         return realm;
     }
 
-    @Override
-    public void onDismiss() {
-        realm.close();
-    }
 }

@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.ui.BasePopupWindow;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
@@ -82,6 +83,9 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
 
     //最多上传图片数量
     private static final int MAX_IMAGE_SIZE = 9;
+    private static final int MIN_TITLE_LEN = 6;
+    private static final int MIN_DESCRIPTION = 20;
+    private static final int MIN_CONTENT = 80;
     private RecordType recordType;
     private Record parent;
     private Record record;
@@ -185,11 +189,9 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            new TipPopWindow(this, true).setMessage(getString(R.string.tip_record_loss)).setOkClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
+            new TipPopWindow(this, true).setMessage(getString(R.string.tip_record_loss)).setOkClickListener((basePopupWindow, view) -> {
+                basePopupWindow.dismiss();
+                finish();
             }).showPopupWindow(this);
             return true;
         }
@@ -260,6 +262,18 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
             record.setDescription(editDescription.getText().toString());
             record.setContent(editContent.getText().toString());
             record.setUrl(editUrl.getText().toString());
+            if (record.getTitle().length() < MIN_TITLE_LEN) {
+                new TipPopWindow(this, true).setMessage(getString(R.string.tip_enter_title_short) + MIN_TITLE_LEN).showPopupWindow(this);
+                return;
+            }
+            if (record.getDescription().length() < MIN_DESCRIPTION) {
+                new TipPopWindow(this, true).setMessage(getString(R.string.tip_enter_description_short) + MIN_DESCRIPTION).showPopupWindow(this);
+                return;
+            }
+            if (record.getContent().length() < MIN_CONTENT) {
+                new TipPopWindow(this, true).setMessage(getString(R.string.tip_enter_content_short) + MIN_CONTENT).showPopupWindow(this);
+                return;
+            }
             if (!StringUtil.isEmpty(record.getUrl()) && !PatternUtil.matchUrl(record.getUrl())) {
                 new TipPopWindow(this, true).setMessage(getString(R.string.tip_please_enter_right_url)).showPopupWindow(this);
                 return;
@@ -334,7 +348,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
                 .imageEngine(GlideEngine.createGlideEngine())
                 .maxSelectNum(MAX_IMAGE_SIZE - imageAdapter.getItemCount())// 最大图片选择数量
                 .minSelectNum(1)// 最小选择数量
-                .imageSpanCount(3)// 每行显示个数
+                //.imageSpanCount(3)// 每行显示个数
                 .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选PictureConfig.MULTIPLE : PictureConfig.SINGLE
                 .isCamera(true)// 是否显示拍照按钮
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
