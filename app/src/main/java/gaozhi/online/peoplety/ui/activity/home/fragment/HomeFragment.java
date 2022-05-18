@@ -3,36 +3,57 @@ package gaozhi.online.peoplety.ui.activity.home.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 import java.util.function.Consumer;
 
+import gaozhi.online.base.net.Result;
+import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Record;
+import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.record.GetRecordByAreaService;
+import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
+import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass. 主页
  */
-public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
+public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiRequest.ResultHandler, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
+    private static final int PAGE_SIZE = 10;
+
     private TextView title;
     private TextView titleTextRight;
     private AreaPopWindow areaPopWindow;
+    //
+    private NoAnimatorRecyclerView recordRecyclerView;
+    private RecordAdapter recordAdapter;
+    private SwipeRefreshLayout recyclerSwipeRefreshView;
     //db info
     private UserDTO loginUser;
+    //获取内容
+    private final GetRecordByAreaService getRecordByAreaService = new GetRecordByAreaService(this);
+    private PageInfo<Record> currentRecordPageInfo;
 
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         loginUser = realm.copyFromRealm(loginUser);
-        if (loginUser.getArea() ==null){
-            loginUser.setArea(realm.where(Area.class).findFirst());
-        }
     }
 
     @Override
@@ -44,10 +65,22 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
     public void initView(View view) {
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_home);
-        titleTextRight =view.findViewById(R.id.title_text_right);
+        titleTextRight = view.findViewById(R.id.title_text_right);
         titleTextRight.setOnClickListener(this);
-        areaPopWindow = new AreaPopWindow(getContext(),true);
+        areaPopWindow = new AreaPopWindow(getContext(), true);
         areaPopWindow.setOnAreaClickedListener(this);
+
+        recordRecyclerView = view.findViewById(R.id.fragment_home_recycler_record);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setStackFromEnd(false);
+        recordRecyclerView.setLayoutManager(linearLayoutManager);
+        recordAdapter = new RecordAdapter();
+        recordRecyclerView.setAdapter(recordAdapter);
+        recordRecyclerView.setOnLoadListener(this);
+
+        recyclerSwipeRefreshView = view.findViewById(R.id.fragment_home_swipe_record);
+        recyclerSwipeRefreshView.setOnRefreshListener(this);
+
     }
 
     @Override
@@ -57,6 +90,16 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
 
     @Override
     public void doBusiness() {
+        if (loginUser.getArea() == null) {
+            areaPopWindow.showPopupWindow(getActivity());
+            return;
+        } else {
+            //先加载数据库内容
+            List<Record> records = getRealm().where(Record.class).equalTo("areaId", loginUser.getArea().getId()).findAll();
+            recordAdapter.add(records);
+            //访问服务器内容
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), 1, PAGE_SIZE);
+        }
         titleTextRight.setText(loginUser.getArea().getName());
     }
 
@@ -67,21 +110,21 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
 
     @Override
     public void onPageSelected() {
-
+        if (recordAdapter.getItemCount() == 0) {
+            doBusiness();
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == titleTextRight.getId()){
+        if (v.getId() == titleTextRight.getId()) {
             areaPopWindow.showPopupWindow(getActivity());
             return;
         }
     }
+
     @Override
-    public void accept( Area area) {
-        if(!area.isMinimum()){//不是最终节点
-            return;
-        }
+    public void accept(Area area) {
         //绑定的对象
         final Area temp = getRealm().copyFromRealm(area);
         getRealm().executeTransactionAsync(realm -> {
@@ -89,6 +132,66 @@ public class HomeFragment extends DBBaseFragment  implements Consumer<Area> {
             realm.copyToRealmOrUpdate(loginUser);
         }, () -> {
             titleTextRight.setText(area.getName());
+            //请求某个地区的资料
+            getRecordByAreaService.request(loginUser.getToken(), area.getId(), 1, PAGE_SIZE);
         });
+    }
+
+    @Override
+    public void start(int id) {
+        title.setText(R.string.request_ing);
+    }
+
+    @Override
+    public void handle(int id, Result result) {
+        title.setText(R.string.bottom_home);
+        //停止刷新状态
+        recyclerSwipeRefreshView.setRefreshing(false);
+        recordRecyclerView.setLoading(false);
+        Gson gson = new Gson();
+
+        currentRecordPageInfo = gson.fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
+        }.getType());
+
+        if (currentRecordPageInfo.getPageNum() <= 1) {
+            recordAdapter.clear();
+            //装入数据库
+            getRealm().executeTransactionAsync(realm -> {
+                List<Record> records = currentRecordPageInfo.getList();
+                for (Record record : records) {
+                    realm.copyToRealmOrUpdate(record);
+                }
+            });
+        }
+        recordAdapter.add(currentRecordPageInfo.getList());
+    }
+
+    @Override
+    public void error(int id, int code, String message, String data) {
+        title.setText(R.string.bottom_home);
+        //停止刷新状态
+        recyclerSwipeRefreshView.setRefreshing(false);
+        recordRecyclerView.setLoading(false);
+        new TipPopWindow(getContext(), true).setMessage(message + data).showPopupWindow(getActivity());
+    }
+
+    @Override
+    public void onRefresh() {
+        doBusiness();
+    }
+
+    @Override
+    public void onLoad() {
+        if (currentRecordPageInfo == null) {
+            recordRecyclerView.setLoading(false);
+            return;
+        }
+        if (currentRecordPageInfo.isHasNextPage()) {
+            //请求某个地区的资料
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), currentRecordPageInfo.getNextPage(), PAGE_SIZE);
+        } else {
+            recordRecyclerView.setLoading(false);
+            //提醒到底了
+        }
     }
 }

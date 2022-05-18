@@ -48,6 +48,7 @@ import gaozhi.online.peoplety.entity.client.ImageModel;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.cos.GetCosTempSecretService;
 import gaozhi.online.peoplety.service.record.PublishRecordService;
+import gaozhi.online.peoplety.ui.activity.record.ImageAdapter;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
@@ -96,7 +97,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     private TextView textArea;
     private AreaPopWindow areaPopWindow;
     private ImageView imageSelectImage;
-    private RecyclerView imageRecyclerView;
     private ImageAdapter imageAdapter;
     private CheckBox checkIsTop;
     private Button btnPublish;
@@ -162,7 +162,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         });
         imageSelectImage = $(R.id.publish_record_activity_image_select_img);
         imageSelectImage.setOnClickListener(this);
-        imageRecyclerView = $(R.id.publish_record_activity_recycler_img);
+        RecyclerView imageRecyclerView = $(R.id.publish_record_activity_recycler_img);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         linearLayout.setOrientation(RecyclerView.HORIZONTAL);
         imageRecyclerView.setLayoutManager(linearLayout);
@@ -466,78 +466,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
             }
             record.setImgs(new Gson().toJson(imgURLs));
             publishRecordService.request(loginUser.getToken(), record);
-        }
-    }
-
-    /**
-     * 显示图片的适配器
-     */
-    private static class ImageAdapter extends NoAnimatorRecyclerView.BaseAdapter<ImageAdapter.ImageViewHolder, ImageModel> {
-        private final AtomicInteger uploadedSize = new AtomicInteger(0);
-
-        @NonNull
-        @Override
-        public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ImageViewHolder(layoutInflate(parent, R.layout.item_recycler_selected_image));
-        }
-
-        @Override
-        public ImageModel getItem(int index) {
-            return super.getItem(index);
-        }
-
-        public void updateItem(ImageModel model) {
-            for (int i = 0; i < getItemCount(); i++) {
-                if (StringUtil.equals(model.getFileName(), getItem(i).getFileName())) {
-                    updateItem(i, model);
-                    break;
-                }
-            }
-        }
-
-        public void addUploaded() {
-            uploadedSize.addAndGet(1);
-        }
-
-        public boolean allUploaded() {
-            Log.i(getClass().getName(), uploadedSize.get() + ":" + getItemCount());
-            return uploadedSize.get() >= getItemCount();
-        }
-
-        public void remove(ImageModel model) {
-            for (int i = 0; i < getItemCount(); i++) {
-                if (StringUtil.equals(model.getFileName(), getItem(i).getFileName())) {
-                    remove(i);
-                    break;
-                }
-            }
-        }
-
-        public static class ImageViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<ImageModel> {
-            private final ImageView imageView;
-            private final TextView textView;
-            private final Context context;
-
-            public ImageViewHolder(@NonNull View itemView) {
-                super(itemView);
-                context = itemView.getContext();
-                imageView = itemView.findViewById(R.id.item_recycler_selected_img_img);
-                textView = itemView.findViewById(R.id.item_recycler_selected_img_text);
-            }
-
-            @Override
-            public void bindView(ImageModel item) {
-                GlideUtil.loadImage(context, item.getUrl(), imageView);
-                if (item.getProcess() == 0) {
-                    textView.setText("");
-                } else if (item.getProcess() == ImageModel.UPLOAD_FAIL_PROCESS) {
-                    textView.setText(R.string.tip_upload_fail);
-                } else if (item.getProcess() < ImageModel.UPLOAD_SUCCESS_PROCESS) {
-                    textView.setText(context.getString(R.string.tip_upload_ing) + item.getProcess() + "%");
-                } else if (item.getProcess() == ImageModel.UPLOAD_SUCCESS_PROCESS) {
-                    textView.setText(R.string.tip_upload_success);
-                }
-            }
         }
     }
 }

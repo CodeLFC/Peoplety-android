@@ -53,6 +53,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     private UserDTO loginUser;
     //util
     private final Gson gson = new Gson();
+
     //permission
     //授权
     private final int PERMISSION_REQUEST_CODE = 100;
@@ -110,6 +111,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     protected void initParams(Intent intent) {
+
     }
 
     @Override
@@ -139,7 +141,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         viewPager = $(R.id.main_view_pager);
         viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(this);
-        viewPager.setCurrentItem(PUBLISH);
         //请求权限
         requestPermission();
     }

@@ -19,6 +19,13 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
         return id;
     }
 
+    //是否正在请求
+    private volatile boolean requesting;
+
+    public boolean isRequesting() {
+        return requesting;
+    }
+
     /**
      * 结果处理器
      */
@@ -82,6 +89,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
                 resultHandler.error(getId(), result.getCode(), result.getMessage(), result.getData());
             }
         }
+        requesting = false;
     }
 
     @Override
@@ -89,6 +97,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
         if (resultHandler != null) {
             resultHandler.error(getId(), code, "net error!", "");
         }
+        requesting = false;
     }
 
     /**
@@ -126,6 +135,7 @@ public class ApiRequest implements HttpRunnable.HttpHandler {
      * @param params api参数
      */
     protected void request(String api, Map<String, String> headers, Map<String, String> params, Object body) {
+        requesting = true;
         if (resultHandler != null) {
             resultHandler.start(getId());
         }

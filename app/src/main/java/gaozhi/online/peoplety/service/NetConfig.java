@@ -19,7 +19,7 @@ public class NetConfig {
     public static final String cosBaseURL = userServiceBaseURL+"/cos/";
 
     // 卷宗微服务
-    public static final String recordServiceBaseURL =baseURL+":8102/general";
+    private static final String recordServiceBaseURL =baseURL+":8102/general";
     //卷宗常量
     public static final String recordConstantBaseURL = recordServiceBaseURL+"/constant/";
     //卷宗服务

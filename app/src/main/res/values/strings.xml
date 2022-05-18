@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">天眼测试版</string>
+    <string name="app_name">天平</string>
     <!--    链接-->
     <string name="url_ip">https://www.ip138.com</string>
     <!--    常用-->
@@ -43,8 +43,8 @@
     <string name="reset_pass">修改密码</string>
     <!--   主页面 -->
     <string name="bottom_me">我</string>
-    <string name="bottom_home">巡查不正义</string>
-    <string name="bottom_publish">检举不正义</string>
+    <string name="bottom_home">巡查</string>
+    <string name="bottom_publish">检举</string>
     <string name="not_permission">申请权限被拒绝，app运行受限</string>
     <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->
@@ -84,7 +84,7 @@
     <string name="upload_head">修改头像</string>
     <string name="tip_err_resource_write">资源保存失败</string>
     <string name="tip_update_fail">修改失败</string>
-    <string name="tip_scan_my_qr_code">扫一扫上面的二维码图案，加我天眼</string>
+    <string name="tip_scan_my_qr_code">扫一扫上面的二维码图案，下载APP</string>
     <string name="qr_code_card">二维码名片</string>
     <string name="official_web">官方网站</string>
     <string name="copyright">copyright@2022</string>
@@ -118,4 +118,6 @@
     <string name="request_ing_cos_secret">正在请求临时密钥</string>
     <string name="delete">删除</string>
     <string name="preview">预览</string>
+    <string name="no_more">没有更多了</string>
+    <string name="record_url">附加链接</string>
 </resources>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <include
         layout="@layout/layout_title"
@@ -15,16 +16,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/activity_margin"
+        android:background="@color/widget_color"
         >
-        <gaozhi.online.peoplety.ui.widget.RecycleSwipeRefreshView
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/fragment_home_swipe_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
                 android:id="@+id/fragment_home_recycler_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </gaozhi.online.peoplety.ui.widget.RecycleSwipeRefreshView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </LinearLayout>
