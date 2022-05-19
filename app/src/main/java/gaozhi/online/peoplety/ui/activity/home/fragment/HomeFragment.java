@@ -31,6 +31,7 @@ import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
+import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
 /**
@@ -142,13 +143,14 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     }
 
     @Override
-    public void handle(int id, PageInfo<Record> data,boolean local) {
-        title.setText(R.string.bottom_home);
-        //停止刷新状态
-        recyclerSwipeRefreshView.setRefreshing(false);
-        recordRecyclerView.setLoading(false);
+    public void handle(int id, PageInfo<Record> data, boolean local) {
+        if (!local) {
+            //停止刷新状态
+            recyclerSwipeRefreshView.setRefreshing(false);
+            recordRecyclerView.setLoading(false);
+            title.setText(R.string.bottom_home);
+        }
         currentRecordPageInfo = data;
-
         if (currentRecordPageInfo.getPageNum() <= 1) {
             recordAdapter.clear();
         }

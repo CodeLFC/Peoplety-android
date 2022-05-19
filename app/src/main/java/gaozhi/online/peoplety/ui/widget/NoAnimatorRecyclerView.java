@@ -55,12 +55,6 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
 
-//        this.getItemAnimator().setAddDuration(0);
-//        this.getItemAnimator().setChangeDuration(0);
-//        this.getItemAnimator().setMoveDuration(0);
-//        this.getItemAnimator().setRemoveDuration(0);
-//        ((SimpleItemAnimator) this.getItemAnimator()).setSupportsChangeAnimations(false);
-
         addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -68,6 +62,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
                 // 记录位置
                 // 获取可视的第一个view
                 View topView = getLayoutManager().getChildAt(0);
+                if (topView == null) return;
                 // 获取与该view的顶部的偏移量
                 lastOffset = topView.getTop();
                 // 得到该View的数组位置

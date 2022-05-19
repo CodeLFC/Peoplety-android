@@ -185,6 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@null"
+                    android:maxLength="10"
                     android:hint="@string/tip_please_enter_name"
                     android:inputType="text"
                     android:paddingHorizontal="@dimen/widget_margin" />
@@ -214,6 +215,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="@string/tip_please_enter_remark"
+                    android:maxLength="50"
                     android:inputType="text"
                     android:paddingHorizontal="@dimen/widget_margin" />
             </LinearLayout>

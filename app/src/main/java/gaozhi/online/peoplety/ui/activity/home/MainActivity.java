@@ -51,7 +51,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
     private UserDTO loginUser;
     //util
-    private final Gson gson = new Gson();
 
     //permission
     //授权
@@ -215,14 +214,20 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     public void error(int id, int code, String message, String data) {
-        new TipPopWindow(this, true)
-                .setOkClickListener((window,v) -> {
-                    window.dismiss();
-                    //关闭主页，进入登录页
-                    LoginActivity.startActivity(MainActivity.this);
-                    finish();
-                })
-                .setMessage(message + data)
-                .showPopupWindow(this);
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                new TipPopWindow(MainActivity.this, true)
+                        .setOkClickListener((window,v) -> {
+                            window.dismiss();
+                            //关闭主页，进入登录页
+                            LoginActivity.startActivity(MainActivity.this);
+                            finish();
+                        })
+                        .setMessage(message + data)
+                        .showPopupWindow(MainActivity.this);
+            }
+        });
+
     }
 }

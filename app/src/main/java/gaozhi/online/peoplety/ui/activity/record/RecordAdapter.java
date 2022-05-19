@@ -80,6 +80,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textRemark;
         private final TextView textComment;
         private final TextView textFavorite;
+        private final ImageView imageDelete;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
         private final Token token;
@@ -111,6 +112,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textRemark = itemView.findViewById(R.id.item_recycler_record_text_remark);
             textComment = itemView.findViewById(R.id.item_recycler_record_text_comment_num);
             textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
+            imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
         }
 
         @Override
@@ -166,11 +168,16 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         }
 
         @Override
-        public void handle(int id, UserDTO data,boolean local) {
+        public void handle(int id, UserDTO data, boolean local) {
             if (data == null) return;
             textName.setText(data.getUserInfo().getNick());
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
             textRemark.setText(data.getUserInfo().getRemark());
+            if (data.getUserInfo().getId() == token.getUserid()) {
+                imageDelete.setVisibility(View.VISIBLE);
+            }else{
+                imageDelete.setVisibility(View.GONE);
+            }
         }
 
         @Override

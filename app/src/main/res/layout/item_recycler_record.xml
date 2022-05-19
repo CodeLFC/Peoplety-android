@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/record_header"
@@ -33,6 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/deep_text_color"
                 android:textSize="@dimen/font_size_title" />
 
@@ -41,6 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textColor="@color/shallow_text_color"
                 android:textSize="@dimen/font_size_general" />
         </LinearLayout>
@@ -51,7 +56,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_bg"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/activity_margin">
+        android:paddingHorizontal="@dimen/activity_margin"
+        android:paddingVertical="@dimen/widget_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,6 +92,16 @@
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/top" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/item_recycler_record_image_delete"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                android:src="@drawable/bin"
+                android:layout_gravity="end"/>
         </LinearLayout>
 
         <LinearLayout
