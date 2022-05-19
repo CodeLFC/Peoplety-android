@@ -17,28 +17,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
+import gaozhi.online.peoplety.entity.Token;
+import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.client.ImageModel;
+import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.DateTimeUtil;
+import gaozhi.online.peoplety.util.GlideUtil;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
+import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
 /**
  * 记录
  */
 public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdapter.RecordViewHolder, Record> {
+    //用于请求信息
+    private final Token token;
+
+    public RecordAdapter(Token token) {
+        this.token = token;
+    }
 
     @NonNull
     @Override
     public RecordViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RecordViewHolder(layoutInflate(parent, R.layout.item_recycler_record));
+        return new RecordViewHolder(layoutInflate(parent, R.layout.item_recycler_record), token);
     }
 
     @Override
@@ -48,8 +62,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         notifyItemRangeChanged(0, getItemCount());
     }
 
-    public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel> {
-        private Context context;
+    public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<UserDTO> {
+        private final Context context;
         private final TextView textTitle;
         private final ImageView imageTop;
         private final TextView textType;
@@ -60,10 +74,19 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageAdapter imageAdapter;
         private final TextView textUrl;
         private final Realm realm;
-        List<String> imgList;
+        private List<String> imgList;
+        private final ImageView imageHead;
+        private final TextView textName;
+        private final TextView textRemark;
+        private final TextView textComment;
+        private final TextView textFavorite;
+        //service
+        private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
+        private final Token token;
 
-        public RecordViewHolder(@NonNull View itemView) {
+        public RecordViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
+            this.token = token;
             context = itemView.getContext();
             realm = Realm.getDefaultInstance();
             textTitle = itemView.findViewById(R.id.item_recycler_record_text_title);
@@ -82,6 +105,12 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             textUrl = itemView.findViewById(R.id.item_recycler_record_text_url);
             imageAdapter.setOnItemClickedListener(this);
+
+            imageHead = itemView.findViewById(R.id.item_recycler_record_image_head);
+            textName = itemView.findViewById(R.id.item_recycler_record_text_name);
+            textRemark = itemView.findViewById(R.id.item_recycler_record_text_remark);
+            textComment = itemView.findViewById(R.id.item_recycler_record_text_comment_num);
+            textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
         }
 
         @Override
@@ -114,6 +143,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
+
+            //从数据库和网络中获取用户
+            getUserInfoService.request(token, item.getUserid());
         }
 
         @Override
@@ -126,6 +158,24 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 position++;
             }
             ShowImageActivity.startActivity(context, new ArrayList<>(imgList), position);
+        }
+
+        @Override
+        public void start(int id) {
+
+        }
+
+        @Override
+        public void handle(int id, UserDTO data,boolean local) {
+            if (data == null) return;
+            textName.setText(data.getUserInfo().getNick());
+            GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
+            textRemark.setText(data.getUserInfo().getRemark());
+        }
+
+        @Override
+        public void error(int id, int code, String message, String data) {
+
         }
     }
 }

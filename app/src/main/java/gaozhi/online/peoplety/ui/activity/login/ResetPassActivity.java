@@ -20,6 +20,7 @@ import java.util.TimerTask;
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.VerifyCode;
@@ -29,7 +30,7 @@ import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 
-public class ResetPassActivity extends BaseActivity implements Handler.Worker, ApiRequest.ResultHandler {
+public class ResetPassActivity extends BaseActivity implements Handler.Worker, DataHelper.OnDataListener<Result> {
     //service
     private SendVerifyCodeService sendVerifyCodeService;
     private ResetPassService resetPassService;

@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.UserInfo;
@@ -45,7 +46,7 @@ import io.realm.Realm;
 /**
  * 个人信息
  */
-public class UserInfoActivity extends DBBaseActivity implements ApiRequest.ResultHandler {
+public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDataListener<Result> {
     private static final int REQUEST_CODE_CHOOSE_PHOTO = 1000;
     private UserDTO loginUser;
     private Status status;

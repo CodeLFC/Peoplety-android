@@ -7,8 +7,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Status;
@@ -18,22 +20,22 @@ import io.realm.Realm;
 /**
  * 资源请求
  */
-public class ResourceRequester implements ApiRequest.ResultHandler {
+public class ResourceRequester implements DataHelper.OnDataListener<Result> {
     //资源有效时间
     private static final long RESOURCE_VALIDATE_PERIOD = 1000 * 60 * 60 * 24;
     private int count;
     private final Gson gson = new Gson();
     private final Realm realm;
     private UserDTO loginUser;
-    private final ApiRequest.ResultHandler resultHandler;
+    private final DataHelper.OnDataListener<UserDTO> resultHandler;
     //资源请求响应接口
-    private final BiConsumer<Integer,Boolean> requestConsumer;
+    private final BiConsumer<Integer, Boolean> requestConsumer;
     private final GetUserStatusService getUserStatusService = new GetUserStatusService(this);
     private final GetRecordAreaService getRecordAreaService = new GetRecordAreaService(this);
     private final GetRecordTypeService getRecordTypeService = new GetRecordTypeService(this);
 
-    public ResourceRequester(@NonNull Realm realm, ApiRequest.ResultHandler resultHandler, @NonNull BiConsumer<Integer, Boolean> requestConsumer) {
-        this.realm =realm;
+    public ResourceRequester(@NonNull Realm realm, DataHelper.OnDataListener<UserDTO> resultHandler, @NonNull BiConsumer<Integer, Boolean> requestConsumer) {
+        this.realm = realm;
         this.resultHandler = resultHandler;
         this.requestConsumer = requestConsumer;
     }
@@ -44,10 +46,11 @@ public class ResourceRequester implements ApiRequest.ResultHandler {
 
     @Override
     public void start(int id) {
-        if(resultHandler!=null){
+        if (resultHandler != null) {
             resultHandler.start(id);
         }
     }
+
     @Override
     public void handle(int id, Result result) {
         if (id == getUserStatusService.getId()) {//请求身份资源成功
@@ -58,7 +61,7 @@ public class ResourceRequester implements ApiRequest.ResultHandler {
                     realm.copyToRealmOrUpdate(status);
                 }
             }, () -> {
-                requestConsumer.accept(count++,false);
+                requestConsumer.accept(count++, false);
                 // 开始请求地区资源
                 getRecordAreaService.request(loginUser.getToken());
             });
@@ -73,7 +76,7 @@ public class ResourceRequester implements ApiRequest.ResultHandler {
                     realm.copyToRealmOrUpdate(area);
                 }
             }, () -> {
-                requestConsumer.accept(count++,false);
+                requestConsumer.accept(count++, false);
                 //开始请求类型资源
                 getRecordTypeService.request(loginUser.getToken());
             });
@@ -94,21 +97,23 @@ public class ResourceRequester implements ApiRequest.ResultHandler {
                     loginUser.setResourceValidateTime(System.currentTimeMillis() + RESOURCE_VALIDATE_PERIOD);
                     realm.copyToRealmOrUpdate(loginUser);
 
-                }, () ->{
+                }, () -> {
                     //资源更新完成
-                    requestConsumer.accept(count++,true);
-                } );
+                    requestConsumer.accept(count++, true);
+                });
             });
         }
     }
+
     @Override
     public void error(int id, int code, String message, String data) {
-        if(resultHandler!=null){
-            resultHandler.error(id,code,message,data);
+        if (resultHandler != null) {
+            resultHandler.error(id, code, message, data);
         }
     }
-    public void refreshResource(@NonNull UserDTO loginUser){
-        this.loginUser =loginUser;
+
+    public void refreshResource(@NonNull UserDTO loginUser) {
+        this.loginUser = loginUser;
         //更新常量
         getUserStatusService.request(loginUser.getToken());
     }

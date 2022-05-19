@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BasePopupWindow;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Record;
@@ -66,7 +67,7 @@ import gaozhi.online.peoplety.util.ToastUtil;
 import gaozhi.online.peoplety.util.pictureselector.GlideEngine;
 import io.realm.Realm;
 
-public class PublishRecordActivity extends DBBaseActivity implements Consumer<ImageModel>, ApiRequest.ResultHandler, Handler.Worker {
+public class PublishRecordActivity extends DBBaseActivity implements Consumer<ImageModel>, DataHelper.OnDataListener<Result>, Handler.Worker {
     private static final String INTENT_TYPE = "type";
     private static final String INTENT_PARENT = "parent";
 
@@ -107,7 +108,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     //db
     private UserDTO loginUser;
     //service
-    private TencentCOS.CosResponse cosResponse;
     private final GetCosTempSecretService getCosTempSecretService = new GetCosTempSecretService(this);
     private final PublishRecordService publishRecordService = new PublishRecordService(this);
     //handler,发送图片上传状态
@@ -217,8 +217,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
             textArea.setText(loginUser.getArea().getName());
         }
 
-        //请求对象存储密钥
-        getCosTempSecretService.request(loginUser.getToken());
     }
 
     @Override
@@ -251,12 +249,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         }
         //上传
         if (v.getId() == btnPublish.getId()) {
-            //检查密钥是否请求成功
-            if (cosResponse == null) {
-                getCosTempSecretService.request(loginUser.getToken());
-                ToastUtil.showToastShort(R.string.request_ing_cos_secret);
-                return;
-            }
+
             //检查其他内容
             record.setTitle(editTitle.getText().toString());
             record.setDescription(editDescription.getText().toString());
@@ -285,18 +278,14 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
             }
             record.setAreaId(loginUser.getArea().getId());
             record.setTop(checkIsTop.isChecked());
-
-            //检查图片是否全部上传
-            if (checkAlreadyUploadAllImg()) {
-                //直接发布
-                attemptPublishRecord();
-            }
+            //请求对象存储密钥，然后上传图片
+            getCosTempSecretService.request(loginUser.getToken());
             return;
         }
     }
 
     //检查是否完全上传了图片
-    private boolean checkAlreadyUploadAllImg() {
+    private boolean checkAlreadyUploadAllImg(final TencentCOS.CosResponse cosResponse) {
         boolean allUploaded = true;
         if (imageAdapter.getItemCount() > 0) {
             for (int i = 0; i < imageAdapter.getItemCount(); i++) {
@@ -304,15 +293,12 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
                 if (model.getProcess() != ImageModel.UPLOAD_SUCCESS_PROCESS) {
                     //上传图像
                     allUploaded = false;
-                    new TencentCOS(this, cosResponse).putRecordImageWithPath(model.getFileName(), model.getUrl(), new CosXmlProgressListener() {
-                        @Override
-                        public void onProgress(long complete, long target) {
-                            double rate = complete * 1.0 / target;
-                            Message message = new Message();
-                            model.setProcess((int) rate);
-                            message.obj = model;
-                            handlerImgUploadProcess.sendMessage(message);
-                        }
+                    new TencentCOS(this, cosResponse).putRecordImageWithPath(model.getFileName(), model.getUrl(), (complete, target) -> {
+                        double rate = complete * 1.0 / target;
+                        Message message = new Message();
+                        model.setProcess((int) rate);
+                        message.obj = model;
+                        handlerImgUploadProcess.sendMessage(message);
                     }, new CosXmlResultListener() {
                         @Override
                         public void onSuccess(CosXmlRequest cosXmlRequest, CosXmlResult cosXmlResult) {
@@ -400,7 +386,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     //图片点击事件
     @Override
     public void accept(ImageModel imageModel) {
-        //ToastUtil.showToastShort("链接：" + imageModel);
         //删除或查看
         List<OptionsPopWindow.Option> options = new LinkedList<>();
         options.add(new OptionsPopWindow.Option(0, getString(R.string.preview)));
@@ -432,7 +417,12 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         btnPublish.setText(R.string.bottom_publish);
         btnPublish.setEnabled(true);
         if (id == getCosTempSecretService.getId()) {
-            cosResponse = new Gson().fromJson(result.getData(), TencentCOS.CosResponse.class);
+            TencentCOS.CosResponse cosResponse = new Gson().fromJson(result.getData(), TencentCOS.CosResponse.class);
+            //检查图片是否全部上传
+            if (checkAlreadyUploadAllImg(cosResponse)) {
+                //直接发布
+                attemptPublishRecord();
+            }
         }
         if (id == publishRecordService.getId()) {
             ToastUtil.showToastLong(R.string.tip_publish_success);

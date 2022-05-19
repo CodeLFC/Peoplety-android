@@ -1,6 +1,8 @@
 package gaozhi.online.peoplety.service.friend;
 
 import com.google.gson.Gson;
+
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.Token;
@@ -14,9 +16,10 @@ import java.util.Map;
  * @description: TODO 修改备注
  * @date 2022/4/13 16:53
  */
-public class UpdateFriendService extends ApiRequest {
-    public UpdateFriendService(ResultHandler resultHandler) {
-        super(NetConfig.friendBaseURL, Type.PUT, resultHandler);
+public class UpdateFriendService extends ApiRequest<Result> {
+    public UpdateFriendService(OnDataListener<Result> resultHandler) {
+        super(NetConfig.friendBaseURL, Type.PUT);
+        setDataListener(resultHandler);
     }
 
     public void request(Token token, long friendShipId, String remark) {
@@ -27,5 +30,15 @@ public class UpdateFriendService extends ApiRequest {
         friend.setId(friendShipId);
         friend.setRemark(remark);
         request("put/attention", headers, params,friend);
+    }
+
+    @Override
+    public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+        return null;
+    }
+
+    @Override
+    public Result getNetData(Result result) {
+        return null;
     }
 }

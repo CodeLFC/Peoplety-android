@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.service.NetConfig;
@@ -17,9 +18,10 @@ import gaozhi.online.peoplety.service.NetConfig;
  * @description: TODO 添加关注关系
  * @date 2022/4/13 16:38
  */
-public class AddAttentionService extends ApiRequest {
-    public AddAttentionService(ResultHandler resultHandler) {
-        super(NetConfig.friendBaseURL, Type.POST, resultHandler);
+public class AddAttentionService extends ApiRequest<Result> {
+    public AddAttentionService(OnDataListener<Result> resultHandler) {
+        super(NetConfig.friendBaseURL, Type.POST);
+        setDataListener(resultHandler);
     }
 
     public void request(MediaSession.Token token, long friendId) {
@@ -29,5 +31,15 @@ public class AddAttentionService extends ApiRequest {
         Friend friend = new Friend();
         friend.setFriendId(friendId);
         request("post/attention", headers, params, friend);
+    }
+
+    @Override
+    public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+        return null;
+    }
+
+    @Override
+    public Result getNetData(Result result) {
+        return result;
     }
 }

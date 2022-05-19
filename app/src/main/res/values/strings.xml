@@ -43,8 +43,8 @@
     <string name="reset_pass">修改密码</string>
     <!--   主页面 -->
     <string name="bottom_me">我</string>
-    <string name="bottom_home">巡查</string>
-    <string name="bottom_publish">检举</string>
+    <string name="bottom_home">巡逻</string>
+    <string name="bottom_publish">公证</string>
     <string name="not_permission">申请权限被拒绝，app运行受限</string>
     <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->

@@ -21,8 +21,7 @@ import com.google.gson.Gson;
 import java.util.LinkedList;
 import java.util.List;
 
-import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
@@ -38,7 +37,7 @@ import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
-public class MainActivity extends DBBaseActivity implements NavigationBarView.OnItemSelectedListener, ViewPager.OnPageChangeListener, ApiRequest.ResultHandler {
+public class MainActivity extends DBBaseActivity implements NavigationBarView.OnItemSelectedListener, ViewPager.OnPageChangeListener, DataHelper.OnDataListener<UserDTO> {
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
@@ -210,15 +209,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     }
 
     @Override
-    public void handle(int id, Result result) {
-        getRealm().executeTransactionAsync(realm -> {
-            UserDTO userInfo = gson.fromJson(result.getData(), UserDTO.class);
-            //更新数据库中的用户信息
-            userInfo.setToken(loginUser.getToken());
-            realm.copyToRealmOrUpdate(userInfo);
-        }, () -> {//success
-           // ToastUtil.showToastShort(R.string.welcome);
-        });
+    public void handle(int id, UserDTO data) {
+
     }
 
     @Override

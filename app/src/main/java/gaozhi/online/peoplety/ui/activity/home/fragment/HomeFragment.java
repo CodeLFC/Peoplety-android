@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Comment;
@@ -35,7 +36,7 @@ import io.realm.Realm;
 /**
  * A simple {@link Fragment} subclass. 主页
  */
-public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiRequest.ResultHandler, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
+public class HomeFragment extends DBBaseFragment implements Consumer<Area>, DataHelper.OnDataListener<PageInfo<Record>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
     private static final int PAGE_SIZE = 10;
 
     private TextView title;
@@ -75,7 +76,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiR
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(false);
         recordRecyclerView.setLayoutManager(linearLayoutManager);
-        recordAdapter = new RecordAdapter();
+        recordAdapter = new RecordAdapter(loginUser.getToken());
         recordRecyclerView.setAdapter(recordAdapter);
         recordRecyclerView.setOnLoadListener(this);
 
@@ -95,10 +96,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiR
             areaPopWindow.showPopupWindow(getActivity());
             return;
         } else {
-            //先加载数据库内容
-            List<Record> records = getRealm().where(Record.class).equalTo("areaId", loginUser.getArea().getId()).findAll();
-            recordAdapter.add(records);
-            //访问服务器内容
+            //访问内容
             getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), 1, PAGE_SIZE);
         }
         titleTextRight.setText(loginUser.getArea().getName());
@@ -144,27 +142,15 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, ApiR
     }
 
     @Override
-    public void handle(int id, Result result) {
+    public void handle(int id, PageInfo<Record> data,boolean local) {
         title.setText(R.string.bottom_home);
         //停止刷新状态
         recyclerSwipeRefreshView.setRefreshing(false);
         recordRecyclerView.setLoading(false);
-        Gson gson = new Gson();
-
-        currentRecordPageInfo = gson.fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
-        }.getType());
+        currentRecordPageInfo = data;
 
         if (currentRecordPageInfo.getPageNum() <= 1) {
             recordAdapter.clear();
-            //装入数据库
-            getRealm().executeTransactionAsync(realm -> {
-                realm.delete(Record.class);
-                realm.delete(Comment.class);
-                List<Record> records = currentRecordPageInfo.getList();
-                for (Record record : records) {
-                    realm.copyToRealmOrUpdate(record);
-                }
-            });
         }
         recordAdapter.add(currentRecordPageInfo.getList());
     }

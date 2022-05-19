@@ -3,7 +3,6 @@ package gaozhi.online.peoplety.ui.activity.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,28 +11,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
+import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
-import gaozhi.online.peoplety.entity.RecordType;
-import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserAuth;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
-import gaozhi.online.peoplety.service.constant.GetRecordAreaService;
-import gaozhi.online.peoplety.service.constant.GetRecordTypeService;
-import gaozhi.online.peoplety.service.constant.GetUserStatusService;
 import gaozhi.online.peoplety.service.constant.ResourceRequester;
 import gaozhi.online.peoplety.service.user.LoginService;
-import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
+import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.util.PatternUtil;
@@ -43,7 +36,7 @@ import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHandler, BiConsumer<Integer, Boolean> {
+public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataListener<UserDTO>, BiConsumer<Integer, Boolean> {
 
     //登陆保护时间
     private static final long LOGIN_PROTECTED_TIME = 1000 * 60 * 60 * 2;
@@ -62,8 +55,6 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
     private TextView text_privacy;
     //资源请求进度
     private TextView textProcess;
-    //util
-    private final Gson gson = new Gson();
     //intent
     private static final String INTENT_TAG_AUTO_LOGIN = "INTENT_TAG_AUTO_LOGIN";
     private boolean auto_login;
@@ -112,7 +103,6 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
         text_privacy.setOnClickListener(this);
         textProcess = $(R.id.login_activity_text_process);
     }
-
 
 
     @Override
@@ -197,46 +187,33 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
     }
 
     @Override
-    public void handle(int id, Result result) {
-        if (id == loginService.getId()) {
-            getRealm().executeTransactionAsync(realm -> {
-                Area area = loginUser == null ? null : loginUser.getArea();
-                loginUser = gson.fromJson(result.getData(), UserDTO.class);
-                loginUser.setAccount(account);
-                loginUser.setPass(pass);
-                //记忆地址
-                loginUser.setArea(area);
+    public void handle(int id, UserDTO data) {
+        getRealm().executeTransactionAsync(realm -> {
+            Area area = loginUser == null ? null : loginUser.getArea();
+            loginUser = data;
+            loginUser.setAccount(account);
+            loginUser.setPass(pass);
+            //记忆地址
+            loginUser.setArea(area);
 
-                RealmResults<UserDTO> allUser = realm.where(UserDTO.class).findAll();
-                for (UserDTO userDTO : allUser) {
-                    userDTO.setCurrent(false);
-                }
-                loginUser.setCurrent(true);
-                realm.copyToRealmOrUpdate(loginUser);
-            }, () -> {//success 登陆成功
-                if (System.currentTimeMillis() > loginUser.getResourceValidateTime()) {
-                    textProcess.setText(R.string.request_ing);
-                    //请求资源
-                    resourceRequester.refreshResource(loginUser);
-                } else {
-                    enterMainWindow();
-                }
-            });
-        }
+            RealmResults<UserDTO> allUser = realm.where(UserDTO.class).findAll();
+            for (UserDTO userDTO : allUser) {
+                userDTO.setCurrent(false);
+            }
+            loginUser.setCurrent(true);
+            realm.copyToRealmOrUpdate(loginUser);
+        }, () -> {//success 登陆成功
+            if (System.currentTimeMillis() > loginUser.getResourceValidateTime()) {
+                textProcess.setText(R.string.request_ing);
+                //请求资源
+                resourceRequester.refreshResource(loginUser);
+            } else {
+                enterMainWindow();
+            }
+        });
     }
 
-    /**
-     * 进入主页面
-     */
-    private void enterMainWindow() {
-        MainActivity.startActivity(LoginActivity.this);
-        finish();
-    }
-    //显示登陆界面
-    private void showLoginView() {
-        layout_bottom.setVisibility(View.INVISIBLE);
-        layout_top.setVisibility(View.VISIBLE);
-    }
+
 
     @Override
     public void error(int id, int code, String message, String data) {
@@ -245,7 +222,19 @@ public class LoginActivity extends DBBaseActivity implements ApiRequest.ResultHa
         showLoginView();
         new TipPopWindow(this, true).setMessage(message + data).showPopupWindow(this);
     }
+    /**
+     * 进入主页面
+     */
+    private void enterMainWindow() {
+        MainActivity.startActivity(LoginActivity.this);
+        finish();
+    }
 
+    //显示登陆界面
+    private void showLoginView() {
+        layout_bottom.setVisibility(View.INVISIBLE);
+        layout_top.setVisibility(View.VISIBLE);
+    }
     /**
      * 其他地方调用启动登陆页面，不允许自动登陆
      *

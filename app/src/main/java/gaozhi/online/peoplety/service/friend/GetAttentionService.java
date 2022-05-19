@@ -1,6 +1,8 @@
 package gaozhi.online.peoplety.service.friend;
 
 import com.google.gson.Gson;
+
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.NetConfig;
@@ -14,9 +16,10 @@ import java.util.Map;
  * @description: TODO 获取关注关系
  * @date 2022/4/13 10:22
  */
-public class GetAttentionService extends ApiRequest {
-    public GetAttentionService(ResultHandler resultHandler) {
-        super(NetConfig.friendBaseURL, Type.GET, resultHandler);
+public class GetAttentionService extends ApiRequest<Result> {
+    public GetAttentionService(OnDataListener<Result> resultHandler) {
+        super(NetConfig.friendBaseURL, Type.GET);
+        setDataListener(resultHandler);
     }
 
     public void request(Token token, int pageNum) {
@@ -26,5 +29,15 @@ public class GetAttentionService extends ApiRequest {
         params.put("pageNum", "" + pageNum);
         params.put("pageSize", "" + 100);
         request("get/attentions", headers, params);
+    }
+
+    @Override
+    public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+        return null;
+    }
+
+    @Override
+    public Result getNetData(Result result) {
+        return result;
     }
 }

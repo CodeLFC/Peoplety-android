@@ -19,6 +19,7 @@ import java.util.TimerTask;
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.VerifyCode;
@@ -31,7 +32,7 @@ import gaozhi.online.peoplety.util.StringUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
-public class RegisterActivity extends DBBaseActivity implements Handler.Worker, ApiRequest.ResultHandler {
+public class RegisterActivity extends DBBaseActivity implements Handler.Worker, DataHelper.OnDataListener<Result> {
     //service
     private SendVerifyCodeService sendVerifyCodeService;
     private RegisterService registerService;
@@ -151,6 +152,11 @@ public class RegisterActivity extends DBBaseActivity implements Handler.Worker, 
     }
 
     @Override
+    public void handle(int id, Result data, boolean local) {
+        if(local)return;
+        handle(id,data);
+    }
+
     public void handle(int id, Result result) {
         if (id == sendVerifyCodeService.getId()) {
             //开始计时-

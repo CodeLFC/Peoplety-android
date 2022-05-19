@@ -25,6 +25,7 @@ import java.io.File;
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.cos.GetCosTempSecretService;
@@ -39,7 +40,7 @@ import io.realm.Realm;
 /**
  * 修改头像
  */
-public class ShowUpdateHeadActivity extends DBBaseActivity implements ApiRequest.ResultHandler, CosXmlProgressListener, CosXmlResultListener, Handler.Worker {
+public class ShowUpdateHeadActivity extends DBBaseActivity implements DataHelper.OnDataListener<Result>, CosXmlProgressListener, CosXmlResultListener, Handler.Worker {
     //intent
     private Uri imagePath;
     //ui
