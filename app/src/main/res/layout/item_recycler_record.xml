@@ -35,35 +35,23 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/item_recycler_record_text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/widget_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textColor="@color/deep_text_color"
+                    android:textSize="@dimen/font_size_title" />
+
                 <ImageView
                     android:id="@+id/item_recycler_record_image_gender"
                     android:layout_width="@dimen/icon_size_small"
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_marginEnd="@dimen/widget_margin"
                     android:src="@drawable/other_gender" />
-
-                <TextView
-                    android:id="@+id/item_recycler_record_text_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/app_name"
-                    android:layout_marginEnd="@dimen/widget_margin"
-                    android:textColor="@color/deep_text_color"
-                    android:textSize="@dimen/font_size_title" />
-
-                <TextView
-                    android:id="@+id/item_recycler_record_text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/widget_margin"
-                    android:background="@drawable/tag_bg"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/widget_margin"
-                    android:text="@string/app_name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_small" />
             </LinearLayout>
 
             <TextView
@@ -141,7 +129,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/item_recycler_record_text_type"
+                android:id="@+id/item_recycler_record_text_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/widget_margin"
@@ -164,6 +152,18 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small"
                 android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/item_recycler_record_text_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:background="@drawable/tag_bg"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/widget_margin"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_small" />
 
             <TextView
                 android:id="@+id/item_recycler_record_text_ip"
