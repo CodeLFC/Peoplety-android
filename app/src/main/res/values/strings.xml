@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">天平</string>
+    <string name="app_name">正义的花生</string>
     <!--    链接-->
     <string name="url_ip">https://www.ip138.com</string>
     <!--    常用-->
@@ -43,8 +43,8 @@
     <string name="reset_pass">修改密码</string>
     <!--   主页面 -->
     <string name="bottom_me">我</string>
-    <string name="bottom_home">巡逻</string>
-    <string name="bottom_publish">公证</string>
+    <string name="bottom_home">援助</string>
+    <string name="bottom_publish">求助</string>
     <string name="not_permission">申请权限被拒绝，app运行受限</string>
     <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->
@@ -84,7 +84,7 @@
     <string name="upload_head">修改头像</string>
     <string name="tip_err_resource_write">资源保存失败</string>
     <string name="tip_update_fail">修改失败</string>
-    <string name="tip_scan_my_qr_code">扫一扫上面的二维码图案，下载APP</string>
+    <string name="tip_scan_my_qr_code">扫一扫上面的二维码图案</string>
     <string name="qr_code_card">二维码名片</string>
     <string name="official_web">官方网站</string>
     <string name="copyright">copyright@2022</string>
@@ -99,7 +99,7 @@
     <string name="title">标题</string>
     <string name="record_title_hint">一句话突出主要内容</string>
     <string name="description">摘要&#160;</string>
-    <string name="record_description_hint">几句话描述问题的关键，如:\n\txx公司产品经理陈先生与AI工程师小明发生争执，陈先生提出无理需求：“实现一个自动打标签的系统。”。当事人小明称此需求是左脚踩右脚上天，无法实现</string>
+    <string name="record_description_hint">几句话描述关键问题</string>
     <string name="content">详情</string>
     <string name="record_content_hint">详细客观的描述事件内容。\n\t时间、地点、人物、过程、结果等</string>
     <string name="addition_url">附加链接和图片</string>
