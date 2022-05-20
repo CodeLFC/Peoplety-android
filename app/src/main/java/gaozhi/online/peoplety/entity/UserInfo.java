@@ -69,7 +69,7 @@ public class UserInfo extends RealmObject {
                     return e;
                 }
             }
-            return null;
+            return OTHER;
         }
     }
 

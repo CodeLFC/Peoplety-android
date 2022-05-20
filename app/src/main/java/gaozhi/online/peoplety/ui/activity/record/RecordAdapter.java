@@ -83,6 +83,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textFavorite;
         private final ImageView imageDelete;
         private final TextView textStatus;
+        private final ImageView imageGender;
+
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
         private final Token token;
@@ -116,6 +118,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
             imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
             textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
+            imageGender = itemView.findViewById(R.id.item_recycler_record_image_gender);
         }
 
         @Override
@@ -175,6 +178,18 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textName.setText(data.getUserInfo().getNick());
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
             textRemark.setText(data.getUserInfo().getRemark());
+            UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
+            switch (gender) {
+                case FEMALE:
+                    imageGender.setImageResource(R.drawable.female);
+                    break;
+                case MALE:
+                    imageGender.setImageResource(R.drawable.male);
+                    break;
+                case OTHER:
+                    imageGender.setImageResource(R.drawable.other_gender);
+                    break;
+            }
             if (data.getUserInfo().getId() == token.getUserid()) {
                 imageDelete.setVisibility(View.VISIBLE);
             } else {
