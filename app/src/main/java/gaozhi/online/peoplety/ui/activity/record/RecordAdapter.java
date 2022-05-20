@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.ui.activity.record;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -81,6 +82,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textComment;
         private final TextView textFavorite;
         private final ImageView imageDelete;
+        private final TextView textStatus;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
         private final Token token;
@@ -113,6 +115,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textComment = itemView.findViewById(R.id.item_recycler_record_text_comment_num);
             textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
             imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
+            textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
         }
 
         @Override
@@ -124,14 +127,10 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             RecordType recordType = realm.where(RecordType.class).equalTo("id", item.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());
-            } else {
-                //刷新资源
             }
             Area area = realm.where(Area.class).equalTo("id", item.getAreaId()).findFirst();
             if (area != null) {
                 textArea.setText(area.getName());
-            } else {
-                //刷新资源
             }
 
             textDescription.setText(item.getDescription());
@@ -169,14 +168,23 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         @Override
         public void handle(int id, UserDTO data, boolean local) {
-            if (data == null) return;
+            Log.i(getClass().getName(), local + ":" + (data != null ? "" + data : "null"));
+            if (data == null || data.getUserInfo() == null) {
+                return;
+            }
             textName.setText(data.getUserInfo().getNick());
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
             textRemark.setText(data.getUserInfo().getRemark());
             if (data.getUserInfo().getId() == token.getUserid()) {
                 imageDelete.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 imageDelete.setVisibility(View.GONE);
+            }
+            if (data.getStatus() == null) {
+                textStatus.setVisibility(View.GONE);
+            } else {
+                textStatus.setVisibility(View.VISIBLE);
+                textStatus.setText(data.getStatus().getName());
             }
         }
 

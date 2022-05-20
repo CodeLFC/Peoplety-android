@@ -28,16 +28,32 @@
             android:layout_marginHorizontal="@dimen/widget_margin"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/item_recycler_record_text_name"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/deep_text_color"
-                android:textSize="@dimen/font_size_title" />
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/item_recycler_record_text_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/deep_text_color"
+                    android:textSize="@dimen/font_size_title" />
+                <TextView
+                    android:id="@+id/item_recycler_record_text_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/widget_margin"
+                    android:background="@drawable/tag_bg"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/widget_margin"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_small" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/item_recycler_record_text_remark"

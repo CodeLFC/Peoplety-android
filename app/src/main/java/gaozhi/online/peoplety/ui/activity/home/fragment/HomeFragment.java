@@ -98,7 +98,9 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             return;
         } else {
             //访问内容
-            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), 1, PAGE_SIZE);
+            if(!getRecordByAreaService.isRequesting()) {
+                getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), 1, PAGE_SIZE);
+            }
         }
         titleTextRight.setText(loginUser.getArea().getName());
     }

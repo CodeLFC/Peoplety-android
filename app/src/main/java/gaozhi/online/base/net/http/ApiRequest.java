@@ -3,7 +3,10 @@ package gaozhi.online.base.net.http;
 import com.google.gson.Gson;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import gaozhi.online.base.net.Result;
 
@@ -50,7 +53,6 @@ public abstract class ApiRequest<T> implements HttpRunnable.HttpHandler, DataHel
     private final String baseURL;
     private final Type type;
     private DataHelper.OnDataListener<T> dataListener;
-
 
     public ApiRequest(String baseURL, Type type) {
         id = (idCount.getAndAdd(1)) % (Integer.MAX_VALUE - 10);
@@ -125,7 +127,8 @@ public abstract class ApiRequest<T> implements HttpRunnable.HttpHandler, DataHel
         requesting = true;
         if (dataListener != null) {
             dataListener.start(getId());
-            dataListener.handle(getId(), initLocalData(headers, params, body), true);
+            T data = initLocalData(headers, params, body);
+            dataListener.handle(getId(), data, true);
         }
         HttpRunnable httpRunnable = new HttpRunnable(type.getType(), UrlFactory.appendParams(baseURL + api, params), this);
         httpRunnable.setHeaderParams(headers);

@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.entity.dto;
 
 
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import io.realm.RealmObject;
@@ -30,5 +31,6 @@ public class UserDTO extends RealmObject {
 
     //选择的地区
     private Area area;
-
+    //用户的身份
+    private Status status;
 }

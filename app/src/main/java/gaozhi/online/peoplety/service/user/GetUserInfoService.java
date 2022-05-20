@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.service.user;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
@@ -38,6 +39,9 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
         UserInfo userInfo = getRealm().where(UserInfo.class).equalTo("id", id).findFirst();
         UserDTO userDTO = new UserDTO();
         userDTO.setUserInfo(userInfo);
+        if (userInfo == null)
+            return userDTO;
+        userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userInfo.getStatus()).findFirst());
         return userDTO;
     }
 
@@ -49,6 +53,7 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
             realm.copyToRealmOrUpdate(userDTO.getUserInfo());
         }, () -> {//success
         });
+        userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
         return userDTO;
     }
 }

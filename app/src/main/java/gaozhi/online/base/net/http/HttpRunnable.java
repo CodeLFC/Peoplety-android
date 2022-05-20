@@ -1,8 +1,9 @@
 package gaozhi.online.base.net.http;
 
 
-
 import android.os.Message;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -55,13 +56,14 @@ public class HttpRunnable implements Runnable, Handler.Worker {
     }
 
     @Override
-    public void handleMessage(Message msg) {
-        if (httpHandler != null) {
-            if (msg.what == Result.NET_ERROR) {
-                httpHandler.error(Result.NET_ERROR);
-            } else {
-                httpHandler.handle((String) (msg.obj));
-            }
+    public void handleMessage(@NonNull Message msg) {
+        if (httpHandler == null) return;
+        if (msg.what == Result.NET_ERROR) {
+            httpHandler.error(Result.NET_ERROR);
+            return;
+        }
+        if (msg.what == 0) {
+            httpHandler.handle((String) (msg.obj));
         }
     }
 
@@ -74,6 +76,7 @@ public class HttpRunnable implements Runnable, Handler.Worker {
     }
 
     public interface HttpHandler {
+
         void handle(String text);
 
         void error(int code);
