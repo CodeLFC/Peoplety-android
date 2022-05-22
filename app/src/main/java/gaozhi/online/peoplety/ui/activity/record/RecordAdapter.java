@@ -27,7 +27,9 @@ import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.client.ImageModel;
+import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
@@ -63,7 +65,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         notifyItemRangeChanged(0, getItemCount());
     }
 
-    public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<UserDTO> {
+    public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<UserDTO>{
         private final Context context;
         private final TextView textTitle;
         private final ImageView imageTop;
@@ -84,9 +86,42 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageView imageDelete;
         private final TextView textStatus;
         private final ImageView imageGender;
-
+        private final ImageView imageComment;
+        private final ImageView imageFavorite;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
+        //获取详情
+        private final GetRecordDTOByIdService getRecordDTOByIdService = new GetRecordDTOByIdService(new DataHelper.OnDataListener<RecordDTO>() {
+            @Override
+            public void start(int id) {
+
+            }
+
+            @Override
+            public void handle(int id, RecordDTO data, boolean local) {
+                //刷新数据
+                refreshData(data.getRecord());
+                //评论数量
+                textComment.setText(StringUtil.numLong2Str(data.getCommentPageInfo().getTotal()));
+                //收藏数量
+                textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
+                //是否 收藏
+                imageFavorite.setImageResource(data.isFavorite()?R.drawable.favorited:R.drawable.favorite);
+
+                imageFavorite.setOnClickListener(v -> {
+                    ToastUtil.showToastShort("收藏");
+                });
+                imageComment.setOnClickListener(v -> {
+                    ToastUtil.showToastShort("评论");
+                });
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+
+            }
+        });
+
         private final Token token;
 
         public RecordViewHolder(@NonNull View itemView, Token token) {
@@ -119,10 +154,22 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
             textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
             imageGender = itemView.findViewById(R.id.item_recycler_record_image_gender);
+
+            imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
+            imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
         }
 
         @Override
         public void bindView(Record item) {
+            //刷新数据
+            refreshData(item);
+            //从数据库和网络中获取用户
+            getUserInfoService.request(token, item.getUserid());
+            //获取详细内容
+            getRecordDTOByIdService.request(token,item.getId());
+        }
+
+        private void refreshData(Record item){
             imageAdapter.clear();
             textTitle.setText(item.getTitle());
             imageTop.setVisibility(item.isTop() ? View.VISIBLE : View.GONE);
@@ -147,9 +194,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
-
-            //从数据库和网络中获取用户
-            getUserInfoService.request(token, item.getUserid());
         }
 
         @Override

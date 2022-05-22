@@ -123,4 +123,5 @@
     <string name="tip_enter_title_short">标题最短字符长度为：</string>
     <string name="tip_enter_description_short">摘要最短字符长度为：</string>
     <string name="tip_enter_content_short">内容最短字符长度为：</string>
+    <string name="request_ing_please_wait">正在请求数据中，请稍后</string>
 </resources>

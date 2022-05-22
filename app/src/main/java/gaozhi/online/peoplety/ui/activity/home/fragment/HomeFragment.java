@@ -27,6 +27,7 @@ import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordByAreaService;
 import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
+import gaozhi.online.peoplety.ui.activity.record.RecordDetailActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
@@ -83,7 +84,8 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
         recyclerSwipeRefreshView = view.findViewById(R.id.fragment_home_swipe_record);
         recyclerSwipeRefreshView.setOnRefreshListener(this);
-
+        //点击条目打开详情
+        recordAdapter.setOnItemClickedListener(record -> RecordDetailActivity.startActivity(getContext(),record.getId()));
     }
 
     @Override

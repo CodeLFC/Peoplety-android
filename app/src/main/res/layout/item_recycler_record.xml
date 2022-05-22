@@ -218,6 +218,7 @@
             android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/item_recycler_record_image_comment"
             android:layout_width="@dimen/icon_size_general"
             android:layout_height="@dimen/icon_size_general"
             android:src="@drawable/comment" />
@@ -233,6 +234,7 @@
             android:textSize="@dimen/font_size_small" />
 
         <ImageView
+            android:id="@+id/item_recycler_record_image_favorite"
             android:layout_width="@dimen/icon_size_general"
             android:layout_height="@dimen/icon_size_general"
             android:src="@drawable/favorite" />

@@ -62,4 +62,14 @@ public class StringUtil {
         }
         return String.format("%.1fw",num/10000.0);
     }
+
+    public static String numLong2Str(long num){
+        if(num<1000){
+            return Long.toString(num);
+        }
+        if(num<10000){
+            return String.format("%.1fk",num/1000.0);
+        }
+        return String.format("%.1fw",num/10000.0);
+    }
 }
