@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.ui.base;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import gaozhi.online.base.ui.BaseActivity;
@@ -11,10 +13,9 @@ public abstract class DBBaseActivity extends BaseActivity {
     private Realm realm;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void initLocalData() {
         realm = Realm.getDefaultInstance();
         doBusiness(realm);
-        super.onCreate(savedInstanceState);
     }
 
     protected abstract void doBusiness(Realm realm);

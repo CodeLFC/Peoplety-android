@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:background="@color/alpha_50_bg_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_color"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/widget_margin">
+
+        <EditText
+            android:id="@+id/pop_window_edit_edit_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radius_widget_bg"
+            android:hint="@string/tip_please_enter_content"
+            android:padding="@dimen/widget_margin"
+            android:maxLines="3"
+            />
+
+        <Button
+            android:id="@+id/pop_widow_edit_btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:text="@string/send"
+            android:textSize="@dimen/font_size_general" />
+    </LinearLayout>
+</LinearLayout>

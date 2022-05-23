@@ -39,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initParams(getIntent());
+        initLocalData();
         if (mAllowFullScreen) {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
@@ -58,6 +59,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         initView(mContextView);
         doBusiness(this);
     }
+
+    /**
+     * 初始化本地数据
+     */
+    protected void initLocalData(){}
 
     /**
      * [沉浸状态栏]

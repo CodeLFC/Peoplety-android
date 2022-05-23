@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/record_header"
+    android:background="@drawable/record_bg"
     android:gravity="center|start"
     android:orientation="vertical"
     android:paddingVertical="@dimen/widget_margin">
@@ -182,9 +182,21 @@
             android:id="@+id/item_recycler_record_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="3"
+            android:background="@drawable/underline_bg_1dp"
+            android:layout_marginBottom="@dimen/widget_margin"
             android:text="@string/app_name"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/shallow_text_color"
+            android:textSize="@dimen/font_size_general" />
+
+        <TextView
+            android:id="@+id/item_recycler_record_text_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:maxLines="5"
+            android:ellipsize="end"
             android:textColor="@color/deep_text_color"
             android:textSize="@dimen/font_size_general" />
 
@@ -249,4 +261,17 @@
             android:textColor="@color/shallow_text_color"
             android:textSize="@dimen/font_size_small" />
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/item_recycler_record_edit_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_margin"
+        android:layout_marginVertical="@dimen/edit_widget_margin"
+        android:background="@drawable/radius_bg"
+        android:hint="@string/comment"
+        android:maxLines="3"
+        android:padding="@dimen/edit_padding"
+        android:textColor="@color/deep_text_color"
+        android:textSize="@dimen/font_size_general" />
 </LinearLayout>

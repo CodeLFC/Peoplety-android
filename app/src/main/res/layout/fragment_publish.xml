@@ -4,34 +4,47 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color"
     android:orientation="vertical">
+
     <include
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/logo_big_size"
         layout="@layout/layout_title"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/logo_big_size" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+       >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
             android:id="@+id/fragment_publish_recycler_record_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/widget_margin"
-            android:paddingHorizontal="@dimen/widget_margin"
-            android:layout_margin="@dimen/activity_margin"
-            android:paddingVertical="@dimen/activity_margin"
             android:background="@drawable/radius_widget_bg"
-            />
+            android:paddingHorizontal="@dimen/widget_margin"
+            android:paddingVertical="@dimen/activity_margin"
+            android:layout_marginHorizontal="@dimen/activity_margin"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <ImageView
             android:id="@+id/fragment_publish_image_pre_step"
             android:layout_width="@dimen/logo_size"
             android:layout_height="@dimen/logo_size"
-            android:src="@drawable/btn_arrow_left"
+            android:layout_margin="@dimen/activity_margin"
             android:background="@drawable/circle_bg"
             android:padding="@dimen/widget_margin"
-            />
+            android:src="@drawable/btn_arrow_left" />
     </LinearLayout>
+
 </LinearLayout>

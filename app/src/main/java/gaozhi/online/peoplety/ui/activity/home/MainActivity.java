@@ -122,8 +122,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         bottomNavigationView = $(R.id.main_navigation);
         //删除长按toast响应
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-        for(int i =0;i<bottomNavigationMenuView.getChildCount();i++){
-            bottomNavigationMenuView.getChildAt(i).setOnLongClickListener(v->true);
+        for (int i = 0; i < bottomNavigationMenuView.getChildCount(); i++) {
+            bottomNavigationMenuView.getChildAt(i).setOnLongClickListener(v -> true);
         }
         //选中响应
         bottomNavigationView.setOnItemSelectedListener(this);
@@ -214,20 +214,14 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     public void error(int id, int code, String message, String data) {
-        viewPager.post(new Runnable() {
-            @Override
-            public void run() {
-                new TipPopWindow(MainActivity.this, true)
-                        .setOkClickListener((window,v) -> {
-                            window.dismiss();
-                            //关闭主页，进入登录页
-                            LoginActivity.startActivity(MainActivity.this);
-                            finish();
-                        })
-                        .setMessage(message + data)
-                        .showPopupWindow(MainActivity.this);
-            }
-        });
-
+        viewPager.post(() -> new TipPopWindow(MainActivity.this, true)
+                .setOkClickListener((window, v) -> {
+                    window.dismiss();
+                    //关闭主页，进入登录页
+                    LoginActivity.startActivity(MainActivity.this);
+                    finish();
+                })
+                .setMessage(message + data)
+                .showPopupWindow(MainActivity.this));
     }
 }

@@ -15,6 +15,7 @@
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@drawable/bottom_bg"
         android:theme="@style/navigation"
         app:itemIconSize="@dimen/icon_size_general"

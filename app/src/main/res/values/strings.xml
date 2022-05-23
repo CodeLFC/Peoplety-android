@@ -90,10 +90,9 @@
     <string name="copyright">copyright@2022</string>
     <!--消息页-->
     <string name="bottom_message">消息</string>
-    <string name="comment">评论围观</string>
+    <string name="comment">我的评论</string>
     <string name="new_fans">新增粉丝</string>
 
-    <!--    首页-->
     <!--发布页-->
     <string name="super_record">父卷宗</string>
     <string name="title">标题</string>
@@ -124,4 +123,8 @@
     <string name="tip_enter_description_short">摘要最短字符长度为：</string>
     <string name="tip_enter_content_short">内容最短字符长度为：</string>
     <string name="request_ing_please_wait">正在请求数据中，请稍后</string>
+    <!--    首页-->
+    <string name="send">发送</string>
+    <string name="tip_please_enter_content">请输入内容…</string>
+    <string name="text_indent">\u3000\u3000</string>
 </resources>
