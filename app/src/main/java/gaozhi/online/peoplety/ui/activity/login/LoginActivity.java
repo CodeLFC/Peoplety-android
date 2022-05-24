@@ -78,6 +78,11 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
         //取消沉浸状态栏
         setSteepStatusBar(false);
         auto_login = intent.getBooleanExtra(INTENT_TAG_AUTO_LOGIN, true);
+    }
+
+    @Override
+    protected void initLocalData() {
+        super.initLocalData();
         resourceRequester = new ResourceRequester(getRealm(), this, this);
     }
 
