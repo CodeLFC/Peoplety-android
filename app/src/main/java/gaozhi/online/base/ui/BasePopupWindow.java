@@ -18,6 +18,8 @@ import gaozhi.online.peoplety.R;
 public abstract class BasePopupWindow extends PopupWindow {
 
     public BasePopupWindow(Context context, int resID, boolean fullScreen) {
+        //设置软键盘输入底部不被顶起
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         View rootView = LayoutInflater.from(context).inflate(resID, null);
         setContentView(rootView);
         rootView.setOnClickListener(v -> dismiss());

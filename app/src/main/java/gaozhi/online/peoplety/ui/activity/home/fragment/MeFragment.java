@@ -63,7 +63,7 @@ public class MeFragment extends DBBaseFragment {
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_me);
         title_right = view.findViewById(R.id.title_image_right);
-        title_right.setImageResource(R.drawable.scan);
+       // title_right.setImageResource(R.drawable.scan);
         title_right.setOnClickListener(this);
         imageHead = view.findViewById(R.id.fragment_me_image_head);
         imageHead.setOnClickListener(this);

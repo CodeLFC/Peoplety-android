@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -54,7 +55,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
          **/
         View mContextView = LayoutInflater.from(this)
                 .inflate(bindLayout(), null);
-
+        //设置软键盘输入底部不被顶起
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(mContextView);
         initView(mContextView);
         doBusiness(this);

@@ -92,8 +92,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageView imageComment;
         private final ImageView imageFavorite;
         //评论框
-        private final EditText editComment;
+      //  private final EditText editComment;
         private final TextView textContent;
+        private final RecordCommentPopWindow editTextPopWindow;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
             @Override
@@ -146,7 +147,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final Token token;
         //是否完整显示内容
         private boolean showDetails;
-
+        private Record record;
         public RecordViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
             this.token = token;
@@ -180,13 +181,16 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
-            editComment = itemView.findViewById(R.id.item_recycler_record_edit_comment);
+          //  editComment = itemView.findViewById(R.id.item_recycler_record_edit_comment);
             textContent = itemView.findViewById(R.id.item_recycler_record_text_content);
+
+            editTextPopWindow = new RecordCommentPopWindow(context);
         }
 
         @Override
         public void bindView(Record item) {
             if (item == null) return;
+            this.record =item;
             //刷新数据
             refreshData(item);
             //从数据库和网络中获取用户
@@ -216,6 +220,13 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
+                imageFavorite.setOnClickListener(v -> {
+                    ToastUtil.showToastShort("收藏到某些收藏夹");
+                });
+                imageComment.setOnClickListener(v -> {
+                    //  editComment.requestFocus();
+                    editTextPopWindow.showPopupWindow(imageComment,token,record);
+                });
             } else {
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
@@ -274,12 +285,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             //是否 收藏
             imageFavorite.setImageResource(data.isFavorite() ? R.drawable.favorited : R.drawable.favorite);
 
-            imageFavorite.setOnClickListener(v -> {
-                ToastUtil.showToastShort("收藏到某些收藏夹");
-            });
-            imageComment.setOnClickListener(v -> {
-                editComment.requestFocus();
-            });
         }
 
         @Override

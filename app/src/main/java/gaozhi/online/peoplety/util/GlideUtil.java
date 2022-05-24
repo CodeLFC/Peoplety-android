@@ -1,5 +1,6 @@
 package gaozhi.online.peoplety.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,18 +28,21 @@ import gaozhi.online.peoplety.R;
 public class GlideUtil {
 
     public static void loadImage(Context context, String url,@DrawableRes int resId, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context)
                 .load(url)
                 .placeholder(resId)
                 .into(imageView);
     }
     public static void loadImage(Context context, String url, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context)
                 .load(url)
                 .placeholder(R.drawable.app_logo)
                 .into(imageView);
     }
     public static void loadGrayImage(Context context, String url, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context)
                 .load(url)
                 .transform(new GreyPicTransform())
@@ -46,10 +50,12 @@ public class GlideUtil {
     }
 
     public static void loadImage(Context context, Bitmap bitmap, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context).load(bitmap).into(imageView);
     }
 
     public static void loadRoundRectangleImage(Context context, int resID, ImageView imageView) {
+        if(!checkContext(context))return;
         InputStream is = context.getResources().openRawResource(resID);
         Bitmap resource = BitmapFactory.decodeStream(is);
         int width = resource.getWidth();
@@ -60,10 +66,12 @@ public class GlideUtil {
     }
 
     public static void loadBitmap(Context context, String url,@DrawableRes int resId, CustomTarget<Bitmap> customTarget) {
+        if(!checkContext(context))return;
         Glide.with(context).asBitmap().load(url).placeholder(resId).into(customTarget);
     }
 
     public static void loadRoundRectangleImage(Context context, String url, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -82,6 +90,7 @@ public class GlideUtil {
     }
 
     public static void loadRoundRectangleImage(Context context, String url, @DrawableRes int resId, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context).asBitmap().load(url).placeholder(resId).into(new CustomTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -100,6 +109,7 @@ public class GlideUtil {
     }
 
     public static void loadRoundImage(Context context, String url, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -118,6 +128,7 @@ public class GlideUtil {
     }
 
     public static void loadRoundImage(Context context, String url, @DrawableRes int resId, ImageView imageView) {
+        if(!checkContext(context))return;
         Glide.with(context).asBitmap().load(url).placeholder(resId).into(new CustomTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -135,6 +146,15 @@ public class GlideUtil {
         });
     }
 
+    private static boolean checkContext(Context context){
+        if(context ==null)return false;
+        if(context instanceof Activity){
+            if(((Activity) context).isDestroyed()){
+                return false;
+            }
+        }
+        return true;
+    }
     /**
      * Glide 将下载到的图片转成灰色图片
      * <p>

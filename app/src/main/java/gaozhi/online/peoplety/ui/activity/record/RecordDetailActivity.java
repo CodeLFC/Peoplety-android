@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
@@ -38,6 +39,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
     //ui
     private RecordAdapter.RecordViewHolder recordViewHolder;
+    private TextView title;
     //data
     private UserDTO loginUser;
     //db
@@ -50,6 +52,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     protected void initView(View view) {
         recordViewHolder = new RecordAdapter.RecordViewHolder($(R.id.record_detail_activity_view_record_item), loginUser.getToken());
         recordViewHolder.setShowDetails(true);
+        title = $(R.id.title_text);
     }
 
     @Override
@@ -77,6 +80,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     public void handle(int id, RecordDTO data, boolean local) {
+        title.setText(data.getRecord().getTitle());
         recordViewHolder.bindView(data);
         recordDTO = data;
     }

@@ -90,7 +90,7 @@
     <string name="copyright">copyright@2022</string>
     <!--消息页-->
     <string name="bottom_message">消息</string>
-    <string name="comment">我的评论</string>
+    <string name="comment">评论</string>
     <string name="new_fans">新增粉丝</string>
 
     <!--发布页-->
@@ -101,8 +101,8 @@
     <string name="record_description_hint">几句话描述关键问题</string>
     <string name="content">详情</string>
     <string name="record_content_hint">详细客观的描述事件内容。\n\t时间、地点、人物、过程、结果等</string>
-    <string name="addition_url">附加链接和图片</string>
-    <string name="record_url_hint">补充证据链接</string>
+    <string name="addition_url">附加链接</string>
+    <string name="record_url_hint">补充链接</string>
     <string name="area">地区</string>
     <string name="record_area_hint">选择事件发生的地区</string>
     <string name="tip_upload_fail">上传失败！请重试</string>
@@ -127,4 +127,7 @@
     <string name="send">发送</string>
     <string name="tip_please_enter_content">请输入内容…</string>
     <string name="text_indent">\u3000\u3000</string>
+    <string name="tip_content_is_empty">输入内容为空</string>
+    <string name="parent_comment">父卷宗</string>
+    <string name="son_comment">子卷宗</string>
 </resources>

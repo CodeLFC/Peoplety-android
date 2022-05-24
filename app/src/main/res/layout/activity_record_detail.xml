@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bg_color"
+    android:background="@color/widget_color"
     tools:context=".ui.activity.record.RecordDetailActivity">
     <include
         layout="@layout/layout_title"
@@ -13,13 +13,39 @@
         android:layout_height="@dimen/logo_big_size" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include
-            android:id="@+id/record_detail_activity_view_record_item"
-            layout="@layout/item_recycler_record"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:id="@+id/record_detail_activity_view_record_item"
+                layout="@layout/item_recycler_record"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginHorizontal="@dimen/activity_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comment"
+                android:textSize="@dimen/font_size_general"
+                android:textColor="@color/deep_text_color"/>
+            <TextView
+                android:layout_marginHorizontal="@dimen/activity_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/parent_comment"
+                android:textSize="@dimen/font_size_general"
+                android:textColor="@color/deep_text_color"/>
+            <TextView
+                android:layout_marginHorizontal="@dimen/activity_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/son_comment"
+                android:textSize="@dimen/font_size_general"
+                android:textColor="@color/deep_text_color"/>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

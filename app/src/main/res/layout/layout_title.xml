@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/app_name"
+        android:maxLines="1"
         android:textColor="@color/deep_text_color"
         android:textSize="@dimen/font_size_title" />
 
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/deep_text_color"
+            android:maxLines="1"
             android:textSize="@dimen/font_size_general" />
     </FrameLayout>
 </LinearLayout>
