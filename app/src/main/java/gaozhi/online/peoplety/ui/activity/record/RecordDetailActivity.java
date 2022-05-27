@@ -44,10 +44,12 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     //ui
     private RecordAdapter.RecordViewHolder recordViewHolder;
     private TextView title;
-    //子-横向排列
+    //子-纵向排列
+    private TextView textRecordTip;
     private NoAnimatorRecyclerView recyclerViewRecordParentChild;
     private ChildRecordAdapter childRecordAdapter;
     //评论 - 纵向排列
+    private TextView textCommentTip;
     private NoAnimatorRecyclerView recyclerViewComment;
     private CommentAdapter commentAdapter;
     //data
@@ -70,6 +72,8 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
         recyclerViewComment = $(R.id.record_detail_activity_recycler_comment);
         recyclerViewComment.setLayoutManager(new LinearLayoutManager(this));
 
+        textRecordTip = $(R.id.record_detail_activity_text_record_tip);
+        textCommentTip = $(R.id.record_detail_activity_text_comment_tip);
     }
 
     @Override
@@ -114,12 +118,25 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
             if (data.getParent() != null) {//添加父卷宗
                 childRecordAdapter.add(data.getParent());
             }
+            //提示
+
+            if ((!local&&data.getChildPageInfo().getTotal() == 0) && data.getParent() == null) {
+                textRecordTip.setVisibility(View.GONE);
+            } else {
+                textRecordTip.setVisibility(View.VISIBLE);
+            }
         }
         childRecordAdapter.add(recordDTO.getChildPageInfo().getList());
 
         //添加评论
         if (data.getCommentPageInfo().getPageNum() <= 1) {
             commentAdapter.clear();
+            //提示
+            if (!local&&data.getCommentPageInfo().getTotal() == 0) {
+                textCommentTip.setVisibility(View.GONE);
+            } else {
+                textCommentTip.setVisibility(View.VISIBLE);
+            }
         }
         commentAdapter.add(recordDTO.getCommentPageInfo().getList());
     }

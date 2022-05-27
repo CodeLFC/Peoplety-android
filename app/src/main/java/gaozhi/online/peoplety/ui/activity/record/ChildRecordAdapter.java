@@ -34,6 +34,7 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
         private final TextView textDescription;
         private final ImageView imageTop;
         private final TextView textIP;
+        private final TextView textFloor;
         public ChildRecordViewHolder(@NonNull View itemView) {
             super(itemView);
             this.context = itemView.getContext();
@@ -43,6 +44,7 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
             textDescription = itemView.findViewById(R.id.item_recycler_child_record_text_description);
             imageTop = itemView.findViewById(R.id.item_recycler_child_record_image_top);
             textIP = itemView.findViewById(R.id.item_recycler_child_record_text_ip);
+            textFloor = itemView.findViewById(R.id.item_recycler_child_record_text_floor);
         }
 
         @Override
@@ -54,6 +56,7 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
             textIP.setText(item.getIp());
+            textFloor.setText(item.getId()+context.getString(R.string.floor));
         }
     }
 }

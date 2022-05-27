@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 不显示动画，且垂直方向上的加载
+ * 不显示动画，且带有垂直方向上的下拉刷新加载
  */
 public class NoAnimatorRecyclerView extends RecyclerView {
     private OnLoadListener mOnLoadListener;

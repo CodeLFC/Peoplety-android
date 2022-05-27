@@ -130,4 +130,6 @@
     <string name="tip_content_is_empty">输入内容为空</string>
     <string name="parent_record">父</string>
     <string name="child_record">子</string>
+    <string name="related_record">相关卷宗</string>
+    <string name="floor">号</string>
 </resources>

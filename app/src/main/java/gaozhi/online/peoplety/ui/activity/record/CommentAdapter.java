@@ -50,6 +50,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
         private final TextView textTime;
         private final ImageView imageDelete;
         private final TextView textStatus;
+        private final TextView textFloor;
         private final Token token;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
@@ -112,6 +113,8 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             textTime = itemView.findViewById(R.id.item_recycler_comment_text_time);
             imageDelete = itemView.findViewById(R.id.item_recycler_comment_image_delete);
             textStatus = itemView.findViewById(R.id.item_recycler_comment_text_status);
+            textFloor = itemView.findViewById(R.id.item_recycler_comment_text_floor);
+
         }
 
         @Override
@@ -126,6 +129,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             }
             textIP.setText(item.getIp());
             getUserInfoService.request(token, item.getUserid());
+            textFloor.setText(item.getId()+context.getString(R.string.floor));
         }
     }
 }

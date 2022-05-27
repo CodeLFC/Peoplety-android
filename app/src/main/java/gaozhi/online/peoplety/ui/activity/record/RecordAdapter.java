@@ -67,6 +67,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
     public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<RecordDTO> {
         private final Context context;
+        //卷宗编号
+        private final TextView textFloor;
         private final TextView textTitle;
         private final ImageView imageTop;
         private final TextView textType;
@@ -190,7 +192,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textParent = itemView.findViewById(R.id.item_recycler_record_text_parent);
 
             imageFork = itemView.findViewById(R.id.item_recycler_record_image_fork);
-
+            textFloor = itemView.findViewById(R.id.item_recycler_record_text_floor);
         }
 
         @Override
@@ -266,6 +268,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imageFork.setOnClickListener((v)->{
                 PublishRecordActivity.startActivity(context,recordType,record);
             });
+            //卷宗编号
+            textFloor.setText(item.getId()+context.getString(R.string.floor));
         }
 
         @Override
