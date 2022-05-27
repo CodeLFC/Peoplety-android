@@ -124,6 +124,9 @@ public abstract class ApiRequest<T> implements HttpRunnable.HttpHandler, DataHel
      * @param params api参数
      */
     protected void request(String api, Map<String, String> headers, Map<String, String> params, Object body) {
+        if(requesting){//如果正在请求，则不进行请求
+            return;
+        }
         requesting = true;
         if (dataListener != null) {
             dataListener.start(getId());

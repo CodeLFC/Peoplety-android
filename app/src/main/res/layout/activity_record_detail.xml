@@ -24,27 +24,17 @@
                 layout="@layout/item_recycler_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginHorizontal="@dimen/activity_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/comment"
-                android:textSize="@dimen/font_size_general"
-                android:textColor="@color/deep_text_color"/>
-            <TextView
-                android:layout_marginHorizontal="@dimen/activity_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/parent_comment"
-                android:textSize="@dimen/font_size_general"
-                android:textColor="@color/deep_text_color"/>
-            <TextView
-                android:layout_marginHorizontal="@dimen/activity_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/son_comment"
-                android:textSize="@dimen/font_size_general"
-                android:textColor="@color/deep_text_color"/>
+
+            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+                android:id="@+id/record_detail_activity_recycler_parent_child"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+                android:id="@+id/record_detail_activity_recycler_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
         </LinearLayout>
     </ScrollView>
 

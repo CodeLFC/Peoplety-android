@@ -148,6 +148,8 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void handle(int id, PageInfo<Record> data, boolean local) {
+        //本地数据非第一页会返回null
+        if(data ==null)return;
         if (!local) {
             //停止刷新状态
             recyclerSwipeRefreshView.setRefreshing(false);

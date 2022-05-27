@@ -208,9 +208,13 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         title.setText(recordType.getName());
 
         //没有父卷宗
-        if (record.getParentId() == 0) {
+        if (parent ==null ) {
             textParentTip.setVisibility(View.GONE);
             textParent.setVisibility(View.GONE);
+        }else{
+            textParentTip.setVisibility(View.VISIBLE);
+            textParent.setVisibility(View.VISIBLE);
+            textParent.setText(parent.getTitle());
         }
 
         if (loginUser.getArea() != null) {

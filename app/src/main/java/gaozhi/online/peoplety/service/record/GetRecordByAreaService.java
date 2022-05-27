@@ -37,7 +37,10 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
     @Override
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         int areaId = Integer.parseInt(params.get("areaId"));
+        int pageNum = Integer.parseInt(params.get("pageNum"));
+        if(pageNum<=1)
         return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).findAll());
+        return null;
     }
 
     @Override

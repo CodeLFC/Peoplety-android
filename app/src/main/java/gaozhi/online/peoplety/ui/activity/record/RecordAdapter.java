@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
@@ -32,15 +30,14 @@ import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.PublishRecordActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
-import gaozhi.online.peoplety.ui.util.pop.EditTextPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.DateTimeUtil;
 import gaozhi.online.peoplety.util.GlideUtil;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
-import gaozhi.online.peoplety.util.SystemUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
@@ -91,6 +88,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageView imageGender;
         private final ImageView imageComment;
         private final ImageView imageFavorite;
+        private final ImageView imageFork;
+        //父子
+        private final TextView textParent;
         //评论框
       //  private final EditText editComment;
         private final TextView textContent;
@@ -148,6 +148,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         //是否完整显示内容
         private boolean showDetails;
         private Record record;
+
         public RecordViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
             this.token = token;
@@ -185,6 +186,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textContent = itemView.findViewById(R.id.item_recycler_record_text_content);
 
             editTextPopWindow = new RecordCommentPopWindow(context);
+
+            textParent = itemView.findViewById(R.id.item_recycler_record_text_parent);
+
+            imageFork = itemView.findViewById(R.id.item_recycler_record_image_fork);
+
         }
 
         @Override
@@ -245,7 +251,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textDescription.setText(item.getDescription());
             textContent.setText(item.getContent());
-            textIp.setText(context.getString(R.string.ip) + item.getIp());
+            textIp.setText(item.getIp());
             textIp.setOnClickListener(v -> WebActivity.startActivity(context, context.getString(R.string.url_ip), item.getIp()));
             textTime.setText(DateTimeUtil.getRecordTime(item.getTime()));
             imgList = new Gson().fromJson(item.getImgs(), new TypeToken<List<String>>() {
@@ -255,6 +261,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
+            textParent.setText(item.getParentId()==0?R.string.parent_record:R.string.child_record);
+            //派生分支
+            imageFork.setOnClickListener((v)->{
+                PublishRecordActivity.startActivity(context,recordType,record);
+            });
         }
 
         @Override
@@ -284,7 +295,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
             //是否 收藏
             imageFavorite.setImageResource(data.isFavorite() ? R.drawable.favorited : R.drawable.favorite);
-
         }
 
         @Override

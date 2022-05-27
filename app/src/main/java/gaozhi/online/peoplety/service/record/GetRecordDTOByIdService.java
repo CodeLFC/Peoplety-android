@@ -25,10 +25,12 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
         super(NetConfig.recordBaseURL, Type.GET);
         setDataListener(dataListener);
     }
-    public void request(Token token,long recordId){
-        request(token,recordId,1,1);
+
+    public void request(Token token, long recordId) {
+        request(token, recordId, 1, 1);
     }
-    public void request(Token token,long recordId,Integer childPage,  Integer commentPage){
+
+    public void request(Token token, long recordId, Integer childPage, Integer commentPage) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
@@ -37,18 +39,24 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
         params.put("commentPage", "" + commentPage);
         request("get/record", headers, params);
     }
+
     @Override
     public RecordDTO initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         long recordId = Long.parseLong(params.get("recordId"));
+        int childPage = Integer.parseInt(params.get("childPage"));
+        int commentPage = Integer.parseInt(params.get("commentPage"));
+        if (childPage > 1 || commentPage > 1) {
+            return null;
+        }
         RecordDTO recordDTO = new RecordDTO();
-        recordDTO.setRecord(getRealm().where(Record.class).equalTo("id",recordId).findFirst());
+        recordDTO.setRecord(getRealm().where(Record.class).equalTo("id", recordId).findFirst());
         Record record = recordDTO.getRecord();
-        if(record ==null){
+        if (record == null) {
             return recordDTO;
         }
-        recordDTO.setParent(getRealm().where(Record.class).equalTo("id",record.getParentId()).findFirst());
-        recordDTO.setChildPageInfo(new PageInfo<>(getRealm().where(Record.class).equalTo("parentId",record.getId()).findAll()));
-        recordDTO.setCommentPageInfo(new PageInfo<>(getRealm().where(Comment.class).equalTo("recordId",record.getId()).findAll()));
+        recordDTO.setParent(getRealm().where(Record.class).equalTo("id", record.getParentId()).findFirst());
+        recordDTO.setChildPageInfo(new PageInfo<>(getRealm().where(Record.class).equalTo("parentId", record.getId()).findAll()));
+        recordDTO.setCommentPageInfo(new PageInfo<>(getRealm().where(Comment.class).equalTo("recordId", record.getId()).findAll()));
         return recordDTO;
     }
 
@@ -56,26 +64,29 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
     public RecordDTO getNetData(Result result) {
         RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
         getRealm().executeTransactionAsync(realm -> {
-           Record record =  recordDTO.getRecord();
-           Record parent = recordDTO.getParent();
-           List<Record> records =recordDTO.getChildPageInfo().getList();
-           List<Comment> comments =recordDTO.getCommentPageInfo().getList();
-           if(record!=null)
-           realm.copyToRealmOrUpdate(record);
-           if(parent!=null)
-           realm.copyToRealmOrUpdate(parent);
-           //子
-           for(Record child:records){
-               if(child!=null){
-                   realm.copyToRealmOrUpdate(child);
-               }
-           }
-           //评论
-           for(Comment comment:comments){
-               if(comment!=null){
-                   realm.copyToRealmOrUpdate(comment);
-               }
-           }
+            Record record = recordDTO.getRecord();
+            Record parent = recordDTO.getParent();
+            List<Record> records = recordDTO.getChildPageInfo().getList();
+            List<Comment> comments = recordDTO.getCommentPageInfo().getList();
+            if (record != null)
+                realm.copyToRealmOrUpdate(record);
+            if (parent != null)
+                realm.copyToRealmOrUpdate(parent);
+
+            //子
+            if (recordDTO.getChildPageInfo().getPageNum() <= 1)
+                for (Record child : records) {
+                    if (child != null) {
+                        realm.copyToRealmOrUpdate(child);
+                    }
+                }
+            //评论
+            if (recordDTO.getCommentPageInfo().getPageNum() <= 1)
+                for (Comment comment : comments) {
+                    if (comment != null) {
+                        realm.copyToRealmOrUpdate(comment);
+                    }
+                }
         });
         return recordDTO;
     }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 
 import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
+import gaozhi.online.peoplety.entity.RecordType;
 import lombok.Data;
 
 /**
@@ -23,5 +24,5 @@ public class RecordDTO {
     private boolean favorite;
     private PageInfo<Record> childPageInfo;
     private PageInfo<Comment> commentPageInfo;
-
+    private RecordType recordType;
 }
