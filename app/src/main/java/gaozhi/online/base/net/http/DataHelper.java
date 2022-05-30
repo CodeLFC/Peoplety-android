@@ -28,7 +28,7 @@ public interface DataHelper<T> {
      * @param <T>
      */
     interface OnDataListener<T> {
-        void start(int id);
+        default void start(int id){}
 
         /**
          * 是否是本地数据
@@ -46,6 +46,6 @@ public interface DataHelper<T> {
         default void handle(int id, T data) {
         }
 
-        void error(int id, int code, String message, String data);
+        default void error(int id, int code, String message, String data){}
     }
 }

@@ -14,7 +14,7 @@ import lombok.Data;
  * @date 2022/5/14 9:35
  */
 @Data
-public class Record  extends RealmObject implements Parcelable {
+public class Record  extends RealmObject implements Parcelable{
      @PrimaryKey
      private long id;
      private long parentId;
@@ -51,7 +51,7 @@ public class Record  extends RealmObject implements Parcelable {
           top = in.readByte() != 0;
      }
 
-     public static final Creator<Record> CREATOR = new Creator<Record>() {
+     public static final Creator<Record> CREATOR = new Creator<>() {
           @Override
           public Record createFromParcel(Parcel in) {
                return new Record(in);
@@ -85,4 +85,5 @@ public class Record  extends RealmObject implements Parcelable {
           dest.writeString(ip);
           dest.writeByte((byte) (top ? 1 : 0));
      }
+
 }

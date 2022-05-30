@@ -12,9 +12,11 @@ import androidx.annotation.NonNull;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Comment;
+import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
@@ -25,7 +27,8 @@ import gaozhi.online.peoplety.util.StringUtil;
 /**
  * 评论适配器
  */
-public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAdapter.CommentViewHolder, Comment> {
+public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAdapter.CommentViewHolder,
+        Comment> {
     private final Token token;
 
     public CommentAdapter(Token token) {
@@ -54,10 +57,6 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
         private final Token token;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
-            @Override
-            public void start(int id) {
-
-            }
 
             @Override
             public void handle(int id, UserDTO data, boolean local) {
@@ -92,10 +91,13 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
                     textStatus.setText(data.getStatus().getName());
                 }
             }
-
+        });
+        //获取位置信息
+        private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
             @Override
-            public void error(int id, int code, String message, String data) {
-
+            public void handle(int id, IPInfo data, boolean local) {
+                textIP.setVisibility(View.VISIBLE);
+                textIP.setText(data.getShowArea());
             }
         });
 
@@ -127,9 +129,9 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             } else {
                 textUrl.setVisibility(View.GONE);
             }
-            textIP.setText(item.getIp());
+            getIPInfoService.request(item.getIp());
             getUserInfoService.request(token, item.getUserid());
-            textFloor.setText(item.getId()+context.getString(R.string.floor));
+            textFloor.setText(item.getId() + context.getString(R.string.floor));
         }
     }
 }

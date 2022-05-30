@@ -28,9 +28,11 @@ import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.service.user.UpdateUserInfoService;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
@@ -52,13 +54,19 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
     private Status status;
     //service
     private final UpdateUserInfoService updateUserInfoService = new UpdateUserInfoService(this);
-
+    //获取位置信息
+    private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
+        @Override
+        public void handle(int id, IPInfo data, boolean local) {
+            textIp.setVisibility(View.VISIBLE);
+            textIp.setText(data.getShowArea());
+        }
+    });
     //ui
     private View headView;
     private ImageView imageHead;
     private View qrCodeView;
     private TextView textId;
-    private View ipView;
     private TextView textIp;
     private TextView textPhone;
     private TextView textStatus;
@@ -106,8 +114,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         qrCodeView = $(R.id.userinfo_activity_view_qr_code);
         qrCodeView.setOnClickListener(this);
         textId = $(R.id.userinfo_activity_text_id);
-        ipView = $(R.id.userinfo_activity_view_ip);
-        ipView.setOnClickListener(this);
         textIp = $(R.id.userinfo_activity_text_ip);
         textPhone = $(R.id.userinfo_activity_text_phone);
         textStatus = $(R.id.userinfo_activity_text_status);
@@ -131,7 +137,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         UserInfo userInfo = loginUser.getUserInfo();
         GlideUtil.loadRoundRectangleImage(this, userInfo.getHeadUrl(), R.drawable.default_head, imageHead);
         textId.setText(Long.toString(userInfo.getId()));
-        textIp.setText(userInfo.getIp());
         textPhone.setText(userInfo.getPhone());
         textStatus.setText(status.getName());
         editName.setText(userInfo.getNick());
@@ -226,6 +231,8 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
                 }
             }
         });
+
+        getIPInfoService.request(userInfo.getIp());
     }
 
     @Override
@@ -268,9 +275,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         if (v.getId() == imageHead.getId()) {
             ShowImageActivity.startActivity(this, loginUser.getUserInfo().getHeadUrl());
             return;
-        }
-        if (v.getId() == ipView.getId()) {
-            WebActivity.startActivity(this, getString(R.string.url_ip), loginUser.getUserInfo().getIp());
         }
     }
 

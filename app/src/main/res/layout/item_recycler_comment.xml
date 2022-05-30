@@ -109,7 +109,8 @@
             android:paddingHorizontal="@dimen/widget_margin"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="@dimen/font_size_small" />
+            android:textSize="@dimen/font_size_small"
+            android:visibility="gone"/>
     </LinearLayout>
     <TextView
         android:id="@+id/item_recycler_comment_text_content"

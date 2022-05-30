@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
@@ -20,7 +21,7 @@ import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
-public class RecordDetailActivity extends DBBaseActivity implements DataHelper.OnDataListener<RecordDTO> {
+public class RecordDetailActivity extends DBBaseActivity implements DataHelper.OnDataListener<RecordDTO>, SwipeRefreshLayout.OnRefreshListener {
     private static final String INTENT_RECORD_ID = "record_id";
     private long recordId;
 
@@ -44,6 +45,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     //ui
     private RecordAdapter.RecordViewHolder recordViewHolder;
     private TextView title;
+    private SwipeRefreshLayout swipeRefreshLayout;
     //子-纵向排列
     private TextView textRecordTip;
     private NoAnimatorRecyclerView recyclerViewRecordParentChild;
@@ -74,6 +76,9 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
         textRecordTip = $(R.id.record_detail_activity_text_record_tip);
         textCommentTip = $(R.id.record_detail_activity_text_comment_tip);
+
+        swipeRefreshLayout = $(R.id.record_detail_activity_swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -85,7 +90,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
         recyclerViewComment.setAdapter(commentAdapter);
 
         recordViewHolder.bindView(record);
-        getRecordDTOByIdService.request(loginUser.getToken(), recordId);
+        onRefresh();
     }
 
     @Override
@@ -107,8 +112,12 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     public void handle(int id, RecordDTO data, boolean local) {
+        if(!local){
+            swipeRefreshLayout.setRefreshing(false);
+        }
         //本地数据非第一页会返回null
         if (data == null) return;
+
         title.setText(data.getRecord().getTitle());
         recordViewHolder.bindView(data);
         recordDTO = data;
@@ -144,5 +153,11 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastLong(message + data);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        getRecordDTOByIdService.request(loginUser.getToken(), recordId);
     }
 }

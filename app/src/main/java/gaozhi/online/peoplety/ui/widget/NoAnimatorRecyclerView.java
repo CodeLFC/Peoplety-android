@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.ui.widget;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,8 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * 正在加载状态
      */
     private boolean isLoading;
-    //记录上次的位置
-    private int lastPosition;
-    private int lastOffset;
+    //记录状态
+    private Parcelable recyclerViewState;
 
     public NoAnimatorRecyclerView(@NonNull Context context) {
         super(context);
@@ -49,7 +49,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
     /**
      * 关闭默认局部刷新动画
      */
-    public void init() {
+    private void init() {
         RecyclerView.ItemAnimator animator = getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
@@ -59,14 +59,8 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                // 记录位置
-                // 获取可视的第一个view
-                View topView = getLayoutManager().getChildAt(0);
-                if (topView == null) return;
-                // 获取与该view的顶部的偏移量
-                lastOffset = topView.getTop();
-                // 得到该View的数组位置
-                lastPosition = getLayoutManager().getPosition(topView);
+                // 记录状态
+                recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
 
                 if (!isLoading && !recyclerView.canScrollVertically(SCROLL_AXIS_VERTICAL)) {
                     loadData();
@@ -97,20 +91,8 @@ public class NoAnimatorRecyclerView extends RecyclerView {
     public void setLoading(boolean loading) {
         // 修改当前的状态
         isLoading = loading;
-        //回到刷新前的位置
-        if (!isLoading) {
-            getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    // 利用线程
-                    post(() -> {
-                        // 这样更精确
-                        ((LinearLayoutManager) getLayoutManager()).scrollToPositionWithOffset(lastPosition, lastOffset);
-                    });
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            });
-        }
+        //恢复状态
+        getLayoutManager().onRestoreInstanceState(recyclerViewState);
     }
 
     /**
@@ -132,6 +114,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <V>
      */
     public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V> extends RecyclerView.Adapter<T> implements Consumer<Integer> {
+
         private Consumer<V> onItemClickedListener;
         private final List<V> itemList = new LinkedList<>();
 

@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.Data;
  * @date 2022/5/14 11:05
  */
 @Data
-public class RecordType extends RealmObject implements Parcelable {
+public class RecordType extends RealmObject implements Parcelable{
     @PrimaryKey
     private int id;
     private int parentId;

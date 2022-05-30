@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">正义的花生</string>
-    <!--    链接-->
-    <string name="url_ip">https://www.ip138.com</string>
     <!--    常用-->
     <string name="tip_update_success">修改成功</string>
     <string name="cancel">取消</string>

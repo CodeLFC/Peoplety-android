@@ -12,7 +12,10 @@
         layout="@layout/layout_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/logo_big_size" />
-
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/record_detail_activity_swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -58,5 +61,6 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

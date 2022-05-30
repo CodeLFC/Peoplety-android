@@ -1,5 +1,6 @@
 package gaozhi.online.peoplety.entity;
 
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
@@ -11,7 +12,7 @@ import lombok.Data;
  * @date 2022/5/14 9:37
  */
 @Data
-public class Area  extends RealmObject {
+public class Area  extends RealmObject{
     @PrimaryKey
     private int id;
     private int parentId;

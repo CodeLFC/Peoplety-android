@@ -8,8 +8,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Record;
+import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.PatternUtil;
@@ -18,7 +21,7 @@ import gaozhi.online.peoplety.util.StringUtil;
 /**
  * 子卷宗适配器
  */
-public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<ChildRecordAdapter.ChildRecordViewHolder,Record> {
+public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<ChildRecordAdapter.ChildRecordViewHolder, Record> {
 
     @NonNull
     @Override
@@ -26,7 +29,7 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
         return new ChildRecordViewHolder(layoutInflate(parent, R.layout.item_recycler_child_record));
     }
 
-    public static class ChildRecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record>{
+    public static class ChildRecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> {
         private final Context context;
         private final TextView textTitle;
         private final TextView textParent;
@@ -35,6 +38,14 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
         private final ImageView imageTop;
         private final TextView textIP;
         private final TextView textFloor;
+        //获取位置信息
+        private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, IPInfo data, boolean local) {
+                textIP.setVisibility(View.VISIBLE);
+                textIP.setText(data.getShowArea());
+            }
+        });
         public ChildRecordViewHolder(@NonNull View itemView) {
             super(itemView);
             this.context = itemView.getContext();
@@ -50,13 +61,13 @@ public class ChildRecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<Child
         @Override
         public void bindView(Record item) {
             textTitle.setText(item.getTitle());
-            textParent.setText(item.getParentId()==0?R.string.parent_record:R.string.child_record);
+            textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             textDescription.setText(item.getDescription());
-            imageTop.setVisibility(item.isTop()?View.VISIBLE:View.GONE);
+            imageTop.setVisibility(item.isTop() ? View.VISIBLE : View.GONE);
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
-            textIP.setText(item.getIp());
-            textFloor.setText(item.getId()+context.getString(R.string.floor));
+            getIPInfoService.request(item.getIp());
+            textFloor.setText(item.getId() + context.getString(R.string.floor));
         }
     }
 }

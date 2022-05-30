@@ -40,8 +40,6 @@ import io.realm.Realm;
  */
 public class HomeFragment extends DBBaseFragment implements Consumer<Area>, DataHelper.OnDataListener<PageInfo<Record>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
     private static final int PAGE_SIZE = 10;
-
-    private TextView title;
     private TextView titleTextRight;
     private AreaPopWindow areaPopWindow;
     //
@@ -67,8 +65,6 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void initView(View view) {
-        title = view.findViewById(R.id.title_text);
-        title.setText(R.string.bottom_home);
         titleTextRight = view.findViewById(R.id.title_text_right);
         titleTextRight.setOnClickListener(this);
         areaPopWindow = new AreaPopWindow(getContext(), true);
@@ -76,7 +72,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
         recordRecyclerView = view.findViewById(R.id.fragment_home_recycler_record);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setStackFromEnd(false);
+        //linearLayoutManager.setStackFromEnd(false);
         recordRecyclerView.setLayoutManager(linearLayoutManager);
         recordAdapter = new RecordAdapter(loginUser.getToken());
         recordRecyclerView.setAdapter(recordAdapter);
@@ -139,11 +135,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             //请求某个地区的资料
             getRecordByAreaService.request(loginUser.getToken(), area.getId(), 1, PAGE_SIZE);
         });
-    }
 
-    @Override
-    public void start(int id) {
-        title.setText(R.string.request_ing);
     }
 
     @Override
@@ -154,7 +146,6 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             //停止刷新状态
             recyclerSwipeRefreshView.setRefreshing(false);
             recordRecyclerView.setLoading(false);
-            title.setText(R.string.bottom_home);
         }
         currentRecordPageInfo = data;
         if (currentRecordPageInfo.getPageNum() <= 1) {
@@ -165,7 +156,6 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void error(int id, int code, String message, String data) {
-        title.setText(R.string.bottom_home);
         //停止刷新状态
         recyclerSwipeRefreshView.setRefreshing(false);
         recordRecyclerView.setLoading(false);

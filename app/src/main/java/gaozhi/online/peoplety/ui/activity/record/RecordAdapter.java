@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Token;
@@ -28,6 +29,7 @@ import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.client.ImageModel;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.PublishRecordActivity;
@@ -58,12 +60,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         return new RecordViewHolder(layoutInflate(parent, R.layout.item_recycler_record), token);
     }
 
-    @Override
-    public void add(List<Record> items) {
-        super.add(items);
-        getItemList().sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
-        notifyItemRangeChanged(0, getItemCount());
-    }
 
     public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<RecordDTO> {
         private final Context context;
@@ -94,16 +90,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         //父子
         private final TextView textParent;
         //评论框
-      //  private final EditText editComment;
+        //  private final EditText editComment;
         private final TextView textContent;
         private final RecordCommentPopWindow editTextPopWindow;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
-            @Override
-            public void start(int id) {
-
-            }
-
             @Override
             public void handle(int id, UserDTO data, boolean local) {
                 Log.i(getClass().getName(), local + ":" + (data != null ? "" + data : "null"));
@@ -137,15 +128,17 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                     textStatus.setText(data.getStatus().getName());
                 }
             }
-
-            @Override
-            public void error(int id, int code, String message, String data) {
-
-            }
         });
         //获取详情
         private final GetRecordDTOByIdService getRecordDTOByIdService = new GetRecordDTOByIdService(this);
-
+        //获取位置信息
+        private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, IPInfo data, boolean local) {
+                textIp.setVisibility(View.VISIBLE);
+                textIp.setText(data.getShowArea());
+            }
+        });
         private final Token token;
         //是否完整显示内容
         private boolean showDetails;
@@ -184,7 +177,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
-          //  editComment = itemView.findViewById(R.id.item_recycler_record_edit_comment);
+            //  editComment = itemView.findViewById(R.id.item_recycler_record_edit_comment);
             textContent = itemView.findViewById(R.id.item_recycler_record_text_content);
 
             editTextPopWindow = new RecordCommentPopWindow(context);
@@ -198,17 +191,20 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         @Override
         public void bindView(Record item) {
             if (item == null) return;
-            this.record =item;
+            this.record = item;
             //刷新数据
             refreshData(item);
             //从数据库和网络中获取用户
             getUserInfoService.request(token, item.getUserid());
             //获取详细内容
             getRecordDTOByIdService.request(token, item.getId());
+            //获取地址信息
+            getIPInfoService.request(item.getIp());
         }
 
         /**
          * 直接绑定DTO
+         *
          * @param item
          */
         public void bindView(RecordDTO item) {
@@ -233,7 +229,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 });
                 imageComment.setOnClickListener(v -> {
                     //  editComment.requestFocus();
-                    editTextPopWindow.showPopupWindow(imageComment,token,record);
+                    editTextPopWindow.showPopupWindow(imageComment, token, record);
                 });
             } else {
                 textDescription.setMaxLines(2);
@@ -253,8 +249,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textDescription.setText(item.getDescription());
             textContent.setText(item.getContent());
-            textIp.setText(item.getIp());
-            textIp.setOnClickListener(v -> WebActivity.startActivity(context, context.getString(R.string.url_ip), item.getIp()));
+
             textTime.setText(DateTimeUtil.getRecordTime(item.getTime()));
             imgList = new Gson().fromJson(item.getImgs(), new TypeToken<List<String>>() {
             }.getType());
@@ -263,13 +258,13 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
-            textParent.setText(item.getParentId()==0?R.string.parent_record:R.string.child_record);
+            textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //派生分支
-            imageFork.setOnClickListener((v)->{
-                PublishRecordActivity.startActivity(context,recordType,record);
+            imageFork.setOnClickListener((v) -> {
+                PublishRecordActivity.startActivity(context, recordType, record);
             });
             //卷宗编号
-            textFloor.setText(item.getId()+context.getString(R.string.floor));
+            textFloor.setText(item.getId() + context.getString(R.string.floor));
         }
 
         @Override
@@ -291,6 +286,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         @Override
         public void handle(int id, RecordDTO data, boolean local) {
+            if (data == null) return;
+
             //刷新数据
             refreshData(data.getRecord());
             //评论数量

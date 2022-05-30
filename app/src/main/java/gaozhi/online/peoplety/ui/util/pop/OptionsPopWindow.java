@@ -25,7 +25,7 @@ import lombok.Data;
 public class OptionsPopWindow extends BasePopupWindow {
     @Data
     @AllArgsConstructor
-    public static class Option {
+    public static class Option{
         private int id;
         private String text;
     }

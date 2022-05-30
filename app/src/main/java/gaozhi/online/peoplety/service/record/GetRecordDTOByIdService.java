@@ -48,12 +48,12 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
         if (childPage > 1 || commentPage > 1) {
             return null;
         }
-        RecordDTO recordDTO = new RecordDTO();
-        recordDTO.setRecord(getRealm().where(Record.class).equalTo("id", recordId).findFirst());
-        Record record = recordDTO.getRecord();
+        Record record =getRealm().where(Record.class).equalTo("id", recordId).findFirst();
         if (record == null) {
-            return recordDTO;
+            return null;
         }
+        RecordDTO recordDTO = new RecordDTO();
+        recordDTO.setRecord(record);
         recordDTO.setParent(getRealm().where(Record.class).equalTo("id", record.getParentId()).findFirst());
         recordDTO.setChildPageInfo(new PageInfo<>(getRealm().where(Record.class).equalTo("parentId", record.getId()).findAll()));
         recordDTO.setCommentPageInfo(new PageInfo<>(getRealm().where(Comment.class).equalTo("recordId", record.getId()).findAll()));

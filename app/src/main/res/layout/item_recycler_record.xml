@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/widget_margin"
     android:background="@drawable/rectangle_bg"
     android:gravity="center|start"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/widget_margin"
-    android:layout_marginBottom="@dimen/widget_margin">
+    android:paddingVertical="@dimen/widget_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,6 +53,18 @@
                     android:layout_height="@dimen/icon_size_small"
                     android:layout_marginEnd="@dimen/widget_margin"
                     android:src="@drawable/other_gender" />
+
+                <TextView
+                    android:id="@+id/item_recycler_record_text_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/widget_margin"
+                    android:background="@drawable/tag_bg"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/widget_margin"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_small" />
             </LinearLayout>
 
             <TextView
@@ -91,28 +103,6 @@
                 android:text="@string/app_name"
                 android:textColor="@color/deep_text_color"
                 android:textSize="@dimen/font_size_title" />
-            <TextView
-                android:id="@+id/item_recycler_record_text_parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:background="@drawable/tag_bg"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/parent_record"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_small" />
-            <TextView
-                android:id="@+id/item_recycler_record_text_url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:background="@drawable/tag_bg"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/record_url"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_small" />
 
             <ImageView
                 android:id="@+id/item_recycler_record_image_top"
@@ -139,19 +129,21 @@
             android:layout_marginBottom="@dimen/widget_margin"
             android:gravity="center|start"
             android:orientation="horizontal">
+
             <TextView
-                android:id="@+id/item_recycler_record_text_floor"
+                android:id="@+id/item_recycler_record_text_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:background="@drawable/tag_bg"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/app_name"
+                android:text="@string/parent_record"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small" />
+
             <TextView
-                android:id="@+id/item_recycler_record_text_status"
+                android:id="@+id/item_recycler_record_text_floor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/widget_margin"
@@ -176,6 +168,19 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/item_recycler_record_text_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:background="@drawable/tag_bg"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/widget_margin"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_small"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/item_recycler_record_text_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -188,14 +193,14 @@
                 android:textSize="@dimen/font_size_small" />
 
             <TextView
-                android:id="@+id/item_recycler_record_text_ip"
+                android:id="@+id/item_recycler_record_text_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:background="@drawable/tag_bg"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/app_name"
+                android:text="@string/record_url"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small" />
         </LinearLayout>
@@ -204,11 +209,11 @@
             android:id="@+id/item_recycler_record_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/underline_bg_1dp"
             android:layout_marginBottom="@dimen/widget_margin"
-            android:text="@string/app_name"
-            android:maxLines="2"
+            android:background="@drawable/underline_bg_1dp"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/app_name"
             android:textColor="@color/shallow_text_color"
             android:textSize="@dimen/font_size_general" />
 
@@ -216,9 +221,9 @@
             android:id="@+id/item_recycler_record_text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:maxLines="5"
             android:ellipsize="end"
+            android:maxLines="5"
+            android:text="@string/app_name"
             android:textColor="@color/deep_text_color"
             android:textSize="@dimen/font_size_general" />
 
@@ -232,10 +237,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/widget_margin"
         android:gravity="center|start"
         android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/activity_margin"
-        android:layout_marginVertical="@dimen/widget_margin">
+        android:paddingHorizontal="@dimen/activity_margin">
 
         <TextView
             android:id="@+id/item_recycler_record_text_time"
@@ -283,6 +288,7 @@
             android:text="0"
             android:textColor="@color/shallow_text_color"
             android:textSize="@dimen/font_size_small" />
+
         <ImageView
             android:id="@+id/item_recycler_record_image_fork"
             android:layout_width="@dimen/icon_size_general"
@@ -290,18 +296,18 @@
             android:src="@drawable/fork_record" />
     </LinearLayout>
 
-<!--    <EditText-->
-<!--        android:id="@+id/item_recycler_record_edit_comment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginHorizontal="@dimen/activity_margin"-->
-<!--        android:layout_marginVertical="@dimen/edit_widget_margin"-->
-<!--        android:background="@drawable/radius_bg"-->
-<!--        android:hint="@string/comment"-->
-<!--        android:maxLines="3"-->
-<!--        android:padding="@dimen/edit_padding"-->
-<!--        android:imeOptions="actionSend"-->
-<!--        android:inputType="text"-->
-<!--        android:textColor="@color/deep_text_color"-->
-<!--        android:textSize="@dimen/font_size_general" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/item_recycler_record_edit_comment"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginHorizontal="@dimen/activity_margin"-->
+    <!--        android:layout_marginVertical="@dimen/edit_widget_margin"-->
+    <!--        android:background="@drawable/radius_bg"-->
+    <!--        android:hint="@string/comment"-->
+    <!--        android:maxLines="3"-->
+    <!--        android:padding="@dimen/edit_padding"-->
+    <!--        android:imeOptions="actionSend"-->
+    <!--        android:inputType="text"-->
+    <!--        android:textColor="@color/deep_text_color"-->
+    <!--        android:textSize="@dimen/font_size_general" />-->
 </LinearLayout>
