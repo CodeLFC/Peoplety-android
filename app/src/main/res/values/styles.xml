@@ -1,7 +1,7 @@
 <resources>
     <!--==============================底部对话框样式=====================-->
     <!--主页右上角弹出菜单样式-->
-    <style name="PopupAnimation" parent="android:Animation" mce_bogus="1">
+    <style name="PopupAnimation" mce_bogus="1" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
@@ -12,8 +12,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
     </style>
+
     <style name="navigation" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/theme_color</item>
-        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:textColorSecondary">@color/deep_text_color</item>
     </style>
 </resources>

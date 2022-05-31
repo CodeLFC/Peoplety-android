@@ -116,6 +116,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <V>
      */
     public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends RecyclerView.Adapter<T> implements Consumer<Integer> {
+
         //item必须实现的接口
         public interface BaseItem {
 
@@ -132,8 +133,16 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             default int compare(BaseItem item) {
                 return (int) (getItemId() - item.getItemId());
             }
+
+            default int getViewType() {
+                return 0;
+            }
         }
-        public static class DefaultLinearLayoutManager extends LinearLayoutManager{
+
+        /**
+         * 默认布局管理器
+         */
+        public static class DefaultLinearLayoutManager extends LinearLayoutManager {
 
             public DefaultLinearLayoutManager(Context context) {
                 super(context);
@@ -142,9 +151,10 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             @Override
             protected void calculateExtraLayoutSpace(@NonNull State state, @NonNull int[] extraLayoutSpace) {
                 Arrays.fill(extraLayoutSpace, 300);
-               // super.calculateExtraLayoutSpace(state, extraLayoutSpace);
+                // super.calculateExtraLayoutSpace(state, extraLayoutSpace);
             }
         }
+
         private Consumer<V> onItemClickedListener;
         //列表
         private final SortedList<BaseItem> itemList = new SortedList<>(BaseItem.class, new SortedListAdapterCallback<>(this) {
@@ -172,6 +182,11 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         protected View layoutInflate(ViewGroup parent, @LayoutRes int layoutId) {
             return LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return getItem(position).getViewType();
         }
 
         @Override
@@ -233,7 +248,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
     /**
      * 可点击的视图缓存
      */
-    public static abstract class BaseViewHolder<V> extends ViewHolder implements View.OnClickListener {
+    public static abstract class BaseViewHolder<T> extends ViewHolder implements View.OnClickListener {
         private Consumer<Integer> onItemSelectedListener;
 
         public BaseViewHolder(@NonNull View itemView) {
@@ -245,7 +260,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             this.onItemSelectedListener = onItemSelectedListener;
         }
 
-        public abstract void bindView(V item);
+        public abstract void bindView(T item);
 
         @Override
         public void onClick(View v) {

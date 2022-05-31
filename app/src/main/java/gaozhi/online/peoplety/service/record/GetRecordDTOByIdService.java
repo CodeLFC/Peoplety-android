@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
@@ -45,11 +46,10 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
     }
 
     @Override
-    public RecordDTO getNetData(Result result) {
+    public void getNetData(Result result, Consumer<RecordDTO> consumer) {
         RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
         getRealm().executeTransactionAsync(realm -> {
             realm.copyToRealmOrUpdate(recordDTO);
-        });
-        return recordDTO;
+        }, () -> consumer.accept(recordDTO));
     }
 }

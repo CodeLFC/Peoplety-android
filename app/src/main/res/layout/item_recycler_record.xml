@@ -274,26 +274,37 @@
             android:textSize="@dimen/font_size_small" />
 
         <ImageView
-            android:id="@+id/item_recycler_record_image_favorite"
+            android:id="@+id/item_recycler_record_image_fork"
             android:layout_width="@dimen/icon_size_general"
             android:layout_height="@dimen/icon_size_general"
-            android:src="@drawable/favorite"/>
+            android:src="@drawable/fork_record" />
 
         <TextView
-            android:id="@+id/item_recycler_record_text_favorite_num"
+            android:id="@+id/item_recycler_record_text_fork_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_margin"
             android:gravity="center"
             android:text="0"
             android:textColor="@color/shallow_text_color"
-            android:textSize="@dimen/font_size_small"/>
+            android:textSize="@dimen/font_size_small" />
 
         <ImageView
-            android:id="@+id/item_recycler_record_image_fork"
+            android:id="@+id/item_recycler_record_image_favorite"
             android:layout_width="@dimen/icon_size_general"
             android:layout_height="@dimen/icon_size_general"
-            android:src="@drawable/fork_record" />
+            android:src="@drawable/favorite" />
+
+        <TextView
+            android:id="@+id/item_recycler_record_text_favorite_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/shallow_text_color"
+            android:textSize="@dimen/font_size_small" />
+
     </LinearLayout>
 
     <!--    <EditText-->

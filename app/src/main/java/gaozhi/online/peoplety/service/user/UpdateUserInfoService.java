@@ -13,6 +13,7 @@ import gaozhi.online.peoplety.service.NetConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 更新用户资料
@@ -36,7 +37,7 @@ public class UpdateUserInfoService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result getNetData(Result result) {
-        return result;
+    public void getNetData(Result result, Consumer<Result> consumer) {
+        consumer.accept(result);
     }
 }

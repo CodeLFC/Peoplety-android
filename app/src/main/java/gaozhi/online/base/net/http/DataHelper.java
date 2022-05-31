@@ -1,6 +1,7 @@
 package gaozhi.online.base.net.http;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import io.realm.Realm;
@@ -17,9 +18,16 @@ public interface DataHelper<T> {
     T initLocalData(Map<String, String> headers, Map<String, String> params, Object body);
 
     /**
+     * 结果
+     * @param result
+     * @return
+     */
+   // T getNetData(Result result);
+
+    /**
      * @param result 结果
      */
-    T getNetData(Result result);
+    void getNetData(Result result, Consumer<T> consumer);
 
 
     /**
@@ -28,7 +36,8 @@ public interface DataHelper<T> {
      * @param <T>
      */
     interface OnDataListener<T> {
-        default void start(int id){}
+        default void start(int id) {
+        }
 
         /**
          * 是否是本地数据
@@ -46,6 +55,7 @@ public interface DataHelper<T> {
         default void handle(int id, T data) {
         }
 
-        default void error(int id, int code, String message, String data){}
+        default void error(int id, int code, String message, String data) {
+        }
     }
 }

@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.util.Objects;
 
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
-import gaozhi.online.peoplety.util.StringUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
@@ -112,4 +111,5 @@ public class Record  extends RealmObject implements Parcelable, NoAnimatorRecycl
      public int hashCode() {
           return Objects.hash(id, parentId, userid, areaId, recordTypeId, enable, title, description, content, imgs, url, time, ip, top);
      }
+
 }

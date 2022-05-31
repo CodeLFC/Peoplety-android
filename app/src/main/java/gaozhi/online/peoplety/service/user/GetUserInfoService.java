@@ -11,6 +11,7 @@ import gaozhi.online.peoplety.service.NetConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author LiFucheng
@@ -46,14 +47,14 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
     }
 
     @Override
-    public UserDTO getNetData(Result result) {
+    public void getNetData(Result result, Consumer<UserDTO>consumer) {
         UserDTO userDTO = getGson().fromJson(result.getData(), UserDTO.class);
         getRealm().executeTransactionAsync(realm -> {
             //更新数据库中的用户信息
             realm.copyToRealmOrUpdate(userDTO.getUserInfo());
         }, () -> {//success
+            userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
+            consumer.accept(userDTO);
         });
-        userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
-        return userDTO;
     }
 }

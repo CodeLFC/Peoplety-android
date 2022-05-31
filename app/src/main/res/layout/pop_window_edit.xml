@@ -3,40 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:orientation="vertical"
-    >
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       android:background="@color/bg_color"
-       android:padding="@dimen/activity_margin"
-       >
-       <EditText
-           android:id="@+id/pop_window_edit_edit_content"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:background="@drawable/edit_bg"
-           android:hint="@string/tip_please_enter_content"
-           android:padding="@dimen/edit_widget_margin"
-           android:maxLines="3"
-           android:inputType="text"
-           />
-       <EditText
-           android:id="@+id/pop_window_edit_edit_url"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:background="@drawable/edit_bg"
-           android:hint="@string/record_url_hint"
-           android:padding="@dimen/edit_widget_margin"
-           android:maxLines="3"
-           />
-       <Button
-           android:id="@+id/pop_widow_edit_btn_send"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:text="@string/send"
-           android:textSize="@dimen/font_size_general" />
-   </LinearLayout>
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_color"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_margin">
+
+        <Button
+            android:id="@+id/pop_widow_edit_btn_send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send"
+            android:textSize="@dimen/font_size_general" />
+
+        <EditText
+            android:id="@+id/pop_window_edit_edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_bg"
+            android:hint="@string/tip_please_enter_content"
+            android:inputType="text"
+            android:maxLines="3"
+            android:padding="@dimen/edit_widget_margin" />
+
+        <EditText
+            android:id="@+id/pop_window_edit_edit_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_bg"
+            android:hint="@string/record_url_hint"
+            android:maxLines="3"
+            android:padding="@dimen/edit_widget_margin" />
+    </LinearLayout>
 
 </LinearLayout>

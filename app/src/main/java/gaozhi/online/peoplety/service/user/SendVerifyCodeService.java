@@ -5,6 +5,7 @@ import gaozhi.online.peoplety.entity.VerifyCode;
 import gaozhi.online.peoplety.service.NetConfig;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 发送验证码
@@ -29,7 +30,7 @@ public class SendVerifyCodeService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result getNetData(Result result) {
-        return result;
+    public void getNetData(Result result, Consumer<Result> consumer) {
+        consumer.accept(result);
     }
 }

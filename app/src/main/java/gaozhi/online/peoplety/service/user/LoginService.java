@@ -8,6 +8,7 @@ import gaozhi.online.peoplety.service.NetConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 登录方法
@@ -39,7 +40,7 @@ public class LoginService extends BaseApiRequest<UserDTO> {
     }
 
     @Override
-    public UserDTO getNetData(Result result) {
-        return getGson().fromJson(result.getData(), UserDTO.class);
+    public void getNetData(Result result, Consumer<UserDTO>consumer) {
+        consumer.accept(getGson().fromJson(result.getData(), UserDTO.class));
     }
 }

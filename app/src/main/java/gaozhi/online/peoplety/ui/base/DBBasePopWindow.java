@@ -15,12 +15,7 @@ public abstract class DBBasePopWindow extends BasePopupWindow{
 
     public DBBasePopWindow(Context context, int resID, boolean fullScreen) {
         super(context, resID, fullScreen);
-        setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                realm.close();
-            }
-        });
+        setOnDismissListener(() -> realm.close());
     }
 
     @Override

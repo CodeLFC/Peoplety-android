@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
@@ -14,6 +15,8 @@ import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * 根据地区获取卷宗列表
@@ -38,26 +41,32 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         int areaId = Integer.parseInt(params.get("areaId"));
         int pageNum = Integer.parseInt(params.get("pageNum"));
-        if(pageNum<=1)
-        return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).findAll());
+        if (pageNum <= 1)
+            return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).findAll());
         return null;
     }
 
     @Override
-    public PageInfo<Record> getNetData(Result result) {
+    public void getNetData(Result result, Consumer<PageInfo<Record>> consumer) {
         PageInfo<Record> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
         }.getType());
-        if (pageInfo.getPageNum() <= 1) {
-            //装入数据库
-            getRealm().executeTransactionAsync(realm -> {
-                realm.delete(Record.class);
-                realm.delete(Comment.class);
-                List<Record> records = pageInfo.getList();
-                for (Record record : records) {
-                    realm.copyToRealmOrUpdate(record);
-                }
-            });
+        consumer.accept(pageInfo);
+        //装入数据库
+        if (pageInfo.getPageNum() >= 1) {
+            return;
         }
-        return pageInfo;
+        getRealm().executeTransactionAsync(realm -> {
+            if (pageInfo.getList().size() > 0) {//删除这一类的第一页
+                int areaId = pageInfo.getList().get(0).getAreaId();
+                RealmResults<Record> old = getRealm().where(Record.class).equalTo("areaId", areaId).findAll();
+                for (Record record : old) {
+                    record.deleteFromRealm();
+                }
+            }
+            List<Record> records = pageInfo.getList();
+            for (Record record : records) {
+                realm.copyToRealmOrUpdate(record);
+            }
+        });
     }
 }

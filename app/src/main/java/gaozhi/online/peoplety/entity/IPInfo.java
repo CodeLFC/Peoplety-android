@@ -35,6 +35,9 @@ public class IPInfo {
     private String msg;
 
     public String getShowArea() {
+        if(data ==null){
+            return "未知";
+        }
         String[] dateArr = data.toArray(new String[]{});
         if (dateArr.length > 4) {
             for (int i = 3; i >= 0; i--) {

@@ -3,8 +3,10 @@ package gaozhi.online.peoplety.service.user;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 重置密码
@@ -29,7 +31,7 @@ public class ResetPassService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result getNetData(Result result) {
-        return result;
+    public void getNetData(Result result, Consumer<Result> consumer) {
+        consumer.accept(result);
     }
 }

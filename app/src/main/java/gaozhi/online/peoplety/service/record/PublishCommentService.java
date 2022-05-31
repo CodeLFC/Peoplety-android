@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.service.record;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.peoplety.entity.Comment;
@@ -25,16 +26,16 @@ public class PublishCommentService extends BaseApiRequest<Comment> {
     }
 
     @Override
-    public Comment getNetData(Result result) {
-        Comment comment = getGson().fromJson(result.getData(),Comment.class);
-        if(comment == null)return null;
+    public void getNetData(Result result, Consumer<Comment> consumer) {
+        Comment comment = getGson().fromJson(result.getData(), Comment.class);
+        if (comment == null) return;
         getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(comment));
-        return comment;
+        consumer.accept(comment);
     }
 
-    public void request(Token token,Comment comment){
+    public void request(Token token, Comment comment) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
-        request("post/comment",headers,null,comment);
+        request("post/comment", headers, null, comment);
     }
 }

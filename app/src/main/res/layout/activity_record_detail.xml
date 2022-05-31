@@ -25,6 +25,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
                 <include
@@ -32,8 +33,10 @@
                     layout="@layout/item_recycler_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>

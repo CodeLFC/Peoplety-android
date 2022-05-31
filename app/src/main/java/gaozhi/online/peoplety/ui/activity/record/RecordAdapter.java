@@ -87,12 +87,13 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageView imageComment;
         private final ImageView imageFavorite;
         private final ImageView imageFork;
+        private final TextView textFork;
         //父子
         private final TextView textParent;
-        //评论框
-        //  private final EditText editComment;
+
         private final TextView textContent;
-        private final RecordCommentPopWindow editTextPopWindow;
+
+        private final CommentPopWindow commentPopWindow;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
             @Override
@@ -177,15 +178,19 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
-            //  editComment = itemView.findViewById(R.id.item_recycler_record_edit_comment);
+            commentPopWindow = new CommentPopWindow(context);
+            imageComment.setOnClickListener(v -> {
+                commentPopWindow.showPopupWindow(imageComment, record);
+            });
             textContent = itemView.findViewById(R.id.item_recycler_record_text_content);
 
-            editTextPopWindow = new RecordCommentPopWindow(context);
 
             textParent = itemView.findViewById(R.id.item_recycler_record_text_parent);
 
             imageFork = itemView.findViewById(R.id.item_recycler_record_image_fork);
             textFloor = itemView.findViewById(R.id.item_recycler_record_text_floor);
+
+            textFork = itemView.findViewById(R.id.item_recycler_record_text_fork_num);
         }
 
         @Override
@@ -224,13 +229,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
-                imageFavorite.setOnClickListener(v -> {
-                    ToastUtil.showToastShort("收藏到某些收藏夹");
-                });
-                imageComment.setOnClickListener(v -> {
-                    //  editComment.requestFocus();
-                    editTextPopWindow.showPopupWindow(imageComment, token, record);
-                });
             } else {
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
@@ -296,6 +294,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
             //是否 收藏
             imageFavorite.setImageResource(data.isFavorite() ? R.drawable.favorited : R.drawable.favorite);
+
+            textFork.setText(StringUtil.numLong2Str(data.getChildNum()));
         }
 
         @Override

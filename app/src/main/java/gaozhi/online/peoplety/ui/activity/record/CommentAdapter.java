@@ -13,6 +13,7 @@ import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.IPInfo;
+import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;

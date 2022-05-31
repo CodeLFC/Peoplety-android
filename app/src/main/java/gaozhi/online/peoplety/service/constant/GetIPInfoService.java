@@ -2,12 +2,14 @@ package gaozhi.online.peoplety.service.constant;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.IPInfoDB;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 获取IP信息
@@ -36,9 +38,8 @@ public class GetIPInfoService extends BaseApiRequest<IPInfo> {
     }
 
     @Override
-    public IPInfo getNetData(Result result) {
+    public void getNetData(Result result, Consumer<IPInfo> consumer) {
         IPInfo ipInfo = getGson().fromJson(result.getData(), IPInfo.class);
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(new IPInfoDB().setIPInfo(ipInfo)));
-        return ipInfo;
+        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(new IPInfoDB().setIPInfo(ipInfo)), () -> consumer.accept(ipInfo));
     }
 }

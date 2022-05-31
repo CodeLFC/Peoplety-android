@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import gaozhi.online.base.net.http.DataHelper;
@@ -17,7 +15,6 @@ import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
-import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
@@ -28,7 +25,6 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     public static void startActivity(Context context, long recordId) {
         Intent intent = new Intent(context, RecordDetailActivity.class);
         intent.putExtra(INTENT_RECORD_ID, recordId);
-        Log.i(RecordDetailActivity.class.getName(), recordId + "卷宗编号");
         context.startActivity(intent);
     }
 
@@ -95,11 +91,14 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
         }
         //本地数据非可能返回null
         if (data == null) return;
-
-        title.setText(data.getRecord().getTitle());
-        recordViewHolder.bindView(data);
-        recordDTO = data;
-        Log.d(TAG, "" + data);
+        if (!local) {
+            recordDTO = data;
+        } else {
+            recordDTO = getRealm().copyFromRealm(data);
+        }
+        title.setText(recordDTO.getRecord().getTitle());
+        recordViewHolder.bindView(recordDTO);
+        Log.d(TAG, "" + recordDTO);
     }
 
     @Override

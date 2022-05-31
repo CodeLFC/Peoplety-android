@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.service.record;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
@@ -30,7 +31,7 @@ public class PublishRecordService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result getNetData(Result result) {
-        return result;
+    public void getNetData(Result result, Consumer<Result>consumer) {
+        consumer.accept(result);
     }
 }
