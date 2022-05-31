@@ -291,7 +291,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             //刷新数据
             refreshData(data.getRecord());
             //评论数量
-            textComment.setText(StringUtil.numLong2Str(data.getCommentPageInfo().getTotal()));
+            textComment.setText(StringUtil.numLong2Str(data.getCommentNum()));
             //收藏数量
             textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
             //是否 收藏

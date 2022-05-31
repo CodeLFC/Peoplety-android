@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ImageModel{
+public class ImageModel implements NoAnimatorRecyclerView.BaseAdapter.BaseItem {
     public static final int UPLOAD_SUCCESS_PROCESS =100;
     public static final int UPLOAD_FAIL_PROCESS =-1;
     private int process;

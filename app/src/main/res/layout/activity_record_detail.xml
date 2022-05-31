@@ -12,55 +12,28 @@
         layout="@layout/layout_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/logo_big_size" />
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/record_detail_activity_swipe_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ScrollView
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/record_detail_activity_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/record_detail_activity_view_record_item"
-                layout="@layout/item_recycler_record"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/record_detail_activity_text_record_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_margin"
-                android:gravity="center"
-                android:text="@string/related_record"
-                android:textColor="@color/deep_text_color"
-                android:textSize="@dimen/font_size_small" />
-
-            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
-                android:id="@+id/record_detail_activity_recycler_parent_child"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <TextView
-                android:id="@+id/record_detail_activity_text_comment_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_margin"
-                android:gravity="center"
-                android:text="@string/comment"
-                android:textColor="@color/deep_text_color"
-                android:textSize="@dimen/font_size_small" />
-            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
-                android:id="@+id/record_detail_activity_recycler_comment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </ScrollView>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <include
+                    android:id="@+id/record_detail_activity_view_record_item"
+                    layout="@layout/item_recycler_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -3,6 +3,10 @@ package gaozhi.online.peoplety.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
+import gaozhi.online.peoplety.util.StringUtil;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
@@ -14,7 +18,7 @@ import lombok.Data;
  * @date 2022/5/14 9:35
  */
 @Data
-public class Record  extends RealmObject implements Parcelable{
+public class Record  extends RealmObject implements Parcelable, NoAnimatorRecyclerView.BaseAdapter.BaseItem {
      @PrimaryKey
      private long id;
      private long parentId;
@@ -86,4 +90,26 @@ public class Record  extends RealmObject implements Parcelable{
           dest.writeByte((byte) (top ? 1 : 0));
      }
 
+     @Override
+     public long getItemId() {
+          return id;
+     }
+
+     @Override
+     public int compare(NoAnimatorRecyclerView.BaseAdapter.BaseItem item) {
+          return (int) (item.getItemId() - getItemId());
+     }
+
+     @Override
+     public boolean equals(Object o) {
+          if (this == o) return true;
+          if (o == null || getClass() != o.getClass()) return false;
+          Record record = (Record) o;
+          return id == record.id && parentId == record.parentId && userid == record.userid && areaId == record.areaId && recordTypeId == record.recordTypeId && enable == record.enable && time == record.time && top == record.top && Objects.equals(title, record.title) && Objects.equals(description, record.description) && Objects.equals(content, record.content) && Objects.equals(imgs, record.imgs) && Objects.equals(url, record.url) && Objects.equals(ip, record.ip);
+     }
+
+     @Override
+     public int hashCode() {
+          return Objects.hash(id, parentId, userid, areaId, recordTypeId, enable, title, description, content, imgs, url, time, ip, top);
+     }
 }

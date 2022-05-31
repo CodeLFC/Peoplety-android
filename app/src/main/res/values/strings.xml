@@ -51,7 +51,7 @@
     <string name="about">关于</string>
     <string name="user_info">个人信息</string>
     <string name="vip">VIP</string>
-    <string name="ip">IP&#160;</string>
+    <string name="ip">属地</string>
     <string name="id">ID&#160;</string>
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
@@ -124,10 +124,9 @@
     <!--    首页-->
     <string name="send">发送</string>
     <string name="tip_please_enter_content">请输入内容…</string>
-    <string name="text_indent">\u3000\u3000</string>
     <string name="tip_content_is_empty">输入内容为空</string>
-    <string name="parent_record">父</string>
-    <string name="child_record">子</string>
+    <string name="parent_record">首发</string>
+    <string name="child_record">派生</string>
     <string name="related_record">相关卷宗</string>
     <string name="floor">号</string>
 </resources>

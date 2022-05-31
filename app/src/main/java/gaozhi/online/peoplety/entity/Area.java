@@ -12,7 +12,7 @@ import lombok.Data;
  * @date 2022/5/14 9:37
  */
 @Data
-public class Area  extends RealmObject{
+public class Area  extends RealmObject implements NoAnimatorRecyclerView.BaseAdapter.BaseItem {
     @PrimaryKey
     private int id;
     private int parentId;
@@ -21,4 +21,9 @@ public class Area  extends RealmObject{
     private String description;
     private String url;
     private boolean minimum;
+
+    @Override
+    public long getItemId() {
+        return id;
+    }
 }

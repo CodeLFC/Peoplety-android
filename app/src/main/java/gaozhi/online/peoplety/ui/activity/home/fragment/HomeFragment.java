@@ -71,8 +71,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         areaPopWindow.setOnAreaClickedListener(this);
 
         recordRecyclerView = view.findViewById(R.id.fragment_home_recycler_record);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        //linearLayoutManager.setStackFromEnd(false);
+        LinearLayoutManager linearLayoutManager = new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(getContext());
         recordRecyclerView.setLayoutManager(linearLayoutManager);
         recordAdapter = new RecordAdapter(loginUser.getToken());
         recordRecyclerView.setAdapter(recordAdapter);

@@ -14,7 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.recyclerview.widget.SortedList;
+import androidx.recyclerview.widget.SortedListAdapterCallback;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -67,7 +70,6 @@ public class NoAnimatorRecyclerView extends RecyclerView {
                 }
             }
         });
-
     }
 
     /**
@@ -113,10 +115,55 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <T>
      * @param <V>
      */
-    public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V> extends RecyclerView.Adapter<T> implements Consumer<Integer> {
+    public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends RecyclerView.Adapter<T> implements Consumer<Integer> {
+        //item必须实现的接口
+        public interface BaseItem {
 
+            default long getItemId() {
+                return -1;
+            }
+
+            /**
+             * 定义item的显示顺序
+             *
+             * @param item
+             * @return
+             */
+            default int compare(BaseItem item) {
+                return (int) (getItemId() - item.getItemId());
+            }
+        }
+        public static class DefaultLinearLayoutManager extends LinearLayoutManager{
+
+            public DefaultLinearLayoutManager(Context context) {
+                super(context);
+            }
+
+            @Override
+            protected void calculateExtraLayoutSpace(@NonNull State state, @NonNull int[] extraLayoutSpace) {
+                Arrays.fill(extraLayoutSpace, 300);
+               // super.calculateExtraLayoutSpace(state, extraLayoutSpace);
+            }
+        }
         private Consumer<V> onItemClickedListener;
-        private final List<V> itemList = new LinkedList<>();
+        //列表
+        private final SortedList<BaseItem> itemList = new SortedList<>(BaseItem.class, new SortedListAdapterCallback<>(this) {
+            @Override
+            public int compare(BaseItem o1, BaseItem o2) {
+                return o1.compare(o2);
+            }
+
+            @Override
+            public boolean areContentsTheSame(BaseItem oldItem, BaseItem newItem) {
+                //依赖hashcode 方法
+                return oldItem == newItem;
+            }
+
+            @Override
+            public boolean areItemsTheSame(BaseItem item1, BaseItem item2) {
+                return item1.getItemId() == item2.getItemId();
+            }
+        });
 
         public BaseAdapter() {
             //防止闪烁
@@ -130,13 +177,13 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         @Override
         public void onBindViewHolder(@NonNull T holder, int position) {
             holder.setOnItemSelectedListener(this);
-            holder.bindView(itemList.get(position));
+            holder.bindView(getItem(position));
         }
 
         //防止闪烁
         @Override
         public long getItemId(int position) {
-            return position;
+            return getItem(position).getItemId();
         }
 
         @Override
@@ -144,40 +191,31 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             return itemList.size();
         }
 
-        protected V getItem(int index) {
-            return itemList.get(index);
+        protected V getItem(int position) {
+            return (V) itemList.get(position);
         }
 
-        protected List<V> getItemList() {
-            return itemList;
-        }
-
-        public void updateItem(int index, V item) {
-            itemList.set(index, item);
-            notifyItemChanged(index);
-        }
 
         public void add(V item) {
-            int loc = itemList.size();
             itemList.add(item);
-            notifyItemInserted(loc);
         }
 
         public void add(List<V> items) {
-            int start = itemList.size() - 1;
-            itemList.addAll(items);
-            notifyItemRangeInserted(start, items.size());
+            for (V e : items) {
+                itemList.add(e);
+            }
         }
 
         public void remove(int index) {
-            itemList.remove(index);
-            notifyItemRemoved(index);
+            itemList.removeItemAt(index);
+        }
+
+        public void updateItem(int index, V item) {
+            itemList.updateItemAt(index, item);
         }
 
         public void clear() {
-            int len = itemList.size();
             itemList.clear();
-            notifyItemRangeRemoved(0, len);
         }
 
         public void setOnItemClickedListener(Consumer<V> onItemClickedListener) {
@@ -187,7 +225,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         @Override
         public void accept(Integer position) {
             if (onItemClickedListener != null) {
-                onItemClickedListener.accept(itemList.get(position));
+                onItemClickedListener.accept(getItem(position));
             }
         }
     }

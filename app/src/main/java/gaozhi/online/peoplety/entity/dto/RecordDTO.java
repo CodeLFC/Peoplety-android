@@ -1,10 +1,9 @@
 package gaozhi.online.peoplety.entity.dto;
 
-import com.github.pagehelper.PageInfo;
-
-import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import lombok.Data;
 
 /**
@@ -14,15 +13,19 @@ import lombok.Data;
  * @date 2022/5/14 9:39
  */
 @Data
-public class RecordDTO {
-
+public class RecordDTO extends RealmObject {
+    @PrimaryKey
+    private long id;
     private Record record;
     private Record parent;
     //收藏数量
     private int favoriteNum;
     //是否收藏
     private boolean favorite;
-    private PageInfo<Record> childPageInfo;
-    private PageInfo<Comment> commentPageInfo;
+    //子数量
+    private long childNum;
+    //评论数量
+    private long commentNum;
+
     private RecordType recordType;
 }

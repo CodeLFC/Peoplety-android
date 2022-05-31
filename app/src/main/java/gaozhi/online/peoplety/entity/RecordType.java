@@ -15,7 +15,7 @@ import lombok.Data;
  * @date 2022/5/14 11:05
  */
 @Data
-public class RecordType extends RealmObject implements Parcelable{
+public class RecordType extends RealmObject implements Parcelable, NoAnimatorRecyclerView.BaseAdapter.BaseItem {
     @PrimaryKey
     private int id;
     private int parentId;
@@ -64,5 +64,10 @@ public class RecordType extends RealmObject implements Parcelable{
         dest.writeByte((byte) (enable ? 1 : 0));
         dest.writeInt(grade);
         dest.writeByte((byte) (minimum ? 1 : 0));
+    }
+
+    @Override
+    public long getItemId() {
+        return id;
     }
 }

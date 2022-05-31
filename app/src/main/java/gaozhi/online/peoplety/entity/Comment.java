@@ -12,7 +12,7 @@ import lombok.Data;
  * @date 2022/5/14 9:56
  */
 @Data
-public class Comment  extends RealmObject{
+public class Comment  extends RealmObject implements NoAnimatorRecyclerView.BaseAdapter.BaseItem {
     @PrimaryKey
     private long id;
     private long userid;
@@ -22,4 +22,13 @@ public class Comment  extends RealmObject{
     private long time;
     private String ip;
 
+    @Override
+    public long getItemId() {
+        return id;
+    }
+
+    @Override
+    public int compare(NoAnimatorRecyclerView.BaseAdapter.BaseItem item) {
+        return (int) (item.getItemId() - getItemId());
+    }
 }

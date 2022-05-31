@@ -46,14 +46,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     private RecordAdapter.RecordViewHolder recordViewHolder;
     private TextView title;
     private SwipeRefreshLayout swipeRefreshLayout;
-    //子-纵向排列
-    private TextView textRecordTip;
-    private NoAnimatorRecyclerView recyclerViewRecordParentChild;
-    private ChildRecordAdapter childRecordAdapter;
-    //评论 - 纵向排列
-    private TextView textCommentTip;
-    private NoAnimatorRecyclerView recyclerViewComment;
-    private CommentAdapter commentAdapter;
+
     //data
     private UserDTO loginUser;
     //db
@@ -67,15 +60,6 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
         recordViewHolder = new RecordAdapter.RecordViewHolder($(R.id.record_detail_activity_view_record_item), loginUser.getToken());
         recordViewHolder.setShowDetails(true);
         title = $(R.id.title_text);
-        recyclerViewRecordParentChild = $(R.id.record_detail_activity_recycler_parent_child);
-
-        recyclerViewRecordParentChild.setLayoutManager(new LinearLayoutManager(this));
-
-        recyclerViewComment = $(R.id.record_detail_activity_recycler_comment);
-        recyclerViewComment.setLayoutManager(new LinearLayoutManager(this));
-
-        textRecordTip = $(R.id.record_detail_activity_text_record_tip);
-        textCommentTip = $(R.id.record_detail_activity_text_comment_tip);
 
         swipeRefreshLayout = $(R.id.record_detail_activity_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -83,12 +67,6 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     protected void doBusiness(Context mContext) {
-        childRecordAdapter = new ChildRecordAdapter();
-        recyclerViewRecordParentChild.setAdapter(childRecordAdapter);
-
-        commentAdapter = new CommentAdapter(loginUser.getToken());
-        recyclerViewComment.setAdapter(commentAdapter);
-
         recordViewHolder.bindView(record);
         onRefresh();
     }
@@ -112,42 +90,16 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     public void handle(int id, RecordDTO data, boolean local) {
-        if(!local){
+        if (!local) {
             swipeRefreshLayout.setRefreshing(false);
         }
-        //本地数据非第一页会返回null
+        //本地数据非可能返回null
         if (data == null) return;
 
         title.setText(data.getRecord().getTitle());
         recordViewHolder.bindView(data);
         recordDTO = data;
-        //添加卷宗
-        if (data.getChildPageInfo().getPageNum() <= 1) {
-            childRecordAdapter.clear();
-            if (data.getParent() != null) {//添加父卷宗
-                childRecordAdapter.add(data.getParent());
-            }
-            //提示
-
-            if ((!local&&data.getChildPageInfo().getTotal() == 0) && data.getParent() == null) {
-                textRecordTip.setVisibility(View.GONE);
-            } else {
-                textRecordTip.setVisibility(View.VISIBLE);
-            }
-        }
-        childRecordAdapter.add(recordDTO.getChildPageInfo().getList());
-
-        //添加评论
-        if (data.getCommentPageInfo().getPageNum() <= 1) {
-            commentAdapter.clear();
-            //提示
-            if (!local&&data.getCommentPageInfo().getTotal() == 0) {
-                textCommentTip.setVisibility(View.GONE);
-            } else {
-                textCommentTip.setVisibility(View.VISIBLE);
-            }
-        }
-        commentAdapter.add(recordDTO.getCommentPageInfo().getList());
+        Log.d(TAG, "" + data);
     }
 
     @Override
