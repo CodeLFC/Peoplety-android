@@ -28,6 +28,11 @@ public class OptionsPopWindow extends BasePopupWindow {
     public static class Option implements NoAnimatorRecyclerView.BaseAdapter.BaseItem {
         private int id;
         private String text;
+
+        @Override
+        public long getItemId() {
+            return id;
+        }
     }
 
     private RecyclerView recyclerView;

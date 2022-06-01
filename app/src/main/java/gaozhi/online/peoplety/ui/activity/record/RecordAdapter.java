@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
@@ -30,11 +31,13 @@ import gaozhi.online.peoplety.entity.client.ImageModel;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
+import gaozhi.online.peoplety.service.record.DeleteRecordByIdService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.PublishRecordActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
+import gaozhi.online.peoplety.ui.util.pop.DialogPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.DateTimeUtil;
 import gaozhi.online.peoplety.util.GlideUtil;
@@ -94,6 +97,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textContent;
 
         private final CommentPopWindow commentPopWindow;
+        private final ChildRecordPopWindow childRecordPopWindow;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
             @Override
@@ -103,7 +107,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                     return;
                 }
                 textName.setText(data.getUserInfo().getNick());
-                GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
+                Log.d(getClass().getName(), "userinfo:" + data.getUserInfo());
+                GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), R.drawable.app_logo, imageHead);
                 textRemark.setText(data.getUserInfo().getRemark());
                 UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
                 switch (gender) {
@@ -140,6 +145,22 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 textIp.setText(data.getShowArea());
             }
         });
+        //删除评论
+        private final DeleteRecordByIdService deleteRecordByIdService = new DeleteRecordByIdService(new DataHelper.OnDataListener<Result>() {
+            @Override
+            public void handle(int id, Result data) {
+                if (getBindingAdapter() != null) {
+                    ((RecordAdapter) getBindingAdapter()).remove(getAbsoluteAdapterPosition());
+                } else {
+                    ToastUtil.showToastShort(R.string.tip_delete_success);
+                }
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+                ToastUtil.showToastShort(message + data);
+            }
+        });
         private final Token token;
         //是否完整显示内容
         private boolean showDetails;
@@ -173,6 +194,15 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textComment = itemView.findViewById(R.id.item_recycler_record_text_comment_num);
             textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
             imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
+            imageDelete.setOnClickListener((v) -> {
+                DialogPopWindow dialogPopWindow = new DialogPopWindow(context);
+                dialogPopWindow.getMessage().setText(R.string.tip_ensure_delete);
+                dialogPopWindow.getBtnRight().setOnClickListener(v1 -> {
+                    deleteRecordByIdService.request(token, record.getId());
+                    dialogPopWindow.dismiss();
+                });
+                dialogPopWindow.showPopupWindow(imageDelete);
+            });
             textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
             imageGender = itemView.findViewById(R.id.item_recycler_record_image_gender);
 
@@ -188,6 +218,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textParent = itemView.findViewById(R.id.item_recycler_record_text_parent);
 
             imageFork = itemView.findViewById(R.id.item_recycler_record_image_fork);
+            childRecordPopWindow = new ChildRecordPopWindow(context);
+            //派生分支
+            imageFork.setOnClickListener((v) -> {
+                childRecordPopWindow.showPopupWindow(imageFork, record);
+            });
             textFloor = itemView.findViewById(R.id.item_recycler_record_text_floor);
 
             textFork = itemView.findViewById(R.id.item_recycler_record_text_fork_num);
@@ -252,15 +287,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imgList = new Gson().fromJson(item.getImgs(), new TypeToken<List<String>>() {
             }.getType());
             for (String img : imgList) {
-                imageAdapter.add(new ImageModel(0, img, ""));
+                imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, img, ""));
             }
             textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
             textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
-            //派生分支
-            imageFork.setOnClickListener((v) -> {
-                PublishRecordActivity.startActivity(context, recordType, record);
-            });
             //卷宗编号
             textFloor.setText(item.getId() + context.getString(R.string.floor));
         }
@@ -284,8 +315,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         @Override
         public void handle(int id, RecordDTO data, boolean local) {
-            if (data == null) return;
-
+            if (data == null || data.getRecord() == null) return;
             //刷新数据
             refreshData(data.getRecord());
             //评论数量

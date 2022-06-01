@@ -71,14 +71,15 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     private static final String INTENT_TYPE = "type";
     private static final String INTENT_PARENT = "parent";
 
-    public static void startActivity(Context context, RecordType recordType) {
-        startActivity(context, recordType, null);
+    public static void startActivity(Context context, @NonNull Record parent) {
+        Intent intent = new Intent(context, PublishRecordActivity.class);
+        intent.putExtra(INTENT_PARENT, parent);
+        context.startActivity(intent);
     }
 
-    public static void startActivity(Context context, RecordType recordType, Record parent) {
+    public static void startActivity(Context context, @NonNull RecordType recordType) {
         Intent intent = new Intent(context, PublishRecordActivity.class);
         intent.putExtra(INTENT_TYPE, recordType);
-        intent.putExtra(INTENT_PARENT, parent);
         context.startActivity(intent);
     }
 
@@ -110,6 +111,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     //service
     private final GetCosTempSecretService getCosTempSecretService = new GetCosTempSecretService(this);
     private final PublishRecordService publishRecordService = new PublishRecordService(this);
+
     //handler,发送图片上传状态
     private final Handler handlerImgUploadProcess = new Handler(this);
 
@@ -120,7 +122,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         record = new Record();
         //无法修改的内容
         record.setParentId(parent == null ? 0 : parent.getId());
-        record.setRecordTypeId(recordType.getId());
     }
 
     @Override
@@ -205,13 +206,14 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
      */
     @Override
     protected void doBusiness(Context mContext) {
+        record.setRecordTypeId(recordType.getId());
         title.setText(recordType.getName());
 
         //没有父卷宗
-        if (parent ==null ) {
+        if (parent == null) {
             textParentTip.setVisibility(View.GONE);
             textParent.setVisibility(View.GONE);
-        }else{
+        } else {
             textParentTip.setVisibility(View.VISIBLE);
             textParent.setVisibility(View.VISIBLE);
             textParent.setText(parent.getTitle());
@@ -228,6 +230,8 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         //build一个没有Realm绑定的副本
         loginUser = realm.copyFromRealm(loginUser);
+        if (parent != null)
+            recordType = realm.where(RecordType.class).equalTo("id", parent.getRecordTypeId()).findFirst();
     }
 
     /**
@@ -374,7 +378,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    imageAdapter.add(new ImageModel(0, imgPath, hashCode));
+                    imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, imgPath, hashCode));
                 }
 
                 //selectList = PictureSelector.obtainMultipleResult(data);

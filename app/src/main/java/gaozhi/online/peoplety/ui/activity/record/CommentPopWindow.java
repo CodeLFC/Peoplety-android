@@ -63,7 +63,7 @@ public class CommentPopWindow extends DBBasePopWindow implements View.OnClickLis
     public void showPopupWindow(View parent, Record record) {
         this.record = record;
         showPopupWindow(parent);
-        getCommentByRecordIdService.request(loginUser.getToken(), record.getId(), 1);
+        onRefresh();
     }
 
     @Override

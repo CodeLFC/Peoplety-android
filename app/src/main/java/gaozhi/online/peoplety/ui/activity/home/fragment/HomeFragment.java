@@ -180,4 +180,9 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             //提醒到底了
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

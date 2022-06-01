@@ -47,9 +47,15 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
 
     @Override
     public void getNetData(Result result, Consumer<RecordDTO> consumer) {
-        RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
+        final RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
+        consumer.accept(recordDTO);
         getRealm().executeTransactionAsync(realm -> {
+            if (recordDTO.getRecord() == null) {
+                RecordDTO temp = realm.where(RecordDTO.class).equalTo("id", recordDTO.getId()).findFirst();
+                if (temp != null)
+                    temp.deleteFromRealm();
+            }
             realm.copyToRealmOrUpdate(recordDTO);
-        }, () -> consumer.accept(recordDTO));
+        });
     }
 }

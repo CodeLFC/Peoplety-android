@@ -17,7 +17,7 @@
         android:padding="@dimen/activity_margin">
 
         <TextView
-            android:id="@+id/pop_widow_tip_message"
+            android:id="@+id/pop_window_dialog_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/widget_margin"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/pop_widow_tip_btn_cancel"
+                android:id="@+id/pop_window_dialog_btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,7 +39,7 @@
                 android:layout_marginEnd="@dimen/activity_margin"
                 android:textSize="@dimen/font_size_general" />
             <Button
-                android:id="@+id/pop_widow_tip_btn_ok"
+                android:id="@+id/pop_window_dialog_btn_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

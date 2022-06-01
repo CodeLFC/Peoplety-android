@@ -63,4 +63,11 @@
                 android:textSize="@dimen/font_size_small" />
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="开发中..."
+        android:gravity="center"
+        android:textColor="@color/deep_text_color"
+        android:textSize="@dimen/font_size_slogan"/>
 </LinearLayout>

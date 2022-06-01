@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Comment;
@@ -18,12 +19,15 @@ import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
+import gaozhi.online.peoplety.service.record.DeleteCommentByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
+import gaozhi.online.peoplety.ui.util.pop.DialogPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.DateTimeUtil;
 import gaozhi.online.peoplety.util.GlideUtil;
 import gaozhi.online.peoplety.util.StringUtil;
+import gaozhi.online.peoplety.util.ToastUtil;
 
 /**
  * 评论适配器
@@ -56,6 +60,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
         private final TextView textStatus;
         private final TextView textFloor;
         private final Token token;
+        private Comment comment;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
 
@@ -101,6 +106,18 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
                 textIP.setText(data.getShowArea());
             }
         });
+        private final DeleteCommentByIdService deleteCommentByIdService = new DeleteCommentByIdService(new DataHelper.OnDataListener<Result>() {
+            @Override
+            public void handle(int id, Result data) {
+                if (getBindingAdapter() != null)
+                    ((CommentAdapter) getBindingAdapter()).remove(getAbsoluteAdapterPosition());
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+                ToastUtil.showToastShort(message + data);
+            }
+        });
 
         public CommentViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
@@ -115,6 +132,17 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             textIP = itemView.findViewById(R.id.item_recycler_comment_text_ip);
             textTime = itemView.findViewById(R.id.item_recycler_comment_text_time);
             imageDelete = itemView.findViewById(R.id.item_recycler_comment_image_delete);
+            imageDelete.setOnClickListener((v) -> {
+                if (comment != null) {
+                    DialogPopWindow dialogPopWindow = new DialogPopWindow(context);
+                    dialogPopWindow.getMessage().setText(R.string.tip_ensure_delete);
+                    dialogPopWindow.getBtnRight().setOnClickListener(v1 -> {
+                        deleteCommentByIdService.request(token, comment.getId());
+                        dialogPopWindow.dismiss();
+                    });
+                    dialogPopWindow.showPopupWindow(imageDelete);
+                }
+            });
             textStatus = itemView.findViewById(R.id.item_recycler_comment_text_status);
             textFloor = itemView.findViewById(R.id.item_recycler_comment_text_floor);
 
@@ -122,6 +150,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
 
         @Override
         public void bindView(Comment item) {
+            this.comment = item;
             textContent.setText(item.getContent());
             textTime.setText(DateTimeUtil.getRecordTime(item.getTime()));
             if (!StringUtil.isEmpty(item.getUrl())) {

@@ -56,7 +56,6 @@ public class MessageFragment extends DBBaseFragment {
 
     @Override
     public void onPageSelected() {
-        ToastUtil.showToastShort("只在应用内刷新消息");
     }
 
     @Override

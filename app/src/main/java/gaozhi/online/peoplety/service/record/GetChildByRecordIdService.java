@@ -10,39 +10,38 @@ import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
-import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
- * 根据地区获取卷宗列表
+ * 获取子卷宗列表
  */
-public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
-    public GetRecordByAreaService(DataHelper.OnDataListener<PageInfo<Record>> resultHandler) {
+public class GetChildByRecordIdService extends BaseApiRequest<PageInfo<Record>> {
+
+    public GetChildByRecordIdService(DataHelper.OnDataListener<PageInfo<Record>> resultHandler) {
         super(NetConfig.recordBaseURL, Type.GET);
         setDataListener(resultHandler);
     }
 
-    public void request(Token token, int areaId, int pageNum, int pageSize) {
+    public void request(Token token, long recordId, int pageNum) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
-        params.put("areaId", "" + areaId);
+        params.put("recordId", "" + recordId);
         params.put("pageNum", "" + pageNum);
-        params.put("pageSize", "" + pageSize);
-        request("get/area/records", headers, params);
+        params.put("pageSize", "" + 10);
+        request("get/record/child", headers, params);
     }
 
     @Override
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
-        int areaId = Integer.parseInt(params.get("areaId"));
+        int recordId = Integer.parseInt(params.get("recordId"));
         int pageNum = Integer.parseInt(params.get("pageNum"));
         if (pageNum <= 1)
-            return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).findAll());
+            return new PageInfo<>(getRealm().where(Record.class).equalTo("parentId", recordId).equalTo("enable",true).findAll());
         return null;
     }
 
@@ -51,15 +50,14 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
         PageInfo<Record> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
         }.getType());
         consumer.accept(pageInfo);
-
+        //装入数据库
         if (pageInfo.getPageNum() > 1) {
             return;
         }
-        //装入数据库
         getRealm().executeTransactionAsync(realm -> {
             if (pageInfo.getList().size() > 0) {//删除这一类的第一页
-                int areaId = pageInfo.getList().get(0).getAreaId();
-                RealmResults<Record> old = getRealm().where(Record.class).equalTo("areaId", areaId).findAll();
+                long parentId = pageInfo.getList().get(0).getParentId();
+                RealmResults<Record> old = getRealm().where(Record.class).equalTo("parentId", parentId).findAll();
                 for (Record record : old) {
                     record.deleteFromRealm();
                 }

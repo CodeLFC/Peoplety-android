@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pop_window_half_screen_height"
+        android:background="@drawable/radius_with_header_bg"
+        android:paddingVertical="@dimen/activity_margin">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/pop_window_child_record_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+                android:id="@+id/pop_window_child_record_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingBottom="@dimen/activity_margin"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <Button
+            android:id="@+id/pop_window_child_record_btn_publish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/child_record"
+            android:textSize="@dimen/font_size_general" />
+    </FrameLayout>
+
+</LinearLayout>

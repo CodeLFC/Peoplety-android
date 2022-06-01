@@ -88,6 +88,11 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     public void handle(int id, RecordDTO data, boolean local) {
         if (!local) {
             swipeRefreshLayout.setRefreshing(false);
+            if(data.getRecord()==null){
+                ToastUtil.showToastShort(R.string.tip_delete_success);
+                finish();
+                return;
+            }
         }
         //本地数据非可能返回null
         if (data == null) return;
