@@ -42,8 +42,11 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         int areaId = Integer.parseInt(params.get("areaId"));
         int pageNum = Integer.parseInt(params.get("pageNum"));
+        String selectedTypes = params.get("selectedTypes");
+        List<Integer> selectedLabel = getGson().fromJson(selectedTypes, new TypeToken<List<Integer>>() {
+        }.getType());
         if (pageNum <= 1)
-            return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).findAll());
+            return new PageInfo<>(getRealm().where(Record.class).equalTo("areaId", areaId).in("recordTypeId", selectedLabel.toArray(new Integer[]{})).findAll());
         return null;
     }
 
