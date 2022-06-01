@@ -27,13 +27,14 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
         setDataListener(resultHandler);
     }
 
-    public void request(Token token, int areaId, int pageNum, int pageSize) {
+    public void request(Token token, int areaId, List<Integer> selectedLabel, int pageNum, int pageSize) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         params.put("areaId", "" + areaId);
         params.put("pageNum", "" + pageNum);
         params.put("pageSize", "" + pageSize);
+        params.put("selectedTypes", getGson().toJson(selectedLabel));
         request("get/area/records", headers, params);
     }
 

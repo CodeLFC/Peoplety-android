@@ -145,7 +145,11 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         public static class DefaultLinearLayoutManager extends LinearLayoutManager {
 
             public DefaultLinearLayoutManager(Context context) {
-                super(context);
+                this(context, RecyclerView.VERTICAL);
+            }
+
+            public DefaultLinearLayoutManager(Context context, int orientation) {
+                super(context, orientation, false);
             }
 
             @Override
@@ -227,6 +231,15 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         public void updateItem(int index, V item) {
             itemList.updateItemAt(index, item);
+        }
+
+        public void updateItem(V item) {
+            for (int index = 0; index < getItemCount(); index++) {
+                if (item.getItemId() == getItem(index).getItemId()) {
+                    updateItem(index, item);
+                    return;
+                }
+            }
         }
 
         public void clear() {

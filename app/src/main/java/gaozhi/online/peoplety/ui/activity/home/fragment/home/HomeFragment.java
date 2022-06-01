@@ -1,29 +1,26 @@
-package gaozhi.online.peoplety.ui.activity.home.fragment;
+package gaozhi.online.peoplety.ui.activity.home.fragment.home;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.pagehelper.PageInfo;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
-import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
-import gaozhi.online.peoplety.entity.dto.RecordDTO;
+import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordByAreaService;
 import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
@@ -32,8 +29,8 @@ import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
-import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass. 主页
@@ -43,6 +40,8 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     private TextView titleTextRight;
     private AreaPopWindow areaPopWindow;
     //
+    private NoAnimatorRecyclerView recordTypeLabelRecyclerView;
+    private RecordTypeLabelAdapter recordTypeLabelAdapter;
     private NoAnimatorRecyclerView recordRecyclerView;
     private RecordAdapter recordAdapter;
     private SwipeRefreshLayout recyclerSwipeRefreshView;
@@ -51,7 +50,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     //获取内容
     private final GetRecordByAreaService getRecordByAreaService = new GetRecordByAreaService(this);
     private PageInfo<Record> currentRecordPageInfo;
-
+    private List<Integer> selectedLabel;
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
@@ -80,7 +79,25 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         recyclerSwipeRefreshView = view.findViewById(R.id.fragment_home_swipe_record);
         recyclerSwipeRefreshView.setOnRefreshListener(this);
         //点击条目打开详情
-        recordAdapter.setOnItemClickedListener(record -> RecordDetailActivity.startActivity(getContext(),record.getId()));
+        recordAdapter.setOnItemClickedListener(record -> RecordDetailActivity.startActivity(getContext(), record.getId()));
+
+        recordTypeLabelRecyclerView = view.findViewById(R.id.fragment_home_recycler_record_type_label);
+        recordTypeLabelRecyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(getContext(), RecyclerView.HORIZONTAL));
+        recordTypeLabelAdapter = new RecordTypeLabelAdapter();
+        recordTypeLabelRecyclerView.setAdapter(recordTypeLabelAdapter);
+        recordTypeLabelAdapter.setOnItemClickedListener(recordType -> {
+            RecordType temp = getRealm().copyFromRealm(recordType);
+            getRealm().executeTransactionAsync(realm -> {
+                temp.setSelected(!temp.isSelected());
+                realm.copyToRealmOrUpdate(temp);
+            }, new Realm.Transaction.OnSuccess() {
+                @Override
+                public void onSuccess() {
+                    recordTypeLabelAdapter.updateItem(recordType);
+                    doBusiness();
+                }
+            });
+        });
     }
 
     @Override
@@ -93,13 +110,21 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         if (loginUser.getArea() == null) {
             areaPopWindow.showPopupWindow(getActivity());
             return;
-        } else {
-            //访问内容
-            if(!getRecordByAreaService.isRequesting()) {
-                getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), 1, PAGE_SIZE);
-            }
         }
         titleTextRight.setText(loginUser.getArea().getName());
+        selectedLabel = new LinkedList<>();
+        List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
+        for (RecordType recordType : recordTypes) {
+            recordTypeLabelAdapter.add(recordType);
+            if (recordType.isSelected()) {
+                selectedLabel.add(recordType.getId());
+            }
+        }
+        //访问内容
+        if (!getRecordByAreaService.isRequesting()) {
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(),selectedLabel, 1, PAGE_SIZE);
+        }
+
     }
 
     @Override
@@ -132,7 +157,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         }, () -> {
             titleTextRight.setText(area.getName());
             //请求某个地区的资料
-            getRecordByAreaService.request(loginUser.getToken(), area.getId(), 1, PAGE_SIZE);
+            doBusiness();
         });
 
     }
@@ -140,7 +165,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     @Override
     public void handle(int id, PageInfo<Record> data, boolean local) {
         //本地数据非第一页会返回null
-        if(data ==null)return;
+        if (data == null) return;
         if (!local) {
             //停止刷新状态
             recyclerSwipeRefreshView.setRefreshing(false);
@@ -174,7 +199,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         }
         if (currentRecordPageInfo.isHasNextPage()) {
             //请求某个地区的资料
-            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), currentRecordPageInfo.getNextPage(), PAGE_SIZE);
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(),selectedLabel, currentRecordPageInfo.getNextPage(), PAGE_SIZE);
         } else {
             recordRecyclerView.setLoading(false);
             //提醒到底了

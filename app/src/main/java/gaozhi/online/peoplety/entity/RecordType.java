@@ -3,6 +3,8 @@ package gaozhi.online.peoplety.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -24,10 +26,13 @@ public class RecordType extends RealmObject implements Parcelable, NoAnimatorRec
     private boolean enable;
     private int grade;
     private boolean minimum;
+    //是否被选中
+    private boolean isSelected;
 
-    public RecordType(){
+    public RecordType() {
 
     }
+
     protected RecordType(Parcel in) {
         id = in.readInt();
         parentId = in.readInt();
@@ -36,6 +41,7 @@ public class RecordType extends RealmObject implements Parcelable, NoAnimatorRec
         enable = in.readByte() != 0;
         grade = in.readInt();
         minimum = in.readByte() != 0;
+        isSelected = in.readByte() != 0;
     }
 
     public static final Creator<RecordType> CREATOR = new Creator<RecordType>() {
@@ -64,10 +70,24 @@ public class RecordType extends RealmObject implements Parcelable, NoAnimatorRec
         dest.writeByte((byte) (enable ? 1 : 0));
         dest.writeInt(grade);
         dest.writeByte((byte) (minimum ? 1 : 0));
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 
     @Override
     public long getItemId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecordType that = (RecordType) o;
+        return id == that.id && parentId == that.parentId && enable == that.enable && grade == that.grade && minimum == that.minimum && isSelected == that.isSelected && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, parentId, name, description, enable, grade, minimum, isSelected);
     }
 }

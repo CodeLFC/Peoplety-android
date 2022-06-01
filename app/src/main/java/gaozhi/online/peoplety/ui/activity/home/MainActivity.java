@@ -16,7 +16,6 @@ import android.view.View;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.gson.Gson;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +26,7 @@ import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
-import gaozhi.online.peoplety.ui.activity.home.fragment.HomeFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.home.HomeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MessageFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;

@@ -131,4 +131,5 @@
     <string name="floor">号</string>
     <string name="tip_delete_success">已删除</string>
     <string name="tip_ensure_delete">确认删除吗?</string>
+    <string name="filter">过滤器:</string>
 </resources>
