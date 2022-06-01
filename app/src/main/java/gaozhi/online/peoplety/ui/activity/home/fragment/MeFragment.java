@@ -11,6 +11,7 @@ import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
+import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.UserInfoActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
@@ -146,7 +147,7 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == viewUserInfo.getId()) {
-            UserInfoActivity.startActivity(getContext());
+            PersonalActivity.startActivity(getContext(),loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == viewChangeAccount.getId()) {

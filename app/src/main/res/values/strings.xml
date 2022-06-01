@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">正义的花生</string>
+    <string name="app_name">城市之声</string>
     <!--    常用-->
     <string name="tip_update_success">修改成功</string>
     <string name="cancel">取消</string>
     <string name="ok">确认</string>
     <!--    登陆界面-->
-    <string name="tip_app_slogan">踏出维权路上的第一公里</string>
+    <string name="tip_app_slogan">听见城市的声音</string>
     <string name="policy_privacy">隐私政策</string>
     <string name="tip_please_enter_id">请输入账号或手机号</string>
     <string name="tip_please_enter_pass">请输入密码</string>
@@ -41,8 +41,8 @@
     <string name="reset_pass">修改密码</string>
     <!--   主页面 -->
     <string name="bottom_me">我</string>
-    <string name="bottom_home">援助</string>
-    <string name="bottom_publish">求助</string>
+    <string name="bottom_home">倾听</string>
+    <string name="bottom_publish">发声</string>
     <string name="not_permission">申请权限被拒绝，app运行受限</string>
     <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->
