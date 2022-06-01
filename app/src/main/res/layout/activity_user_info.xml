@@ -10,7 +10,7 @@
     <include
         layout="@layout/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/logo_big_size" />
+        android:layout_height="@dimen/header_height" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -41,8 +41,8 @@
 
                 <ImageView
                     android:id="@+id/userinfo_activity_image_head"
-                    android:layout_width="@dimen/logo_big_size"
-                    android:layout_height="@dimen/logo_big_size"
+                    android:layout_width="@dimen/header_height"
+                    android:layout_height="@dimen/header_height"
                     android:src="@drawable/app_logo" />
             </LinearLayout>
 

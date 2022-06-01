@@ -11,11 +11,11 @@
         android:visibility="visible">
         <View
             android:layout_width="0dp"
-            android:layout_height="@dimen/logo_big_size"
-            android:layout_marginBottom="@dimen/logo_big_size" />
+            android:layout_height="@dimen/header_height"
+            android:layout_marginBottom="@dimen/header_height" />
         <ImageView
-            android:layout_width="@dimen/logo_big_size"
-            android:layout_height="@dimen/logo_big_size"
+            android:layout_width="@dimen/header_height"
+            android:layout_height="@dimen/header_height"
             android:layout_gravity="center"
             android:layout_marginBottom="50dp"
             android:src="@drawable/app_logo" />
@@ -50,12 +50,12 @@
 
         <View
             android:layout_width="0dp"
-            android:layout_height="@dimen/logo_big_size"
-            android:layout_marginBottom="@dimen/logo_big_size" />
+            android:layout_height="@dimen/header_height"
+            android:layout_marginBottom="@dimen/header_height" />
 
         <ImageView
-            android:layout_width="@dimen/logo_big_size"
-            android:layout_height="@dimen/logo_big_size"
+            android:layout_width="@dimen/header_height"
+            android:layout_height="@dimen/header_height"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:src="@drawable/app_logo" />
@@ -82,9 +82,9 @@
             <EditText
                 android:id="@+id/login_activity_edit_phone"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/logo_big_size"
+                android:layout_height="@dimen/header_height"
                 android:hint="@string/tip_please_enter_id"
-                android:paddingHorizontal="@dimen/logo_big_size"
+                android:paddingHorizontal="@dimen/header_height"
                 android:textSize="@dimen/font_size_general"
                 android:autofillHints="phone" />
         </FrameLayout>
@@ -103,10 +103,10 @@
             <EditText
                 android:id="@+id/login_activity_edit_pass"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/logo_big_size"
+                android:layout_height="@dimen/header_height"
                 android:hint="@string/tip_please_enter_pass"
                 android:inputType="textPassword"
-                android:paddingHorizontal="@dimen/logo_big_size"
+                android:paddingHorizontal="@dimen/header_height"
                 android:textSize="@dimen/font_size_general"
                 android:autofillHints="password" />
         </FrameLayout>

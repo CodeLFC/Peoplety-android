@@ -2,7 +2,7 @@
 <resources>
     <dimen name="font_size_small">12sp</dimen>
     <dimen name="font_size_general">16sp</dimen>
-    <dimen name="font_size_title">18sp</dimen>
+    <dimen name="font_size_title">16sp</dimen>
     <dimen name="font_size_name">22sp</dimen>
     <dimen name="font_size_slogan">28sp</dimen>
 
@@ -11,7 +11,7 @@
     <dimen name="icon_size_title">25dp</dimen>
 
     <dimen name="logo_size">48dp</dimen>
-    <dimen name="logo_big_size">64dp</dimen>
+    <dimen name="header_height">48dp</dimen>
     <dimen name="logo_bigger_size">90dp</dimen>
     <dimen name="activity_margin">20dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
