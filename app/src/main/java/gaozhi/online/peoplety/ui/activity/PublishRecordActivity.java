@@ -85,9 +85,9 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
 
     //最多上传图片数量
     private static final int MAX_IMAGE_SIZE = 9;
-    private static final int MIN_TITLE_LEN = 6;
-    private static final int MIN_DESCRIPTION = 20;
-    private static final int MIN_CONTENT = 80;
+    private static final int MIN_TITLE_LEN = 4;
+    private static final int MIN_DESCRIPTION = 10;
+    private static final int MIN_CONTENT = 20;
     private RecordType recordType;
     private Record parent;
     private Record record;
