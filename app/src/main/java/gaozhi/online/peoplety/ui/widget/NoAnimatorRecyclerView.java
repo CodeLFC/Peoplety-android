@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * 不显示动画，且带有垂直方向上的下拉刷新加载
@@ -214,7 +215,6 @@ public class NoAnimatorRecyclerView extends RecyclerView {
             return (V) itemList.get(position);
         }
 
-
         public void add(V item) {
             itemList.add(item);
         }
@@ -238,6 +238,23 @@ public class NoAnimatorRecyclerView extends RecyclerView {
                 if (item.getItemId() == getItem(index).getItemId()) {
                     updateItem(index, item);
                     return;
+                }
+            }
+        }
+
+        public void forEach(Consumer<V> consumer) {
+            forEach(consumer, null);
+        }
+
+        public void forEach(Consumer<V> consumer, Predicate<V> predicate) {
+            for (int index = 0; index < getItemCount(); index++) {
+                V item = getItem(index);
+                if (predicate == null) {
+                    consumer.accept(item);
+                    continue;
+                }
+                if (predicate.test(item)) {
+                    consumer.accept(item);
                 }
             }
         }

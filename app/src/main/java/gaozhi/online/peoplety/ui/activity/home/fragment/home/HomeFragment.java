@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
@@ -51,6 +52,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     private final GetRecordByAreaService getRecordByAreaService = new GetRecordByAreaService(this);
     private PageInfo<Record> currentRecordPageInfo;
     private List<Integer> selectedLabel;
+
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
@@ -86,17 +88,36 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         recordTypeLabelAdapter = new RecordTypeLabelAdapter();
         recordTypeLabelRecyclerView.setAdapter(recordTypeLabelAdapter);
         recordTypeLabelAdapter.setOnItemClickedListener(recordType -> {
-            RecordType temp = getRealm().copyFromRealm(recordType);
+            //全选按钮
+            if (recordType.getId() == RecordTypeLabelAdapter.allSelected.getId()) {
+                recordType.setSelected(!recordType.isSelected());
+                recordTypeLabelAdapter.updateItem(recordType);
+                recordTypeLabelAdapter.forEach(record -> {
+                    RecordType temp = record.isManaged() ? getRealm().copyFromRealm(record) : record;
+                    getRealm().executeTransactionAsync(realm -> {
+                        temp.setSelected(recordType.isSelected());
+                        realm.copyToRealmOrUpdate(temp);
+                    }, () -> {
+                        recordTypeLabelAdapter.updateItem(temp);
+                    });
+                }, recordType1 -> recordType1.getId() != RecordTypeLabelAdapter.allSelected.getId());
+                doBusiness();
+                return;
+            }
+            //非全选按钮
+            RecordType temp = recordType.isManaged() ? getRealm().copyFromRealm(recordType) : recordType;
             getRealm().executeTransactionAsync(realm -> {
                 temp.setSelected(!temp.isSelected());
                 realm.copyToRealmOrUpdate(temp);
-            }, new Realm.Transaction.OnSuccess() {
-                @Override
-                public void onSuccess() {
-                    recordTypeLabelAdapter.updateItem(recordType);
-                    doBusiness();
+            }, () -> {
+                recordTypeLabelAdapter.updateItem(temp);
+                if (!temp.isSelected()) {
+                    RecordTypeLabelAdapter.allSelected.setSelected(false);
+                    recordTypeLabelAdapter.updateItem(RecordTypeLabelAdapter.allSelected);
                 }
+                doBusiness();
             });
+
         });
     }
 
@@ -122,7 +143,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         }
         //访问内容
         if (!getRecordByAreaService.isRequesting()) {
-            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(),selectedLabel, 1, PAGE_SIZE);
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), selectedLabel, 1, PAGE_SIZE);
         }
 
     }
@@ -199,7 +220,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         }
         if (currentRecordPageInfo.isHasNextPage()) {
             //请求某个地区的资料
-            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(),selectedLabel, currentRecordPageInfo.getNextPage(), PAGE_SIZE);
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), selectedLabel, currentRecordPageInfo.getNextPage(), PAGE_SIZE);
         } else {
             recordRecyclerView.setLoading(false);
             //提醒到底了

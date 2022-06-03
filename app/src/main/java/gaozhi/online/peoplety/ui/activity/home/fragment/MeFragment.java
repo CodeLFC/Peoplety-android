@@ -5,13 +5,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.UserInfo;
+import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
+import gaozhi.online.peoplety.ui.activity.personal.UserRecordActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.UserInfoActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
@@ -19,6 +23,7 @@ import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.util.GlideUtil;
 import gaozhi.online.peoplety.util.StringUtil;
+import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
 /**
@@ -47,10 +52,20 @@ public class MeFragment extends DBBaseFragment {
     private View viewChangeAccount;
     private View viewAbout;
     private View viewSettings;
+    //service
+    private final GetRecordCountByUseridService getRecordCountByUseridService = new GetRecordCountByUseridService(new DataHelper.OnDataListener<UserRecordCount>() {
+        @Override
+        public void handle(int id, UserRecordCount data, boolean local) {
+            if (data == null) return;
+            textRecordNum.setText("" + data.getRecordNum());
+            textFavoriteNum.setText("" + data.getFavoriteNum());
+        }
+    });
 
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
+        loginUser = realm.copyFromRealm(loginUser);
         status = realm.where(Status.class).equalTo("id", loginUser.getUserInfo().getStatus()).findFirst();
     }
 
@@ -64,7 +79,7 @@ public class MeFragment extends DBBaseFragment {
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_me);
         title_right = view.findViewById(R.id.title_image_right);
-       // title_right.setImageResource(R.drawable.scan);
+        // title_right.setImageResource(R.drawable.scan);
         title_right.setOnClickListener(this);
         imageHead = view.findViewById(R.id.fragment_me_image_head);
         imageHead.setOnClickListener(this);
@@ -122,8 +137,8 @@ public class MeFragment extends DBBaseFragment {
             case OTHER:
                 imageGender.setImageResource(R.drawable.other_gender);
         }
-        textAttentionNum.setText(StringUtil.num2Str(loginUser.getAttentionNum()));
-        textFansNum.setText(StringUtil.num2Str(loginUser.getFanNum()));
+        textAttentionNum.setText(StringUtil.numLong2Str(loginUser.getAttentionNum()));
+        textFansNum.setText(StringUtil.numLong2Str(loginUser.getFanNum()));
     }
 
     @Override
@@ -147,7 +162,7 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == viewUserInfo.getId()) {
-            PersonalActivity.startActivity(getContext(),loginUser.getUserInfo().getId());
+            PersonalActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == viewChangeAccount.getId()) {
@@ -161,6 +176,22 @@ public class MeFragment extends DBBaseFragment {
         }
         if (v.getId() == viewSettings.getId()) {
             SettingsActivity.startActivity(getContext());
+            return;
+        }
+        if (v.getId() == textRecordNum.getId()) {
+            UserRecordActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
+            return;
+        }
+        if (v.getId() == textFavoriteNum.getId()) {
+            ToastUtil.showToastShort("收藏夹");
+            return;
+        }
+        if (v.getId() == textAttentionNum.getId()) {
+            ToastUtil.showToastShort("关注");
+            return;
+        }
+        if (v.getId() == textFansNum.getId()) {
+            ToastUtil.showToastShort("粉丝");
         }
     }
 
@@ -169,5 +200,6 @@ public class MeFragment extends DBBaseFragment {
         super.onResume();
         doBusiness(getRealm());
         doBusiness();
+        getRecordCountByUseridService.request(loginUser.getToken(),loginUser.getUserInfo().getId());
     }
 }
