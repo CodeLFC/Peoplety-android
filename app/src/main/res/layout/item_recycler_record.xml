@@ -65,6 +65,17 @@
                     android:text="@string/app_name"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_small" />
+                <TextView
+                    android:id="@+id/item_recycler_record_text_attention"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/widget_margin"
+                    android:background="@drawable/tag_bg"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/widget_margin"
+                    android:text="@string/attention"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_small" />
             </LinearLayout>
 
             <TextView

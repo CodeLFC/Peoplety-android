@@ -324,7 +324,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
             //是否 收藏
             imageFavorite.setImageResource(data.isFavorite() ? R.drawable.favorited : R.drawable.favorite);
-
+            //派生数量
             textFork.setText(StringUtil.numLong2Str(data.getChildNum()));
         }
 
