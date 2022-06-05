@@ -80,6 +80,10 @@ public class AreaPopWindow extends DBBasePopWindow implements View.OnClickListen
 
     //适配器
     private static class AreaAdapter extends NoAnimatorRecyclerView.BaseAdapter<AreaAdapter.AreaViewHolder, Area> {
+        public AreaAdapter() {
+            super(Area.class);
+        }
+
         @NonNull
         @Override
         public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

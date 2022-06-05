@@ -27,8 +27,4 @@ public class Comment  extends RealmObject implements NoAnimatorRecyclerView.Base
         return id;
     }
 
-    @Override
-    public int compare(NoAnimatorRecyclerView.BaseAdapter.BaseItem item) {
-        return (int) (item.getItemId() - getItemId());
-    }
 }

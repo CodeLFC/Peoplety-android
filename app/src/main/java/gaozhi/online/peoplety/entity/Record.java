@@ -96,11 +96,6 @@ public class Record extends RealmObject implements Parcelable, NoAnimatorRecycle
     }
 
     @Override
-    public int compare(NoAnimatorRecyclerView.BaseAdapter.BaseItem item) {
-        return isTop() ? -1: (int) (item.getItemId() - getItemId());
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

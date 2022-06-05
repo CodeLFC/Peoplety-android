@@ -72,6 +72,10 @@ public class OptionsPopWindow extends BasePopupWindow {
 
     //适配器
     private static class OptionAdapter extends NoAnimatorRecyclerView.BaseAdapter<OptionAdapter.OptionViewHolder, Option> {
+        public OptionAdapter() {
+            super(Option.class);
+        }
+
         @NonNull
         @Override
         public OptionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedListAdapterCallback;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -54,6 +55,11 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
     private final Token token;
 
     public RecordAdapter(Token token) {
+        this(token, null);
+    }
+
+    public RecordAdapter(Token token, BaseSortedListAdapterCallback<Record> sortedListAdapterCallback) {
+        super(Record.class, sortedListAdapterCallback);
         this.token = token;
     }
 

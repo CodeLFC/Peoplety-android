@@ -14,6 +14,10 @@ import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
  */
 public class RecordTypeAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordTypeAdapter.RecordTypeViewHolder,RecordType> {
 
+    public RecordTypeAdapter() {
+        super(RecordType.class);
+    }
+
     @NonNull
     @Override
     public RecordTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

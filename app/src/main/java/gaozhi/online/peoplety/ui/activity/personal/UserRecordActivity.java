@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.SortedListAdapterCallback;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.pagehelper.PageInfo;
@@ -50,7 +51,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
         @Override
         public void handle(int id, UserDTO data, boolean local) {
             if (data != null) {
-                textTitle.setText(data.getUserInfo().getNick()+getString(R.string.bottom_publish));
+                textTitle.setText(data.getUserInfo().getNick() + getString(R.string.bottom_publish));
             }
         }
     });
@@ -70,7 +71,15 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
         swipeRefreshLayout = $(R.id.user_record_activity_swipe);
         NoAnimatorRecyclerView recyclerView = $(R.id.user_record_activity_recycler_record);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
-        recordAdapter = new RecordAdapter(loginUser.getToken());
+        recordAdapter = new RecordAdapter(loginUser.getToken(), new NoAnimatorRecyclerView.BaseAdapter.BaseSortedListAdapterCallback<>() {
+            @Override
+            public int compare(Record o1, Record o2) {
+                if ((o1.isTop() && o2.isTop()) || (!o1.isTop() && !o2.isTop())) {
+                    return super.compare(o1, o2);
+                }
+                return o1.isTop() ? -1 : 1;
+            }
+        });
         recyclerView.setAdapter(recordAdapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setOnLoadListener(this);
@@ -96,7 +105,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         getRecordByUserIdService.request(loginUser.getToken(), userid, 1, PAGE_SIZE);
-        getUserInfoService.request(loginUser.getToken(),userid);
+        getUserInfoService.request(loginUser.getToken(), userid);
     }
 
     @Override

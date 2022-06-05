@@ -125,18 +125,28 @@ public class NoAnimatorRecyclerView extends RecyclerView {
                 return -1;
             }
 
-            /**
-             * 定义item的显示顺序
-             *
-             * @param item
-             * @return
-             */
-            default int compare(BaseItem item) {
-                return (int) (getItemId() - item.getItemId());
-            }
-
             default int getViewType() {
                 return 0;
+            }
+        }
+
+        /**
+         * 排序规则
+         *
+         * @param <T>
+         */
+        public static class BaseSortedListAdapterCallback<T extends BaseItem> {
+
+            public int compare(T o1, T o2) {
+                return (int) (o2.getItemId() - o1.getItemId());
+            }
+
+            public boolean areContentsTheSame(T oldItem, T newItem) {
+                return oldItem == newItem;
+            }
+
+            public boolean areItemsTheSame(T item1, T item2) {
+                return item1.getItemId() == item2.getItemId();
             }
         }
 
@@ -162,27 +172,36 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         private Consumer<V> onItemClickedListener;
         //列表
-        private final SortedList<BaseItem> itemList = new SortedList<>(BaseItem.class, new SortedListAdapterCallback<>(this) {
-            @Override
-            public int compare(BaseItem o1, BaseItem o2) {
-                return o1.compare(o2);
-            }
+        private final SortedList<V> itemList;
 
-            @Override
-            public boolean areContentsTheSame(BaseItem oldItem, BaseItem newItem) {
-                //依赖hashcode 方法
-                return oldItem == newItem;
-            }
+        public BaseAdapter(Class<V> klass) {
+            this(klass, null);
+        }
 
-            @Override
-            public boolean areItemsTheSame(BaseItem item1, BaseItem item2) {
-                return item1.getItemId() == item2.getItemId();
-            }
-        });
-
-        public BaseAdapter() {
+        public BaseAdapter(Class<V> klass, BaseSortedListAdapterCallback<V> sortedListAdapterCallback) {
             //防止闪烁
             setHasStableIds(true);
+            if (sortedListAdapterCallback == null) {
+                sortedListAdapterCallback = new BaseSortedListAdapterCallback<>();
+            }
+            //初始化
+            BaseSortedListAdapterCallback<V> finalSortedListAdapterCallback = sortedListAdapterCallback;
+            itemList = new SortedList<>(klass, new SortedListAdapterCallback<V>(this) {
+                @Override
+                public int compare(V o1, V o2) {
+                    return finalSortedListAdapterCallback.compare(o1, o2);
+                }
+
+                @Override
+                public boolean areContentsTheSame(V oldItem, V newItem) {
+                    return finalSortedListAdapterCallback.areContentsTheSame(oldItem, newItem);
+                }
+
+                @Override
+                public boolean areItemsTheSame(V item1, V item2) {
+                    return finalSortedListAdapterCallback.areItemsTheSame(item1, item2);
+                }
+            });
         }
 
         protected View layoutInflate(ViewGroup parent, @LayoutRes int layoutId) {

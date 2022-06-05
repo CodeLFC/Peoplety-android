@@ -37,6 +37,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
     private final Token token;
 
     public CommentAdapter(Token token) {
+        super(Comment.class);
         this.token = token;
     }
 

@@ -25,6 +25,7 @@ public class RecordTypeLabelAdapter extends NoAnimatorRecyclerView.BaseAdapter<R
     }
 
     public RecordTypeLabelAdapter() {
+        super(RecordType.class);
         add(allSelected);
     }
 

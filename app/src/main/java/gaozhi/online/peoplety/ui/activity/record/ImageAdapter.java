@@ -23,6 +23,10 @@ import gaozhi.online.peoplety.util.StringUtil;
 public class ImageAdapter extends NoAnimatorRecyclerView.BaseAdapter<ImageAdapter.ImageViewHolder, ImageModel> {
     private final AtomicInteger uploadedSize = new AtomicInteger(0);
 
+    public ImageAdapter() {
+        super(ImageModel.class);
+    }
+
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
