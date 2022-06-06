@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import gaozhi.online.base.ui.BasePopupWindow;
 import gaozhi.online.peoplety.R;
@@ -28,18 +28,45 @@ public class OptionsPopWindow extends BasePopupWindow {
     public static class Option implements NoAnimatorRecyclerView.BaseAdapter.BaseItem {
         private int id;
         private String text;
+        private boolean isSelected;
+        private boolean isDismiss;
+
+        /**
+         * 兼容
+         *
+         * @param id
+         * @param text
+         */
+        public Option(int id, String text) {
+            this.id = id;
+            this.text = text;
+        }
 
         @Override
         public long getItemId() {
             return id;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Option option = (Option) o;
+            return id == option.id && isDismiss == option.isDismiss && isSelected == option.isSelected && Objects.equals(text, option.text);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, text, isDismiss, isSelected);
         }
     }
 
     private RecyclerView recyclerView;
     private OptionAdapter optionAdapter;
 
-    public OptionsPopWindow(Context context, boolean fullScreen) {
-        super(context, R.layout.pop_window_options, fullScreen);
+    public OptionsPopWindow(Context context) {
+        super(context, R.layout.pop_window_options, true);
+        setOnItemClickedListener(null);
     }
 
     @Override
@@ -56,10 +83,15 @@ public class OptionsPopWindow extends BasePopupWindow {
         return this;
     }
 
-    public OptionsPopWindow setOnItemClickedListener(BiConsumer<OptionsPopWindow,Option> optionConsumer) {
+    public OptionsPopWindow setOnItemClickedListener(BiConsumer<OptionsPopWindow, Option> optionConsumer) {
         optionAdapter.setOnItemClickedListener(option -> {
-            if(optionConsumer!=null){
-                optionConsumer.accept(OptionsPopWindow.this,option);
+            option.isSelected = !option.isSelected;
+            optionAdapter.updateItem(option);
+            if (option.isDismiss) {
+                dismiss();
+            }
+            if (optionConsumer != null) {
+                optionConsumer.accept(OptionsPopWindow.this, option);
             }
         });
         return this;
@@ -84,17 +116,19 @@ public class OptionsPopWindow extends BasePopupWindow {
 
         //viewHolder
         private static class OptionViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Option> {
-
+            private final Context context;
             private final TextView textView;
 
             public OptionViewHolder(@NonNull View itemView) {
                 super(itemView);
+                context = itemView.getContext();
                 textView = itemView.findViewById(R.id.recycler_adapter_text);
             }
 
             @Override
             public void bindView(Option item) {
                 textView.setText(item.getText());
+                textView.setTextColor(context.getColor(item.isSelected ? R.color.theme_color : R.color.deep_text_color));
             }
 
         }

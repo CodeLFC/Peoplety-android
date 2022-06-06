@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.SortedList;
 import androidx.recyclerview.widget.SortedListAdapterCallback;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -54,7 +52,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * 关闭默认局部刷新动画
      */
     private void init() {
-        RecyclerView.ItemAnimator animator = getItemAnimator();
+        ItemAnimator animator = getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
@@ -116,7 +114,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <T>
      * @param <V>
      */
-    public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends RecyclerView.Adapter<T> implements Consumer<Integer> {
+    public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends Adapter<T> implements Consumer<Integer> {
 
         //item必须实现的接口
         public interface BaseItem {
@@ -297,7 +295,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
     /**
      * 可点击的视图缓存
      */
-    public static abstract class BaseViewHolder<T> extends ViewHolder implements View.OnClickListener {
+    public static abstract class BaseViewHolder<T> extends ViewHolder implements OnClickListener {
         private Consumer<Integer> onItemSelectedListener;
 
         public BaseViewHolder(@NonNull View itemView) {

@@ -54,28 +54,6 @@
                     android:layout_marginEnd="@dimen/widget_margin"
                     android:src="@drawable/other_gender" />
 
-                <TextView
-                    android:id="@+id/item_recycler_record_text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/widget_margin"
-                    android:background="@drawable/tag_bg"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/widget_margin"
-                    android:text="@string/app_name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_small" />
-                <TextView
-                    android:id="@+id/item_recycler_record_text_attention"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/widget_margin"
-                    android:background="@drawable/tag_bg"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/widget_margin"
-                    android:text="@string/attention"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_small" />
             </LinearLayout>
 
             <TextView
@@ -83,11 +61,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="@string/app_name"
                 android:textColor="@color/shallow_text_color"
                 android:textSize="@dimen/font_size_general" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_recycler_record_text_attention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_bg"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/widget_margin"
+            android:text="@string/attention"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_general"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -134,12 +124,47 @@
                 android:src="@drawable/bin" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/item_recycler_record_text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/widget_margin"
+            android:background="@drawable/underline_bg_1dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/app_name"
+            android:textColor="@color/shallow_text_color"
+            android:textSize="@dimen/font_size_general" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/widget_margin"
             android:gravity="center|start"
             android:orientation="horizontal">
+            <TextView
+                android:id="@+id/item_recycler_record_text_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:background="@drawable/tag_bg"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/widget_margin"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_small" />
+
+            <TextView
+                android:id="@+id/item_recycler_record_text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:background="@drawable/tag_bg"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/widget_margin"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_small" />
 
             <TextView
                 android:id="@+id/item_recycler_record_text_parent"
@@ -150,18 +175,6 @@
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/widget_margin"
                 android:text="@string/parent_record"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_small" />
-
-            <TextView
-                android:id="@+id/item_recycler_record_text_floor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:background="@drawable/tag_bg"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/app_name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small" />
 
@@ -189,10 +202,9 @@
                 android:text="@string/app_name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small"
-                android:visibility="gone" />
-
+                android:visibility="visible" />
             <TextView
-                android:id="@+id/item_recycler_record_text_type"
+                android:id="@+id/item_recycler_record_text_floor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/widget_margin"
@@ -202,31 +214,7 @@
                 android:text="@string/app_name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small" />
-
-            <TextView
-                android:id="@+id/item_recycler_record_text_url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:background="@drawable/tag_bg"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/widget_margin"
-                android:text="@string/record_url"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_small" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/item_recycler_record_text_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/widget_margin"
-            android:background="@drawable/underline_bg_1dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/app_name"
-            android:textColor="@color/shallow_text_color"
-            android:textSize="@dimen/font_size_general" />
 
         <TextView
             android:id="@+id/item_recycler_record_text_content"
@@ -267,6 +255,12 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/item_recycler_record_image_link"
+            android:layout_width="@dimen/icon_size_general"
+            android:layout_height="@dimen/icon_size_general"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:src="@drawable/link" />
 
         <ImageView
             android:id="@+id/item_recycler_record_image_comment"
@@ -310,12 +304,10 @@
             android:id="@+id/item_recycler_record_text_favorite_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:gravity="center"
             android:text="0"
             android:textColor="@color/shallow_text_color"
             android:textSize="@dimen/font_size_small" />
-
     </LinearLayout>
 
     <!--    <EditText-->

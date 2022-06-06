@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SortedListAdapterCallback;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,6 +22,7 @@ import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
@@ -32,10 +32,10 @@ import gaozhi.online.peoplety.entity.client.ImageModel;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
+import gaozhi.online.peoplety.service.friend.GetFriendService;
 import gaozhi.online.peoplety.service.record.DeleteRecordByIdService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
-import gaozhi.online.peoplety.ui.activity.PublishRecordActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.ui.util.pop.DialogPopWindow;
@@ -77,12 +77,12 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textTitle;
         private final ImageView imageTop;
         private final TextView textType;
+        //屏蔽属性的显示
         private final TextView textArea;
         private final TextView textDescription;
         private final TextView textIp;
         private final TextView textTime;
         private final ImageAdapter imageAdapter;
-        private final TextView textUrl;
         private final Realm realm;
         private List<String> imgList;
         private final ImageView imageHead;
@@ -97,11 +97,13 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageView imageFavorite;
         private final ImageView imageFork;
         private final TextView textFork;
+        private final ImageView imageLink;
         //父子
         private final TextView textParent;
 
         private final TextView textContent;
-
+        //关注
+        private final TextView textAttention;
         private final CommentPopWindow commentPopWindow;
         private final ChildRecordPopWindow childRecordPopWindow;
         //service
@@ -133,10 +135,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 } else {
                     imageDelete.setVisibility(View.GONE);
                 }
-                if (data.getStatus() == null) {
-                    textStatus.setVisibility(View.GONE);
-                } else {
-                    textStatus.setVisibility(View.VISIBLE);
+                if (data.getStatus() != null) {
                     textStatus.setText(data.getStatus().getName());
                 }
             }
@@ -147,7 +146,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
             @Override
             public void handle(int id, IPInfo data, boolean local) {
-                textIp.setVisibility(View.VISIBLE);
                 textIp.setText(data.getShowArea());
             }
         });
@@ -167,6 +165,18 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 ToastUtil.showToastShort(message + data);
             }
         });
+        //关注按钮
+        private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, Friend data, boolean local) {
+                if (data == null && showDetails) {
+                    textAttention.setVisibility(View.VISIBLE);
+                    return;
+                }
+                textAttention.setVisibility(View.GONE);
+            }
+        });
+
         private final Token token;
         //是否完整显示内容
         private boolean showDetails;
@@ -191,7 +201,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imageAdapter = new ImageAdapter();
             recyclerView.setAdapter(imageAdapter);
 
-            textUrl = itemView.findViewById(R.id.item_recycler_record_text_url);
             imageAdapter.setOnItemClickedListener(this);
 
             imageHead = itemView.findViewById(R.id.item_recycler_record_image_head);
@@ -232,6 +241,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textFloor = itemView.findViewById(R.id.item_recycler_record_text_floor);
 
             textFork = itemView.findViewById(R.id.item_recycler_record_text_fork_num);
+
+            textAttention = itemView.findViewById(R.id.item_recycler_record_text_attention);
+            imageLink = itemView.findViewById(R.id.item_recycler_record_image_link);
         }
 
         @Override
@@ -246,6 +258,12 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             getRecordDTOByIdService.request(token, item.getId());
             //获取地址信息
             getIPInfoService.request(item.getIp());
+            //获取关注信息
+            if (token.getUserid() != item.getUserid()) {
+                getFriendService.request(token, item.getUserid());
+            } else {
+                textAttention.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -270,9 +288,13 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
+                textStatus.setVisibility(View.VISIBLE);
+                //textArea.setVisibility(View.VISIBLE);
             } else {
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
+                textStatus.setVisibility(View.GONE);
+                //textArea.setVisibility(View.GONE);
             }
             imageAdapter.clear();
             textTitle.setText(item.getTitle());
@@ -295,8 +317,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             for (String img : imgList) {
                 imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, img, ""));
             }
-            textUrl.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
-            textUrl.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
+            imageLink.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
+            imageLink.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
             textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //卷宗编号
             textFloor.setText(item.getId() + context.getString(R.string.floor));

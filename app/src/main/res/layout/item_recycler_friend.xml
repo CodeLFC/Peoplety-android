@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/widget_margin"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/activity_margin">
+
+    <ImageView
+        android:id="@+id/item_recycler_friend_image_head"
+        android:layout_width="@dimen/logo_size"
+        android:layout_height="@dimen/logo_size"
+        android:src="@drawable/app_logo" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/widget_margin"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_recycler_friend_text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textColor="@color/deep_text_color"
+                android:textSize="@dimen/font_size_title" />
+
+            <ImageView
+                android:id="@+id/item_recycler_friend_image_gender"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:src="@drawable/other_gender" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_recycler_friend_text_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/app_name"
+            android:textColor="@color/shallow_text_color"
+            android:textSize="@dimen/font_size_general" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/item_recycler_friend_text_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/widget_margin"
+        android:background="@drawable/tag_bg"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/widget_margin"
+        android:text="@string/attention"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_general"
+        android:visibility="gone"/>
+</LinearLayout>

@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -27,7 +25,6 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.exception.CosXmlServiceException;
-import com.tencent.cos.xml.listener.CosXmlProgressListener;
 import com.tencent.cos.xml.listener.CosXmlResultListener;
 import com.tencent.cos.xml.model.CosXmlRequest;
 import com.tencent.cos.xml.model.CosXmlResult;
@@ -35,14 +32,11 @@ import com.tencent.cos.xml.model.CosXmlResult;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.base.net.http.DataHelper;
-import gaozhi.online.base.ui.BasePopupWindow;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
@@ -56,9 +50,7 @@ import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.OptionsPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
-import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.FileUtil;
-import gaozhi.online.peoplety.util.GlideUtil;
 import gaozhi.online.peoplety.util.ImageUtil;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
@@ -398,7 +390,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         List<OptionsPopWindow.Option> options = new LinkedList<>();
         options.add(new OptionsPopWindow.Option(0, getString(R.string.preview)));
         options.add(new OptionsPopWindow.Option(1, getString(R.string.delete)));
-        new OptionsPopWindow(this, true)
+        new OptionsPopWindow(this)
                 .setOptions(options)
                 .setOnItemClickedListener((window, option) -> {
                     window.dismiss();

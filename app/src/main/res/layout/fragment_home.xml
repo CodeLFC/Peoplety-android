@@ -13,27 +13,6 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/widget_color"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter"
-            android:textColor="@color/deep_text_color"
-            android:textSize="@dimen/font_size_general" />
-
-        <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
-            android:id="@+id/fragment_home_recycler_record_type_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/bg_color"

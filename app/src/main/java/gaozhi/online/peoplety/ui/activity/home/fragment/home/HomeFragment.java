@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.View;
@@ -15,7 +14,6 @@ import com.github.pagehelper.PageInfo;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
@@ -28,21 +26,25 @@ import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
 import gaozhi.online.peoplety.ui.activity.record.RecordDetailActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.util.pop.AreaPopWindow;
+import gaozhi.online.peoplety.ui.util.pop.OptionsPopWindow;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass. 主页
  */
 public class HomeFragment extends DBBaseFragment implements Consumer<Area>, DataHelper.OnDataListener<PageInfo<Record>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
     private static final int PAGE_SIZE = 10;
-    private TextView titleTextRight;
+    //ui
+    private TextView titleTextLeft;
     private AreaPopWindow areaPopWindow;
-    //
-    private NoAnimatorRecyclerView recordTypeLabelRecyclerView;
-    private RecordTypeLabelAdapter recordTypeLabelAdapter;
+    private TextView titleTextRight;
+    private OptionsPopWindow optionsPopWindow;
+    //选择
+    private static final int SELECT_ALL = -1;
+    private static final int OK = -2;
+    //ui
     private NoAnimatorRecyclerView recordRecyclerView;
     private RecordAdapter recordAdapter;
     private SwipeRefreshLayout recyclerSwipeRefreshView;
@@ -66,10 +68,14 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void initView(View view) {
-        titleTextRight = view.findViewById(R.id.title_text_right);
-        titleTextRight.setOnClickListener(this);
+        titleTextLeft = view.findViewById(R.id.title_text_left);
+        titleTextLeft.setOnClickListener(this);
         areaPopWindow = new AreaPopWindow(getContext(), true);
         areaPopWindow.setOnAreaClickedListener(this);
+        titleTextRight = view.findViewById(R.id.title_text_right);
+        titleTextRight.setText(R.string.filter);
+        titleTextRight.setOnClickListener(this);
+        optionsPopWindow = new OptionsPopWindow(getContext());
 
         recordRecyclerView = view.findViewById(R.id.fragment_home_recycler_record);
         LinearLayoutManager linearLayoutManager = new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(getContext());
@@ -83,47 +89,44 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         //点击条目打开详情
         recordAdapter.setOnItemClickedListener(record -> RecordDetailActivity.startActivity(getContext(), record.getId()));
 
-        recordTypeLabelRecyclerView = view.findViewById(R.id.fragment_home_recycler_record_type_label);
-        recordTypeLabelRecyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(getContext(), RecyclerView.HORIZONTAL));
-        recordTypeLabelAdapter = new RecordTypeLabelAdapter();
-        recordTypeLabelRecyclerView.setAdapter(recordTypeLabelAdapter);
-        recordTypeLabelAdapter.setOnItemClickedListener(recordType -> {
+        optionsPopWindow.setOnItemClickedListener((optionsPopWindow, option) -> {
             //全选按钮
-            if (recordType.getId() == RecordTypeLabelAdapter.allSelected.getId()) {
-                recordType.setSelected(!recordType.isSelected());
-                recordTypeLabelAdapter.updateItem(recordType);
-                recordTypeLabelAdapter.forEach(record -> {
-                    RecordType temp = record.isManaged() ? getRealm().copyFromRealm(record) : record;
-                    getRealm().executeTransactionAsync(realm -> {
-                        temp.setSelected(recordType.isSelected());
-                        realm.copyToRealmOrUpdate(temp);
-                    }, () -> {
-                        recordTypeLabelAdapter.updateItem(temp);
-                    });
-                }, recordType1 -> recordType1.getId() != RecordTypeLabelAdapter.allSelected.getId());
+            if (option.getId() == SELECT_ALL) {
+                List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
+                List<RecordType> temps = new LinkedList<>();
+                for (RecordType recordType : recordTypes) {
+                    RecordType temp = recordType.isManaged() ? getRealm().copyFromRealm(recordType) : recordType;
+                    temp.setSelected(false);
+                    temps.add(temp);
+                }
+                getRealm().executeTransactionAsync(realm -> {
+                    realm.copyToRealmOrUpdate(temps);
+                }, (Realm.Transaction.OnSuccess) this::doBusiness);
+
+                return;
+            }
+            //确认选择
+            if (option.getId() == OK) {
                 doBusiness();
                 return;
             }
-            //非全选按钮
-            RecordType temp = recordType.isManaged() ? getRealm().copyFromRealm(recordType) : recordType;
-            getRealm().executeTransactionAsync(realm -> {
-                temp.setSelected(!temp.isSelected());
-                realm.copyToRealmOrUpdate(temp);
-            }, () -> {
-                recordTypeLabelAdapter.updateItem(temp);
-                if (!temp.isSelected()) {
-                    RecordTypeLabelAdapter.allSelected.setSelected(false);
-                    recordTypeLabelAdapter.updateItem(RecordTypeLabelAdapter.allSelected);
+            //非全选按钮，耿勋数据库
+            List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
+            for (RecordType e : recordTypes) {
+                if (e.getId() == option.getId()) {
+                    RecordType temp = e.isManaged() ? getRealm().copyFromRealm(e) : e;
+                    getRealm().executeTransactionAsync(realm -> {
+                        temp.setSelected(option.isSelected());
+                        realm.copyToRealmOrUpdate(temp);
+                    });
+                    return;
                 }
-                doBusiness();
-            });
-
+            }
         });
     }
 
     @Override
     public void initParams(Bundle bundle) {
-
     }
 
     @Override
@@ -132,15 +135,23 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             areaPopWindow.showPopupWindow(getActivity());
             return;
         }
-        titleTextRight.setText(loginUser.getArea().getName());
+        titleTextLeft.setText(loginUser.getArea().getName());
         selectedLabel = new LinkedList<>();
+
         List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
+        List<OptionsPopWindow.Option> options = new LinkedList<>();
+
         for (RecordType recordType : recordTypes) {
-            recordTypeLabelAdapter.add(recordType);
             if (recordType.isSelected()) {
                 selectedLabel.add(recordType.getId());
             }
+            options.add(new OptionsPopWindow.Option(recordType.getId(), recordType.getName(), recordType.isSelected(), false));
         }
+        //添加全选按钮
+        options.add(new OptionsPopWindow.Option(SELECT_ALL, getContext().getString(R.string.all_selected), false, true));
+        //添加确认按钮
+        options.add(new OptionsPopWindow.Option(OK, getContext().getString(R.string.ok), false, true));
+        optionsPopWindow.setOptions(options);
         //访问内容
         if (!getRecordByAreaService.isRequesting()) {
             getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), selectedLabel, 1, PAGE_SIZE);
@@ -162,8 +173,12 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == titleTextRight.getId()) {
+        if (v.getId() == titleTextLeft.getId()) {
             areaPopWindow.showPopupWindow(getActivity());
+            return;
+        }
+        if (v.getId() == titleTextRight.getId()) {
+            optionsPopWindow.showPopupWindow(getActivity());
             return;
         }
     }
@@ -176,7 +191,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
             loginUser.setArea(temp);
             realm.copyToRealmOrUpdate(loginUser);
         }, () -> {
-            titleTextRight.setText(area.getName());
+            titleTextLeft.setText(area.getName());
             //请求某个地区的资料
             doBusiness();
         });

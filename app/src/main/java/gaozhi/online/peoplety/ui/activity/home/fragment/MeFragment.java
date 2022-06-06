@@ -14,6 +14,7 @@ import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
+import gaozhi.online.peoplety.ui.activity.personal.FriendsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.activity.personal.UserRecordActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
@@ -187,11 +188,11 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == textAttentionNum.getId()) {
-            ToastUtil.showToastShort("关注");
+            FriendsActivity.startActivityForAttention(getContext());
             return;
         }
         if (v.getId() == textFansNum.getId()) {
-            ToastUtil.showToastShort("粉丝");
+            FriendsActivity.startActivityForFan(getContext());
         }
     }
 

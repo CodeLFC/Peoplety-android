@@ -2,11 +2,9 @@ package gaozhi.online.peoplety.ui.activity.personal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.SortedListAdapterCallback;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.pagehelper.PageInfo;

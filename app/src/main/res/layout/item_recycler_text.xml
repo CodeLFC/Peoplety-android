@@ -11,7 +11,7 @@
         android:layout_marginBottom="2dp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@color/black"
+        android:textColor="@color/deep_text_color"
         android:textSize="@dimen/font_size_title"
         android:textStyle="bold"
         android:background="@drawable/underline_bg_1dp"/>
