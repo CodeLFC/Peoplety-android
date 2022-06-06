@@ -36,6 +36,7 @@ import gaozhi.online.peoplety.service.friend.GetFriendService;
 import gaozhi.online.peoplety.service.record.DeleteRecordByIdService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.personal.FriendAdapter;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.ui.util.pop.DialogPopWindow;
@@ -72,6 +73,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
     public static class RecordViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Record> implements Consumer<ImageModel>, DataHelper.OnDataListener<RecordDTO> {
         private final Context context;
+        private final FriendAdapter.FriendViewHolder friendViewHolder;
         //卷宗编号
         private final TextView textFloor;
         private final TextView textTitle;
@@ -85,14 +87,10 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ImageAdapter imageAdapter;
         private final Realm realm;
         private List<String> imgList;
-        private final ImageView imageHead;
-        private final TextView textName;
-        private final TextView textRemark;
         private final TextView textComment;
         private final TextView textFavorite;
         private final ImageView imageDelete;
         private final TextView textStatus;
-        private final ImageView imageGender;
         private final ImageView imageComment;
         private final ImageView imageFavorite;
         private final ImageView imageFork;
@@ -102,44 +100,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textParent;
 
         private final TextView textContent;
-        //关注
-        private final TextView textAttention;
         private final CommentPopWindow commentPopWindow;
         private final ChildRecordPopWindow childRecordPopWindow;
         //service
-        private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
-            @Override
-            public void handle(int id, UserDTO data, boolean local) {
-                Log.i(getClass().getName(), local + ":" + (data != null ? "" + data : "null"));
-                if (data == null || data.getUserInfo() == null) {
-                    return;
-                }
-                textName.setText(data.getUserInfo().getNick());
-                Log.d(getClass().getName(), "userinfo:" + data.getUserInfo());
-                GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), R.drawable.app_logo, imageHead);
-                textRemark.setText(data.getUserInfo().getRemark());
-                UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
-                switch (gender) {
-                    case FEMALE:
-                        imageGender.setImageResource(R.drawable.female);
-                        break;
-                    case MALE:
-                        imageGender.setImageResource(R.drawable.male);
-                        break;
-                    case OTHER:
-                        imageGender.setImageResource(R.drawable.other_gender);
-                        break;
-                }
-                if (data.getUserInfo().getId() == token.getUserid()) {
-                    imageDelete.setVisibility(View.VISIBLE);
-                } else {
-                    imageDelete.setVisibility(View.GONE);
-                }
-                if (data.getStatus() != null) {
-                    textStatus.setText(data.getStatus().getName());
-                }
-            }
-        });
         //获取详情
         private final GetRecordDTOByIdService getRecordDTOByIdService = new GetRecordDTOByIdService(this);
         //获取位置信息
@@ -165,17 +128,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 ToastUtil.showToastShort(message + data);
             }
         });
-        //关注按钮
-        private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
-            @Override
-            public void handle(int id, Friend data, boolean local) {
-                if (data == null && showDetails) {
-                    textAttention.setVisibility(View.VISIBLE);
-                    return;
-                }
-                textAttention.setVisibility(View.GONE);
-            }
-        });
 
         private final Token token;
         //是否完整显示内容
@@ -187,6 +139,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             this.token = token;
             context = itemView.getContext();
             realm = Realm.getDefaultInstance();
+            View view = itemView.findViewById(R.id.item_recycler_record_friend_info_view);
+            friendViewHolder = new FriendAdapter.FriendViewHolder(view, token);
             textTitle = itemView.findViewById(R.id.item_recycler_record_text_title);
             imageTop = itemView.findViewById(R.id.item_recycler_record_image_top);
             textType = itemView.findViewById(R.id.item_recycler_record_text_type);
@@ -203,9 +157,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             imageAdapter.setOnItemClickedListener(this);
 
-            imageHead = itemView.findViewById(R.id.item_recycler_record_image_head);
-            textName = itemView.findViewById(R.id.item_recycler_record_text_name);
-            textRemark = itemView.findViewById(R.id.item_recycler_record_text_remark);
             textComment = itemView.findViewById(R.id.item_recycler_record_text_comment_num);
             textFavorite = itemView.findViewById(R.id.item_recycler_record_text_favorite_num);
             imageDelete = itemView.findViewById(R.id.item_recycler_record_image_delete);
@@ -219,7 +170,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 dialogPopWindow.showPopupWindow(imageDelete);
             });
             textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
-            imageGender = itemView.findViewById(R.id.item_recycler_record_image_gender);
 
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
@@ -242,7 +192,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
             textFork = itemView.findViewById(R.id.item_recycler_record_text_fork_num);
 
-            textAttention = itemView.findViewById(R.id.item_recycler_record_text_attention);
             imageLink = itemView.findViewById(R.id.item_recycler_record_image_link);
         }
 
@@ -252,18 +201,10 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             this.record = item;
             //刷新数据
             refreshData(item);
-            //从数据库和网络中获取用户
-            getUserInfoService.request(token, item.getUserid());
             //获取详细内容
             getRecordDTOByIdService.request(token, item.getId());
             //获取地址信息
             getIPInfoService.request(item.getIp());
-            //获取关注信息
-            if (token.getUserid() != item.getUserid()) {
-                getFriendService.request(token, item.getUserid());
-            } else {
-                textAttention.setVisibility(View.GONE);
-            }
         }
 
         /**
@@ -273,8 +214,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
          */
         public void bindView(RecordDTO item) {
             if (item == null) return;
-            //从数据库和网络中获取用户
-            getUserInfoService.request(token, item.getRecord().getUserid());
             //绑定详细内容
             handle(-1, item, false);
         }
@@ -296,6 +235,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 textStatus.setVisibility(View.GONE);
                 //textArea.setVisibility(View.GONE);
             }
+            friendViewHolder.showAttention(showDetails);
             imageAdapter.clear();
             textTitle.setText(item.getTitle());
             imageTop.setVisibility(item.isTop() ? View.VISIBLE : View.GONE);
@@ -322,6 +262,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //卷宗编号
             textFloor.setText(item.getId() + context.getString(R.string.floor));
+            friendViewHolder.bindView(item.getUserid());
         }
 
         @Override
