@@ -166,9 +166,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void onPageSelected() {
-        if (recordAdapter.getItemCount() == 0) {
-            doBusiness();
-        }
+
     }
 
     @Override
@@ -245,5 +243,8 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     @Override
     public void onResume() {
         super.onResume();
+        if (recordAdapter == null || recordAdapter.getItemCount() == 0) {
+            doBusiness();
+        }
     }
 }

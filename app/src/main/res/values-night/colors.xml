@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--颜色-->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#F44336</color>
+    <color name="pink">#db639b</color>
+    <color name="gold">#f4ea2a</color>
+
+    <color name="edit_bolder">@color/black</color>
+    <color name="bg_color">#111111</color>
+    <color name="alpha_50_bg_color">#20666666</color>
+
+    <color name="widget_color">#333333</color>
+    <color name="theme_color">@color/black</color>
+    <color name="shallow_theme_color">@color/black</color>
+    <color name="pop_menu_bg_color">#7Fececec</color>
+    <!--字体颜色-->
+    <color name="deep_text_color">@color/white</color>
+    <color name="shallow_text_color">#CCCCCC</color>
+
+    <!--首页底部选择颜色-->
+    <color name="bottom_color">#f6f6f6</color>
+</resources>

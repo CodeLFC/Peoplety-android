@@ -10,6 +10,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/widget_margin"
         android:layout_gravity="center">
         <ImageView
             android:id="@+id/title_image_left"
@@ -47,12 +48,12 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/widget_margin"
         android:layout_gravity="center">
     <ImageView
         android:id="@+id/title_image_right"
         android:layout_width="@dimen/icon_size_title"
         android:layout_height="@dimen/icon_size_title"
-        android:layout_marginEnd="@dimen/widget_margin"
         android:layout_gravity="center" />
         <TextView
             android:id="@+id/title_text_right"

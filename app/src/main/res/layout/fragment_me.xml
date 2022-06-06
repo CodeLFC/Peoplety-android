@@ -56,7 +56,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/app_name"
-                            android:textColor="@color/black"
+                            android:textColor="@color/deep_text_color"
                             android:textSize="@dimen/font_size_name" />
 
                         <ImageView
@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/qr_code_card"
-                    android:textColor="@color/black"
+                    android:textColor="@color/deep_text_color"
                     android:textSize="@dimen/font_size_title" />
             </LinearLayout>
 
@@ -266,7 +266,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/settings"
-                    android:textColor="@color/black"
+                    android:textColor="@color/deep_text_color"
                     android:textSize="@dimen/font_size_title" />
 
                 <ImageView
@@ -296,7 +296,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/about"
-                    android:textColor="@color/black"
+                    android:textColor="@color/deep_text_color"
                     android:textSize="@dimen/font_size_title" />
 
                 <ImageView
@@ -326,7 +326,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/change_account"
-                    android:textColor="@color/black"
+                    android:textColor="@color/deep_text_color"
                     android:textSize="@dimen/font_size_title" />
 
                 <ImageView

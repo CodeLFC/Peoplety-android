@@ -81,7 +81,7 @@ public class MeFragment extends DBBaseFragment {
         title = view.findViewById(R.id.title_text);
         title.setText(R.string.bottom_me);
         title_right = view.findViewById(R.id.title_image_right);
-        // title_right.setImageResource(R.drawable.scan);
+        title_right.setImageResource(R.drawable.scan);
         title_right.setOnClickListener(this);
         imageHead = view.findViewById(R.id.fragment_me_image_head);
         imageHead.setOnClickListener(this);
@@ -194,6 +194,10 @@ public class MeFragment extends DBBaseFragment {
         }
         if (v.getId() == textFansNum.getId()) {
             FriendsActivity.startActivityForFan(getContext());
+            return;
+        }
+        if(v.getId() == title_right.getId()){
+            ToastUtil.showToastShort("扫码");
         }
     }
 
@@ -202,6 +206,6 @@ public class MeFragment extends DBBaseFragment {
         super.onResume();
         doBusiness(getRealm());
         doBusiness();
-        getRecordCountByUseridService.request(loginUser.getToken(),loginUser.getUserInfo().getId());
+        getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
     }
 }

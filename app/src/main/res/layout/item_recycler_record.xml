@@ -7,7 +7,7 @@
     android:background="@drawable/rectangle_bg"
     android:gravity="center|start"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/widget_margin">
+    android:paddingBottom="@dimen/widget_margin">
 
     <include
         android:id="@+id/item_recycler_record_friend_info_view"

@@ -4,5 +4,5 @@
     android:shape="oval"
     >
     <!-- 填充颜色 -->
-    <solid android:color="@color/theme_color"/>
+    <solid android:color="@color/widget_color"/>
 </shape>
