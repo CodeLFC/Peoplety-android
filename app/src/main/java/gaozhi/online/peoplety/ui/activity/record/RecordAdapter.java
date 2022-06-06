@@ -90,7 +90,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textComment;
         private final TextView textFavorite;
         private final ImageView imageDelete;
-        private final TextView textStatus;
         private final ImageView imageComment;
         private final ImageView imageFavorite;
         private final ImageView imageFork;
@@ -169,8 +168,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 });
                 dialogPopWindow.showPopupWindow(imageDelete);
             });
-            textStatus = itemView.findViewById(R.id.item_recycler_record_text_status);
-
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
             commentPopWindow = new CommentPopWindow(context);
@@ -227,13 +224,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
-                textStatus.setVisibility(View.VISIBLE);
-                //textArea.setVisibility(View.VISIBLE);
             } else {
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
-                textStatus.setVisibility(View.GONE);
-                //textArea.setVisibility(View.GONE);
             }
             friendViewHolder.showAttention(showDetails);
             imageAdapter.clear();

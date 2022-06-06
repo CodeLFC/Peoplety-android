@@ -1,8 +1,5 @@
 package gaozhi.online.peoplety.service.friend;
 
-import android.media.session.MediaSession;
-
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +8,7 @@ import java.util.function.Consumer;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Friend;
+import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.NetConfig;
 
 /**
@@ -25,7 +23,7 @@ public class AddAttentionService extends ApiRequest<Result> {
         setDataListener(resultHandler);
     }
 
-    public void request(MediaSession.Token token, long friendId) {
+    public void request(Token token, long friendId) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();

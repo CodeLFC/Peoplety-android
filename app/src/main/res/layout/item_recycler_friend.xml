@@ -33,14 +33,25 @@
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@string/app_name"
                 android:textColor="@color/deep_text_color"
                 android:textSize="@dimen/font_size_title" />
 
+            <TextView
+                android:id="@+id/item_recycler_friend_text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/widget_margin"
+                android:background="@drawable/rectangle_bg"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/widget_margin"
+                android:text="@string/app_name"
+                android:textColor="@color/deep_text_color"
+                android:textSize="@dimen/font_size_small" />
             <ImageView
                 android:id="@+id/item_recycler_friend_image_gender"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
+                android:padding="1dp"
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:src="@drawable/other_gender" />
         </LinearLayout>

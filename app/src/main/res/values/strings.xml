@@ -133,4 +133,5 @@
     <string name="tip_ensure_delete">确认删除吗?</string>
     <string name="filter">筛选</string>
     <string name="all_selected">全选</string>
+    <string name="tip_attention_success">关注成功</string>
 </resources>

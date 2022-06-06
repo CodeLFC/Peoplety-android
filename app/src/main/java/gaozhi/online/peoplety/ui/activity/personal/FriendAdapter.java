@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.friend.AddAttentionService;
 import gaozhi.online.peoplety.service.friend.GetFriendService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
@@ -35,9 +37,10 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
         return new FriendViewHolder(layoutInflate(parent, R.layout.item_recycler_friend), token);
     }
 
-    public static class FriendViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Friend> implements DataHelper.OnDataListener<UserDTO> {
+    public static class FriendViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Friend> implements DataHelper.OnDataListener<UserDTO>, View.OnClickListener {
         private final Token token;
         private boolean showAttention;
+        private long friendId;
         //ui
         private final Context context;
         private final ImageView imageHead;
@@ -45,10 +48,10 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
         private final TextView textName;
         private final TextView textRemark;
         private final TextView textAttention;
-
+        private final TextView textStatus;
         //service
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
-        private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<Friend>() {
+        private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
             @Override
             public void handle(int id, Friend data, boolean local) {
                 if (data == null) {
@@ -57,8 +60,23 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
                     return;
                 }
                 //设置备注
-                textName.setText(data.getRemark());
+                if (!StringUtil.isEmpty(data.getRemark())) {
+                    textName.setText(data.getRemark());
+                }
                 textAttention.setVisibility(View.GONE);
+            }
+        });
+        //关注
+        private final AddAttentionService addAttentionService = new AddAttentionService(new DataHelper.OnDataListener<Result>() {
+            @Override
+            public void handle(int id, Result data) {
+                ToastUtil.showToastShort(R.string.tip_attention_success);
+                textAttention.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+                ToastUtil.showToastShort(message + data);
             }
         });
 
@@ -71,7 +89,10 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             textName = itemView.findViewById(R.id.item_recycler_friend_text_name);
             textRemark = itemView.findViewById(R.id.item_recycler_friend_text_remark);
             textAttention = itemView.findViewById(R.id.item_recycler_friend_text_attention);
+            textStatus = itemView.findViewById(R.id.item_recycler_friend_text_status);
             showAttention(true);
+            textAttention.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -79,15 +100,14 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             long anotherId = item.getUserid() == token.getUserid() ? item.getFriendId() : item.getUserid();
             if (item.getUserid() == token.getUserid()) {
                 textName.setText(item.getRemark());
-            } else {
-                //只有在粉丝页面才获取关注信息,否则就是已关注状态
-                getFriendService.request(token, anotherId);
             }
             //获取用户信息
             getUserInfoService.request(token, anotherId);
+            friendId = anotherId;
         }
 
         public void bindView(long friendId) {
+            this.friendId = friendId;
             if (token.getUserid() != friendId) {
                 getFriendService.request(token, friendId);
             }
@@ -97,7 +117,6 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         public void showAttention(boolean show) {
             showAttention = show;
-            textAttention.setVisibility(show ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -106,14 +125,31 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             if (StringUtil.isEmpty(textName.getText().toString())) {
                 textName.setText(data.getUserInfo().getNick());
             }
+            if(data.getStatus()!=null) {
+                textStatus.setText(data.getStatus().getName());
+            }
             textRemark.setText(data.getUserInfo().getRemark());
             UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
             imageGender.setImageResource(gender == UserInfo.Gender.MALE ? R.drawable.male : gender == UserInfo.Gender.FEMALE ? R.drawable.female : R.drawable.other_gender);
+            if (token.getUserid() != data.getUserInfo().getId()) {
+                getFriendService.request(token, data.getUserInfo().getId());
+            }
         }
 
         @Override
         public void error(int id, int code, String message, String data) {
             ToastUtil.showToastShort(message + data);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == textAttention.getId()) {
+                addAttentionService.request(token, friendId);
+                return;
+            }
+            if (v.getId() == itemView.getId()) {
+                PersonalActivity.startActivity(context, friendId);
+            }
         }
     }
 }

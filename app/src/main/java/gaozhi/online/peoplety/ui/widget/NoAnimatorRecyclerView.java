@@ -295,12 +295,16 @@ public class NoAnimatorRecyclerView extends RecyclerView {
     /**
      * 可点击的视图缓存
      */
-    public static abstract class BaseViewHolder<T> extends ViewHolder implements OnClickListener {
+    public static abstract class BaseViewHolder<T> extends ViewHolder {
         private Consumer<Integer> onItemSelectedListener;
 
         public BaseViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(v -> {
+                if (onItemSelectedListener != null) {
+                    onItemSelectedListener.accept(getBindingAdapterPosition());
+                }
+            });
         }
 
         public void setOnItemSelectedListener(Consumer<Integer> onItemSelectedListener) {
@@ -309,11 +313,5 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         public abstract void bindView(T item);
 
-        @Override
-        public void onClick(View v) {
-            if (onItemSelectedListener != null) {
-                onItemSelectedListener.accept(getBindingAdapterPosition());
-            }
-        }
     }
 }

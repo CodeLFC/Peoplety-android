@@ -144,8 +144,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     protected void doBusiness(Context mContext) {
-        //更新信息
-        getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
+
     }
 
     public static void startActivity(Context context) {
@@ -202,16 +201,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     }
 
     @Override
-    public void start(int id) {
-
-    }
-
-    @Override
-    public void handle(int id, UserDTO data) {
-
-    }
-
-    @Override
     public void error(int id, int code, String message, String data) {
         viewPager.post(() -> new TipPopWindow(MainActivity.this, true)
                 .setOkClickListener((window, v) -> {
@@ -222,5 +211,12 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
                 })
                 .setMessage(message + data)
                 .showPopupWindow(MainActivity.this));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //更新信息
+        getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
     }
 }

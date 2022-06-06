@@ -12,6 +12,7 @@ import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
+import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.FriendsActivity;

@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.service.user;
 
+import android.util.Log;
+
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Status;
@@ -47,11 +49,21 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
     }
 
     @Override
-    public void getNetData(Result result, Consumer<UserDTO>consumer) {
+    public void getNetData(Result result, Consumer<UserDTO> consumer) {
         UserDTO userDTO = getGson().fromJson(result.getData(), UserDTO.class);
         getRealm().executeTransactionAsync(realm -> {
             //更新数据库中的用户信息
-            realm.copyToRealmOrUpdate(userDTO.getUserInfo());
+            //realm.copyToRealmOrUpdate(userDTO.getUserInfo());
+            UserDTO temp = realm.where(UserDTO.class).equalTo("account", userDTO.getUserInfo().getPhone()).findFirst();
+            if (temp == null) {
+                temp = realm.where(UserDTO.class).equalTo("account", Long.toString(userDTO.getUserInfo().getId())).findFirst();
+            }
+            if (temp != null) {
+                temp.setAttentionNum(userDTO.getAttentionNum());
+                temp.setFanNum(userDTO.getFanNum());
+                realm.copyToRealmOrUpdate(temp);
+            }
+            Log.i(getClass().getName(), "" + temp);
         }, () -> {//success
             userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
             consumer.accept(userDTO);
