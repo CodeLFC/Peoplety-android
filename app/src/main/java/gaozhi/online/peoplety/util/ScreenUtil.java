@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.util;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 
 public class ScreenUtil {
     private Context context;
@@ -15,6 +16,10 @@ public class ScreenUtil {
 
     public int getScreenHeight() {
         return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public DisplayMetrics getScreenSize() {
+        return context.getResources().getDisplayMetrics();
     }
 
     public int getScreenWidth() {
@@ -35,25 +40,29 @@ public class ScreenUtil {
         float f = getDensity(context);
         return (int) (((double) i - 0.5D) / (double) f);
     }
+
     //px转换成dip
-    public int px2dip(float pxValue){
-        float scale =getDensity(context);
-        return (int)(pxValue/scale + 0.5f);
+    public int px2dip(float pxValue) {
+        float scale = getDensity(context);
+        return (int) (pxValue / scale + 0.5f);
 
     }
+
     //dip转换成px
-    public int dip2px(float dipValue){
+    public int dip2px(float dipValue) {
         float scale = getDensity(context);
-        return (int)(dipValue * scale + 0.5f);
+        return (int) (dipValue * scale + 0.5f);
     }
+
     //px转换成sp
-    public int px2sp(float pxValue){
+    public int px2sp(float pxValue) {
         float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int)(pxValue / fontScale + 0.5f);
+        return (int) (pxValue / fontScale + 0.5f);
     }
+
     //sp转换成px
-    public int sp2px(float spValue){
+    public int sp2px(float spValue) {
         float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int)(spValue * fontScale + 0.5f);
+        return (int) (spValue * fontScale + 0.5f);
     }
 }

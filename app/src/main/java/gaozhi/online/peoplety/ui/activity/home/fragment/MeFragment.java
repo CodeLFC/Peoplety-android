@@ -12,14 +12,13 @@ import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
-import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
+import gaozhi.online.peoplety.ui.util.scan.ScanActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.FriendsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.activity.personal.UserRecordActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
-import gaozhi.online.peoplety.ui.activity.userinfo.UserInfoActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
@@ -196,8 +195,8 @@ public class MeFragment extends DBBaseFragment {
             FriendsActivity.startActivityForFan(getContext());
             return;
         }
-        if(v.getId() == title_right.getId()){
-            ToastUtil.showToastShort("扫码");
+        if (v.getId() == title_right.getId()) {
+            ScanActivity.startActivity(getContext());
         }
     }
 

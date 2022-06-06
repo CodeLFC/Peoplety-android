@@ -33,6 +33,7 @@ import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
+import gaozhi.online.peoplety.util.PermissionUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
@@ -53,7 +54,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     //permission
     //授权
-    private final int PERMISSION_REQUEST_CODE = 100;
+    private PermissionUtil permissionUtil;
     private final String[] authorities = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -64,39 +65,10 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 //            Manifest.permission.ACCESS_FINE_LOCATION
     };
 
-    /**
-     * 申请权限
-     */
-    private void requestPermission() {
-        List<String> permissionList = new LinkedList<>();
-        for (String authority : authorities) {
-            if (ContextCompat.checkSelfPermission(this, authority) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(authority);
-            }
-        }
-
-        if (permissionList.size() > 0) {
-            ActivityCompat.requestPermissions(this, authorities, PERMISSION_REQUEST_CODE);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            boolean hasNotGranted = false;//是否有权限没有通过
-            for (int grant : grantResults) {
-                if (grant == PackageManager.PERMISSION_DENIED) {
-                    hasNotGranted = true;
-                    Log.i(TAG, "deny:" + grant);
-                }
-            }
-            if (hasNotGranted) {
-                ToastUtil.showToastLong(R.string.not_permission);
-                finish();
-            }
-        }
+        permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -108,6 +80,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     protected void initParams(Intent intent) {
+        permissionUtil = new PermissionUtil(this, 100);
 
     }
 
@@ -138,13 +111,16 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         viewPager = $(R.id.main_view_pager);
         viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(this);
-        //请求权限
-        requestPermission();
     }
 
     @Override
     protected void doBusiness(Context mContext) {
-
+        permissionUtil.setPermissionListener(() -> {
+            ToastUtil.showToastLong(R.string.not_permission);
+            finish();
+        });
+        //请求权限
+        permissionUtil.requestPermission(authorities);
     }
 
     public static void startActivity(Context context) {

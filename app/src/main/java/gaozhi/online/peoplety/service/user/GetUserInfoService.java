@@ -63,7 +63,6 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
                 temp.setFanNum(userDTO.getFanNum());
                 realm.copyToRealmOrUpdate(temp);
             }
-            Log.i(getClass().getName(), "" + temp);
         }, () -> {//success
             userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
             consumer.accept(userDTO);

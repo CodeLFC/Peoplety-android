@@ -134,4 +134,6 @@
     <string name="filter">筛选</string>
     <string name="all_selected">全选</string>
     <string name="tip_attention_success">关注成功</string>
+    <string name="camera_error">相机异常</string>
+    <string name="tip_version_not_adapter">此功能未适配本机安卓版本</string>
 </resources>

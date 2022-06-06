@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import gaozhi.online.base.asynchronization.GlobalExecutor;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -28,6 +29,8 @@ public class PeopletyApplication extends Application implements Application.Acti
     //数据库
     private final String RDB_NAME = "peoplety.realm";
     private final long RDB_VERSION = 1;
+    //线程
+    private static GlobalExecutor globalExecutor;
 
     @Override
     public void onCreate() {
@@ -40,6 +43,8 @@ public class PeopletyApplication extends Application implements Application.Acti
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().name(RDB_NAME).schemaVersion(RDB_VERSION).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(config);
+
+        globalExecutor = new GlobalExecutor();
     }
 
     @Override
@@ -99,5 +104,9 @@ public class PeopletyApplication extends Application implements Application.Acti
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
 
+    }
+
+    public static GlobalExecutor getGlobalExecutor() {
+        return globalExecutor;
     }
 }

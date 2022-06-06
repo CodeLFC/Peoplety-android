@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Peoplety">
         <activity
+            android:name=".ui.util.scan.ScanActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.personal.FriendsActivity"
             android:exported="false" />
         <activity
