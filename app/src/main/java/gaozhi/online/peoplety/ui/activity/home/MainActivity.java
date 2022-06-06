@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.ui.activity.home;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -25,14 +26,19 @@ import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.home.fragment.home.HomeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MessageFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
+import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
+import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
+import gaozhi.online.peoplety.ui.util.scan.ScanActivity;
+import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.PermissionUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
@@ -194,5 +200,19 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         super.onResume();
         //更新信息
         getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == ScanActivity.QR_RESULT_CODE){
+            String qrContent = data.getStringExtra(ScanActivity.QR_CONTENT_KEY);
+            if(qrContent.startsWith(NetConfig.officialURL)){
+                String userid = qrContent.substring(NetConfig.officialURL.length());
+                PersonalActivity.startActivity(this,Long.parseLong(userid));
+            }else if(PatternUtil.matchUrl(qrContent)){
+                WebActivity.startActivity(this,qrContent,getString(R.string.tip_scan_result));
+            }
+        }
     }
 }

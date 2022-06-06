@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
@@ -25,6 +26,8 @@ public class PersonalActivity extends DBBaseActivity {
 
     //intent
     private long userid;
+    //ui
+    private TextView textTitle;
 
     @Override
     protected void initParams(Intent intent) {
@@ -38,12 +41,12 @@ public class PersonalActivity extends DBBaseActivity {
 
     @Override
     protected void initView(View view) {
-
+        textTitle = $(R.id.title_text);
     }
 
     @Override
     protected void doBusiness(Context mContext) {
-
+        textTitle.setText("用户：" + userid);
     }
 
     @Override

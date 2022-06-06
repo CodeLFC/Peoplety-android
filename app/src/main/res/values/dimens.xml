@@ -22,4 +22,5 @@
     <dimen name="edit_widget_margin">12dp</dimen>
     <dimen name="btn_general_height">32dp</dimen>
     <dimen name="pop_window_half_screen_height">600dp</dimen>
+    <dimen name="scan_rectangle_size">150dp</dimen>
 </resources>

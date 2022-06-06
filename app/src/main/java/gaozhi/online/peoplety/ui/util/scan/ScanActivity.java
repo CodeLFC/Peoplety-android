@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.ui.util.scan;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,7 +20,6 @@ import android.view.TextureView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -40,9 +40,9 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
     public static final int QR_RESULT_CODE = 8888;
     public static final String QR_CONTENT_KEY = "qr-content";
 
-    public static void startActivity(Context context) {
+    public static void startActivityForResult(Activity context, int QR_REQUEST_CODE) {
         Intent intent = new Intent(context, ScanActivity.class);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, QR_REQUEST_CODE);
     }
 
     //permission
@@ -62,8 +62,6 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
     @Override
     protected void initParams(Intent intent) {
         permissionUtil = new PermissionUtil(this, 100);
-        ScreenUtil screenUtil = new ScreenUtil(this);
-        previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * 4 / 3);
     }
 
     @Override
@@ -74,7 +72,6 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
     @Override
     protected void initView(View view) {
         textureViewCamera = $(R.id.scan_activity_texture_preview);
-        textureViewCamera.resizePreview(previewSize);
         textureViewCamera.setSurfaceTextureListener(this);
     }
 
@@ -84,27 +81,36 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
             @Override
             public void agreed() {
                 cameraHelper = new CameraHelper(ScanActivity.this, PeopletyApplication.getGlobalExecutor());
+                Size[] cameraSize = cameraHelper.getBackCameraSize();
+                ScreenUtil screenUtil = new ScreenUtil(ScanActivity.this);
+                if (cameraSize == null || cameraSize.length == 0) {
+                    previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * 4 / 3);
+                } else {
+                    previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * cameraSize[0].getWidth() / cameraSize[0].getHeight());
+                }
+                Log.i(TAG, "预览大小：" + previewSize);
+                textureViewCamera.resizePreview(previewSize);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     cameraHelper.openBackCamera(new CameraDevice.StateCallback() {
                         @Override
                         public void onOpened(@NonNull CameraDevice camera) {
                             cameraDevice = camera;
-    //                        Matrix matrix = new Matrix();
-    //                        //第1步:把视频区移动到View区,使两者中心点重合.
-    //                        matrix.preTranslate((textureViewWidth - videoWidth) / 2, (textureViewHeight - videoHeight) / 2);
-    //
-    //                        //第2步:因为默认视频是fitXY的形式显示的,所以首先要缩放还原回来.
-    //                        matrix.preScale(videoWidth / textureViewWidth, videoHeight / textureViewHeight);
-    //
-    //                        //第3步,等比例放大或缩小,直到视频区的一边和View一边相等.如果另一边和view的一边不相等，则留下空隙
-    //                        if (sx >= sy) {
-    //                            matrix.postScale(sy, sy, textureViewWidth / 2, textureViewHeight / 2);
-    //                        } else {
-    //                            matrix.postScale(sx, sx, textureViewWidth / 2, textureViewHeight / 2);
-    //                        }
-    //
-    //                        mTextureView.setTransform(matrix);
-    //                        mTextureView.postInvalidate();
+                            //                        Matrix matrix = new Matrix();
+                            //                        //第1步:把视频区移动到View区,使两者中心点重合.
+                            //                        matrix.preTranslate((textureViewWidth - videoWidth) / 2, (textureViewHeight - videoHeight) / 2);
+                            //
+                            //                        //第2步:因为默认视频是fitXY的形式显示的,所以首先要缩放还原回来.
+                            //                        matrix.preScale(videoWidth / textureViewWidth, videoHeight / textureViewHeight);
+                            //
+                            //                        //第3步,等比例放大或缩小,直到视频区的一边和View一边相等.如果另一边和view的一边不相等，则留下空隙
+                            //                        if (sx >= sy) {
+                            //                            matrix.postScale(sy, sy, textureViewWidth / 2, textureViewHeight / 2);
+                            //                        } else {
+                            //                            matrix.postScale(sx, sx, textureViewWidth / 2, textureViewHeight / 2);
+                            //                        }
+                            //
+                            //                        mTextureView.setTransform(matrix);
+                            //                        mTextureView.postInvalidate();
                         }
 
                         @Override
@@ -117,7 +123,7 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
                         }
                     });
-                }else{
+                } else {
                     ToastUtil.showToastShort(R.string.tip_version_not_adapter);
                     finish();
                 }
@@ -149,7 +155,7 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-        imageReader = ImageReader.newInstance(width, height, CameraHelper.IMAGE_FORMAT, 3);
+        imageReader = ImageReader.newInstance(previewSize.getWidth(), previewSize.getHeight(), CameraHelper.IMAGE_FORMAT, 3);
         imageReader.setOnImageAvailableListener(this, PeopletyApplication.getGlobalExecutor().getBackgroundHandler());
         List<Surface> surfaces = new LinkedList<>();
         surfaces.add(new Surface(surface));
@@ -200,7 +206,7 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
             String content = ZxingUtil.QRCodeAnalyser.analyzeBitmap(bitmapImage);
             image.close();
             if (content != null) {
-                ToastUtil.showToastShort(content);
+                imageReader.close();
                 Intent intent = new Intent();
                 intent.putExtra(QR_CONTENT_KEY, content);
                 setResult(QR_RESULT_CODE, intent);

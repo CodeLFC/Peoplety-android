@@ -196,7 +196,7 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == title_right.getId()) {
-            ScanActivity.startActivity(getContext());
+            ScanActivity.startActivityForResult(getActivity(),0);
         }
     }
 
@@ -207,4 +207,6 @@ public class MeFragment extends DBBaseFragment {
         doBusiness();
         getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
     }
+
+
 }

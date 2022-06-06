@@ -6,18 +6,42 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@color/bg_color"
+    android:background="@drawable/scan_foreground"
     tools:context=".ui.util.scan.ScanActivity">
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <gaozhi.online.peoplety.ui.util.scan.CameraTextureView
-        android:id="@+id/scan_activity_texture_preview"
+        android:layout_weight="1" />
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+       >
+
+        <gaozhi.online.peoplety.ui.util.scan.CameraTextureView
+            android:id="@+id/scan_activity_texture_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/scan_foreground" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:text="@string/tip_scan"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_general"
+            android:layout_marginBottom="@dimen/logo_bigger_size"/>
+    </FrameLayout>
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>

@@ -69,7 +69,7 @@ public class CameraHelper {
     private final CameraManager cameraManager;
     private final GlobalExecutor globalExecutor;
 
-    public CameraHelper(Context context,@NotNull GlobalExecutor globalExecutor) {
+    public CameraHelper(Context context, @NotNull GlobalExecutor globalExecutor) {
         this.context = context;
         this.globalExecutor = globalExecutor;
         cameraSizeMap = new HashMap<>();
@@ -123,7 +123,7 @@ public class CameraHelper {
      * @param stateCallback The callback which is invoked once the camera is opened
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
-    private void openCamera(int camera,CameraDevice.StateCallback stateCallback) {
+    private void openCamera(int camera, CameraDevice.StateCallback stateCallback) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             stateCallback.onError(null, CameraDevice.StateCallback.ERROR_CAMERA_DISABLED);
             return;
@@ -140,6 +140,18 @@ public class CameraHelper {
         List<Surface> surfaces = new LinkedList<>();
         surfaces.add(preview);
         startPreview(cameraDevice, surfaces, previewListener);
+    }
+
+    public Size[] getBackCameraSize() {
+        return getCameraSize(backCamera);
+    }
+
+    public Size[] getFrontCameraSize() {
+        return getCameraSize(frontCamera);
+    }
+
+    private Size[] getCameraSize(int camera) {
+        return cameraSizeMap.get(cameraList[camera]);
     }
 
     /**
@@ -162,7 +174,9 @@ public class CameraHelper {
             public void onConfigured(@NonNull CameraCaptureSession session) {
                 Log.i(this.getClass().getSimpleName(), "预览会话开始创建！");
                 builder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                //builder.set(CaptureRequest.JPEG_THUMBNAIL_SIZE, new Size(1080,1920));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    builder.set(CaptureRequest.SCALER_ROTATE_AND_CROP, CaptureRequest.SCALER_ROTATE_AND_CROP_AUTO);
+                }
                 CaptureRequest captureRequest = builder.build();
                 try {
                     //线程handler
@@ -191,8 +205,9 @@ public class CameraHelper {
             e.printStackTrace();
         }
     }
+
     private void setCameraSize(Camera camera, float needW, float needH) {
-        if(null == camera ) return;
+        if (null == camera) return;
         Camera.Parameters parameters = camera.getParameters();
         List<Camera.Size> list = parameters.getSupportedPreviewSizes();
         /**
@@ -200,21 +215,21 @@ public class CameraHelper {
          * 比如我现在的画布尺寸是宽230高120，这个尺寸摄像头是绝对不支持的所以我们需要在摄像头
          * 支持的所有尺寸中选择以一个最接近我们目标的
          */
-        float needRatio = needW/needH;
+        float needRatio = needW / needH;
         Log.e("我需要的宽高比为", String.valueOf(needRatio));
         LinkedHashMap<Float, Camera.Size> map = new LinkedHashMap<>();
         float bestRatio = 0;
-        for (Camera.Size size : list){
-            Log.e("Camera.Size", size.width + "," + size.height + "," + (float)size.width/size.height);
+        for (Camera.Size size : list) {
+            Log.e("Camera.Size", size.width + "," + size.height + "," + (float) size.width / size.height);
             /**
              * 先把所有的尺寸打出来让大家有一个认识
              */
-            map.put((float)size.width/size.height, size);
+            map.put((float) size.width / size.height, size);
             /**
              * 将所有的尺寸根据宽高比，存入map
              */
-            if(bestRatio == 0 || Math.abs(needRatio - (float)size.width/size.height) < Math.abs(needRatio - bestRatio)) {
-                bestRatio = (float)size.width/size.height;
+            if (bestRatio == 0 || Math.abs(needRatio - (float) size.width / size.height) < Math.abs(needRatio - bestRatio)) {
+                bestRatio = (float) size.width / size.height;
             }
         }
         Log.e("最佳的Camera.Size", String.valueOf(bestRatio));

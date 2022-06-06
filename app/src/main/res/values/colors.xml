@@ -9,7 +9,7 @@
     <color name="edit_bolder">#F1F1F1</color>
     <color name="bg_color">#F5F5F5</color>
     <color name="alpha_50_bg_color">#20000000</color>
-
+    <color name="alpha_80_bg_color">#10000000</color>
     <color name="widget_color">#FFFFFF</color>
     <color name="theme_color">#0c8ccd</color>
     <color name="shallow_theme_color">#0d96db</color>
