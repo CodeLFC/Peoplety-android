@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -71,8 +72,7 @@ public class PeopletyApplication extends Application implements Application.Acti
         if (resources != null && resources.getConfiguration().fontScale != fontScale) {
             android.content.res.Configuration configuration = resources.getConfiguration();
             configuration.fontScale = fontScale;
-            //resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-            activity.createConfigurationContext(configuration);
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         }
     }
 
