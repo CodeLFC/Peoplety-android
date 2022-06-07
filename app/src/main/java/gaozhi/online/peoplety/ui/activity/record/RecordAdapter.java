@@ -236,6 +236,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             RecordType recordType = realm.where(RecordType.class).equalTo("id", item.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());
+                Log.i(getClass().getName(),recordType.getName());
             }
             Area area = realm.where(Area.class).equalTo("id", item.getAreaId()).findFirst();
             if (area != null) {
