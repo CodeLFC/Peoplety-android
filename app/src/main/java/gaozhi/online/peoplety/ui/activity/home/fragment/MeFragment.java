@@ -13,6 +13,7 @@ import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
+import gaozhi.online.peoplety.ui.activity.personal.FavoriteActivity;
 import gaozhi.online.peoplety.ui.util.scan.ScanActivity;
 import gaozhi.online.peoplety.ui.activity.SettingsActivity;
 import gaozhi.online.peoplety.ui.activity.personal.FriendsActivity;
@@ -54,7 +55,7 @@ public class MeFragment extends DBBaseFragment {
     private View viewAbout;
     private View viewSettings;
     //service
-    private final GetRecordCountByUseridService getRecordCountByUseridService = new GetRecordCountByUseridService(new DataHelper.OnDataListener<UserRecordCount>() {
+    private final GetRecordCountByUseridService getRecordCountByUseridService = new GetRecordCountByUseridService(new DataHelper.OnDataListener<>() {
         @Override
         public void handle(int id, UserRecordCount data, boolean local) {
             if (data == null) return;
@@ -184,19 +185,19 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == textFavoriteNum.getId()) {
-            ToastUtil.showToastShort("收藏夹");
+            FavoriteActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == textAttentionNum.getId()) {
-            FriendsActivity.startActivityForAttention(getContext());
+            FriendsActivity.startActivityForAttention(getContext(), loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == textFansNum.getId()) {
-            FriendsActivity.startActivityForFan(getContext());
+            FriendsActivity.startActivityForFan(getContext(), loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == title_right.getId()) {
-            ScanActivity.startActivityForResult(getActivity(),0);
+            ScanActivity.startActivityForResult(getActivity(), 0);
         }
     }
 

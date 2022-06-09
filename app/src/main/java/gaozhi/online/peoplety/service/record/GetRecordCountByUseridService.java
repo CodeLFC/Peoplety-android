@@ -9,6 +9,7 @@ import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 获取一些统计数据
@@ -35,6 +36,8 @@ public class GetRecordCountByUseridService extends BaseApiRequest<UserRecordCoun
 
     @Override
     public void getNetData(Result result, Consumer<UserRecordCount> consumer) {
-        consumer.accept(getGson().fromJson(result.getData(), UserRecordCount.class));
+        UserRecordCount userRecordCount = getGson().fromJson(result.getData(), UserRecordCount.class);
+        consumer.accept(userRecordCount);
+        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(userRecordCount));
     }
 }

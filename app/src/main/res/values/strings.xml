@@ -138,4 +138,7 @@
     <string name="tip_version_not_adapter">此功能未适配本机安卓版本</string>
     <string name="tip_scan">将二维码放入框内即可扫描</string>
     <string name="tip_scan_result">二维码扫描结果</string>
+    <string name="favorite_private">私密</string>
+    <string name="favorite_public">公开</string>
+    <string name="add">新建</string>
 </resources>

@@ -113,7 +113,8 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
     }
 
     @Override
-    public void handle(int id, PageInfo<Record> data) {
+    public void handle(int id, PageInfo<Record> data, boolean local) {
+        if (data == null) return;
         recordPageInfo = data;
         if (recordPageInfo.getPageNum() <= 1) {
             recordAdapter.clear();

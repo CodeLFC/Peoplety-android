@@ -53,9 +53,9 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
         private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
             @Override
-            public void handle(int id, Friend data, boolean local) {
+            public void handle(int id, Friend data,boolean local) {
                 if (data == null) {
-                    if (showAttention)
+                    if (showAttention&&!local)
                         textAttention.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -67,7 +67,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             }
         });
         //关注
-        private final AddAttentionService addAttentionService = new AddAttentionService(new DataHelper.OnDataListener<Result>() {
+        private final AddAttentionService addAttentionService = new AddAttentionService(new DataHelper.OnDataListener<>() {
             @Override
             public void handle(int id, Result data) {
                 ToastUtil.showToastShort(R.string.tip_attention_success);
@@ -90,9 +90,9 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             textRemark = itemView.findViewById(R.id.item_recycler_friend_text_remark);
             textAttention = itemView.findViewById(R.id.item_recycler_friend_text_attention);
             textStatus = itemView.findViewById(R.id.item_recycler_friend_text_status);
-            showAttention(true);
             textAttention.setOnClickListener(this);
             itemView.setOnClickListener(this);
+            showAttention(true);
         }
 
         @Override

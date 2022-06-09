@@ -26,15 +26,17 @@ import io.realm.Realm;
  */
 public class FriendsActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Friend>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
     private static final String INTENT_ATTENTION = "attention";
+    private static final String INTENT_USERID = "userid";
     private static final int PAGE_SIZE = 20;
 
     /**
      * @param context
      * @param attention 是否是关注列表
      */
-    private static void startActivity(Context context, boolean attention) {
+    private static void startActivity(Context context, boolean attention, long userid) {
         Intent intent = new Intent(context, FriendsActivity.class);
         intent.putExtra(INTENT_ATTENTION, attention);
+        intent.putExtra(INTENT_USERID, userid);
         context.startActivity(intent);
     }
 
@@ -43,8 +45,8 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
      *
      * @param context
      */
-    public static void startActivityForAttention(Context context) {
-        startActivity(context, true);
+    public static void startActivityForAttention(Context context, long userid) {
+        startActivity(context, true, userid);
     }
 
     /**
@@ -52,12 +54,13 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
      *
      * @param context
      */
-    public static void startActivityForFan(Context context) {
-        startActivity(context, false);
+    public static void startActivityForFan(Context context, long userid) {
+        startActivity(context, false, userid);
     }
 
     //params
     private boolean isAttention;
+    private long userid;
     //service
     private final GetAttentionService getAttentionService = new GetAttentionService(this);
     private final GetFanService getFanService = new GetFanService(this);
@@ -72,6 +75,7 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
     @Override
     protected void initParams(Intent intent) {
         isAttention = intent.getBooleanExtra(INTENT_ATTENTION, false);
+        userid = intent.getLongExtra(INTENT_USERID, 0);
     }
 
     @Override
@@ -124,10 +128,10 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
      */
     private void request(int pageNum) {
         if (isAttention) {
-            getAttentionService.request(loginUser.getToken(), pageNum, PAGE_SIZE);
+            getAttentionService.request(loginUser.getToken(), userid, pageNum, PAGE_SIZE);
             return;
         }
-        getFanService.request(loginUser.getToken(), pageNum, PAGE_SIZE);
+        getFanService.request(loginUser.getToken(), userid, pageNum, PAGE_SIZE);
     }
 
     @Override
@@ -139,6 +143,7 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
 
     @Override
     public void handle(int id, PageInfo<Friend> data, boolean local) {
+        if (data == null) return;
         currentPageInfo = data;
         if (currentPageInfo.getPageNum() <= 1) {
             friendAdapter.clear();

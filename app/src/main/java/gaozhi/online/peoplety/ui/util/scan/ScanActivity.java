@@ -71,15 +71,11 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     protected void initView(View view) {
-        textureViewCamera = $(R.id.scan_activity_texture_preview);
-        textureViewCamera.setSurfaceTextureListener(this);
-    }
-
-    @Override
-    protected void doBusiness(Context mContext) {
         permissionUtil.setPermissionListener(new PermissionUtil.PermissionListener() {
             @Override
             public void agreed() {
+                textureViewCamera = $(R.id.scan_activity_texture_preview);
+                textureViewCamera.setSurfaceTextureListener(ScanActivity.this);
                 cameraHelper = new CameraHelper(ScanActivity.this, PeopletyApplication.getGlobalExecutor());
                 Size[] cameraSize = cameraHelper.getBackCameraSize();
                 ScreenUtil screenUtil = new ScreenUtil(ScanActivity.this);
@@ -135,6 +131,10 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void doBusiness(Context mContext) {
         permissionUtil.requestPermission(authorities);
     }
 
