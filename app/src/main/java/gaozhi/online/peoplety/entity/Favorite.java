@@ -8,7 +8,6 @@ import java.util.Objects;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -26,6 +25,10 @@ public class Favorite extends RealmObject implements Parcelable, NoAnimatorRecyc
     private String description;
     private long time;
     private boolean visible;
+
+    public Favorite() {
+
+    }
 
     protected Favorite(Parcel in) {
         id = in.readLong();

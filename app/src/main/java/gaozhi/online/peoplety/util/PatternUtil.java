@@ -17,29 +17,36 @@ public class PatternUtil {
     private static final Pattern qq = Pattern.compile("^[1-9][0-9]{4,10}$");
     private static final Pattern wechat = Pattern.compile("^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$");
     public static boolean matchEmail(String src) {
+        if(src ==null)return false;
         return email.matcher(src).matches();
     }
 
     public static boolean matchUrl(String src) {
+        if(src ==null)return false;
         return url.matcher(src).matches();
     }
 
     public static boolean matchEnglish(String src) {
+        if(src ==null)return false;
         return english.matcher(src).matches();
     }
 
     public static boolean matchChinese(String src) {
+        if(src ==null)return false;
         return chinese.matcher(src).matches();
     }
 
     public static boolean matchPhone(String src) {
+        if(src ==null)return false;
         return phone.matcher(src).matches();
     }
 
     public static boolean matchQQ(String src) {
+        if(src ==null)return false;
         return qq.matcher(src).matches();
     }
     public static boolean matchWechat(String src){
+        if(src ==null)return false;
         return wechat.matcher(src).matches()||matchPhone(src);
     }
 }

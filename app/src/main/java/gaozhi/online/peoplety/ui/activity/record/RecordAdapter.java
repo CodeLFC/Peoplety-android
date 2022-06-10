@@ -214,15 +214,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             handle(-1, item, false);
         }
 
-        /**
-         * 直接绑定ID
-         */
-        public void bindView(long recordId) {
-            Record record = new Record();
-            record.setId(recordId);
-            bindView(record);
-        }
-
         public void setShowDetails(boolean showDetails) {
             this.showDetails = showDetails;
         }
@@ -251,20 +242,23 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (area != null) {
                 textArea.setText(area.getName());
             }
+
             textDescription.setText(item.getDescription());
             textContent.setText(item.getContent());
 
             textTime.setText(DateTimeUtil.getRecordTime(item.getTime()));
             imgList = new Gson().fromJson(item.getImgs(), new TypeToken<List<String>>() {
             }.getType());
-            for (String img : imgList) {
-                imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, img, ""));
-            }
+            if (imgList != null)
+                for (String img : imgList) {
+                    imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, img, ""));
+                }
             imageLink.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
             imageLink.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
             textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //卷宗编号
             textFloor.setText(item.getId() + context.getString(R.string.floor));
+
             friendViewHolder.bindView(item.getUserid());
         }
 

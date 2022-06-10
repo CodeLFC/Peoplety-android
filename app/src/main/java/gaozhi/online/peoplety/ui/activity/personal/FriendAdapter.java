@@ -121,6 +121,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         @Override
         public void handle(int id, UserDTO data) {
+            if(data==null||data.getUserInfo()==null)return;
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
             if (StringUtil.isEmpty(textName.getText().toString())) {
                 textName.setText(data.getUserInfo().getNick());

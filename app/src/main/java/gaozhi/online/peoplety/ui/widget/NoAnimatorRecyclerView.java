@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.SortedListAdapterCallback;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -239,6 +240,12 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         public void add(List<V> items) {
             for (V e : items) {
                 itemList.add(e);
+            }
+        }
+
+        public <VN> void add(List<VN> items, Function<VN, V> function) {
+            for (VN e : items) {
+                itemList.add(function.apply(e));
             }
         }
 

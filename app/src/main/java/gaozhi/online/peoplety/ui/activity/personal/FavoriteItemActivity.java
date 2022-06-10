@@ -3,25 +3,47 @@ package gaozhi.online.peoplety.ui.activity.personal;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.pagehelper.PageInfo;
 
+import java.util.function.Function;
+
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Record;
+import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetItemsByFavoriteIdService;
+import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
 /**
  * 收藏内容
  */
-public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Item>>, SwipeRefreshLayout.OnRefreshListener {
+public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Item>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
+    /**
+     * 收藏转 Record
+     */
+    public class FavoriteItemFunction implements Function<Item, Record> {
+        @Override
+        public Record apply(Item item) {
+            Record record = getRealm().where(Record.class).equalTo("id", item.getRecordId()).findFirst();
+            if (record == null) {
+                record = new Record();
+                record.setId(item.getRecordId());
+            }
+            return record;
+        }
+    }
+
     public static final String INTENT_FAVORITE = "favorite";
 
     public static void startActivity(Context context, Favorite favorite) {
@@ -39,9 +61,16 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     private static final int PAGE_SIZE = 10;
     private final GetItemsByFavoriteIdService getItemsByFavoriteIdService = new GetItemsByFavoriteIdService(this);
 
+    //ui
+    private TextView textTitle;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecordAdapter recordAdapter;
+    private FavoriteItemFunction favoriteItemFunction;
+
     @Override
     protected void initParams(Intent intent) {
         favorite = intent.getParcelableExtra(INTENT_FAVORITE);
+        favoriteItemFunction = new FavoriteItemFunction();
     }
 
     @Override
@@ -51,11 +80,19 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     protected void initView(View view) {
-
+        swipeRefreshLayout = $(R.id.favorite_item_activity_swipe);
+        NoAnimatorRecyclerView recyclerView = $(R.id.favorite_item_activity_recycler_record);
+        recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
+        recordAdapter = new RecordAdapter(loginUser.getToken());
+        recyclerView.setAdapter(recordAdapter);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        recyclerView.setOnLoadListener(this);
+        textTitle = $(R.id.title_text);
     }
 
     @Override
     protected void doBusiness(Context mContext) {
+        textTitle.setText(favorite.getName());
         onRefresh();
     }
 
@@ -77,17 +114,24 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     public void handle(int id, PageInfo<Item> data, boolean local) {
-        if(data == null)return;
-
+        if (data == null) return;
         itemPageInfo = data;
         if (itemPageInfo.getPageNum() <= 1) {
-
+            recordAdapter.clear();
         }
-
+        recordAdapter.add(itemPageInfo.getList(), favoriteItemFunction);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoad() {
+        if (itemPageInfo != null && itemPageInfo.isHasNextPage())
+            getItemsByFavoriteIdService.request(loginUser.getToken(), favorite.getId(), itemPageInfo.getNextPage(), PAGE_SIZE);
     }
 }
