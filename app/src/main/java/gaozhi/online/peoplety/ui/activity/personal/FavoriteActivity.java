@@ -10,6 +10,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.pagehelper.PageInfo;
 
+import java.util.function.Consumer;
+
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Favorite;
@@ -23,7 +25,7 @@ import io.realm.Realm;
 /**
  * 喜欢的内容
  */
-public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Favorite>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
+public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Favorite>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener, Consumer<Favorite> {
 
     private static final String INTENT_USERID = "userid";
     private static final int PAGE_SIZE = 20;
@@ -75,6 +77,7 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
         recyclerViewFavorite.setOnLoadListener(this);
         favoriteAdapter = new FavoriteAdapter();
         recyclerViewFavorite.setAdapter(favoriteAdapter);
+        favoriteAdapter.setOnItemClickedListener(this);
     }
 
     @Override
@@ -120,5 +123,10 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void accept(Favorite favorite) {
+        FavoriteItemActivity.startActivity(this, favorite);
     }
 }

@@ -41,7 +41,7 @@ public class GetChildByRecordIdService extends BaseApiRequest<PageInfo<Record>> 
         int recordId = Integer.parseInt(params.get("recordId"));
         int pageNum = Integer.parseInt(params.get("pageNum"));
         if (pageNum <= 1)
-            return new PageInfo<>(getRealm().where(Record.class).equalTo("parentId", recordId).equalTo("enable",true).findAll());
+            return new PageInfo<>(getRealm().where(Record.class).equalTo("parentId", recordId).equalTo("enable", true).findAll());
         return null;
     }
 
@@ -63,9 +63,7 @@ public class GetChildByRecordIdService extends BaseApiRequest<PageInfo<Record>> 
                 }
             }
             List<Record> records = pageInfo.getList();
-            for (Record record : records) {
-                realm.copyToRealmOrUpdate(record);
-            }
+            realm.copyToRealmOrUpdate(records);
         });
     }
 }

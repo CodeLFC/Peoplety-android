@@ -56,13 +56,11 @@ public class GetFavoritesByUseridService extends BaseApiRequest<PageInfo<Favorit
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
-            if (pageInfo.getList().size() > 0) {//删除这一类的第一页
+            if (pageInfo.getList().size() > 0) {//删除库中的内容
                 realm.delete(Favorite.class);
             }
             List<Favorite> favorites = pageInfo.getList();
-            for (Favorite favorite : favorites) {
-                realm.copyToRealmOrUpdate(favorite);
-            }
+            realm.copyToRealmOrUpdate(favorites);
         });
     }
 }

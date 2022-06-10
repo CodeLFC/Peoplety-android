@@ -56,9 +56,7 @@ public class GetRecordByUserIdService extends BaseApiRequest<PageInfo<Record>> {
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
             List<Record> records = pageInfo.getList();
-            for (Record record : records) {
-                realm.copyToRealmOrUpdate(record);
-            }
+            realm.copyToRealmOrUpdate(records);
         });
     }
 }

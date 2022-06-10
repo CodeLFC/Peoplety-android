@@ -69,9 +69,7 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
                 }
             }
             List<Record> records = pageInfo.getList();
-            for (Record record : records) {
-                realm.copyToRealmOrUpdate(record);
-            }
+            realm.copyToRealmOrUpdate(records);
         });
     }
 }

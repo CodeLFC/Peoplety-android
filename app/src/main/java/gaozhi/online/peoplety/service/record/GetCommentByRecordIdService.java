@@ -64,9 +64,7 @@ public class GetCommentByRecordIdService extends BaseApiRequest<PageInfo<Comment
                     comment.deleteFromRealm();
                 }
             }
-            for (Comment comment : commentPageInfo.getList()) {
-                realm.copyToRealmOrUpdate(comment);
-            }
+            realm.copyToRealmOrUpdate(commentPageInfo.getList());
         });
     }
 }

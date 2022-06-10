@@ -195,7 +195,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         @Override
         public void bindView(Record item) {
             if (item == null) return;
-            this.record = item;
             //刷新数据
             refreshData(item);
             //获取详细内容
@@ -215,12 +214,22 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             handle(-1, item, false);
         }
 
+        /**
+         * 直接绑定ID
+         */
+        public void bindView(long recordId) {
+            Record record = new Record();
+            record.setId(recordId);
+            bindView(record);
+        }
+
         public void setShowDetails(boolean showDetails) {
             this.showDetails = showDetails;
         }
 
         //刷新数据
         private void refreshData(Record item) {
+            this.record = item;
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
@@ -236,7 +245,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             RecordType recordType = realm.where(RecordType.class).equalTo("id", item.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());
-                Log.i(getClass().getName(),recordType.getName());
+                Log.i(getClass().getName(), recordType.getName());
             }
             Area area = realm.where(Area.class).equalTo("id", item.getAreaId()).findFirst();
             if (area != null) {
@@ -286,7 +295,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             //收藏数量
             textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
             //是否 收藏
-            imageFavorite.setImageResource(data.getFavorite()!=null ? R.drawable.favorited : R.drawable.favorite);
+            imageFavorite.setImageResource(data.getFavorite() != null ? R.drawable.favorited : R.drawable.favorite);
             //派生数量
             textFork.setText(StringUtil.numLong2Str(data.getChildNum()));
         }
