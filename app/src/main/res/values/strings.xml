@@ -141,4 +141,5 @@
     <string name="favorite_private">私密</string>
     <string name="favorite_public">公开</string>
     <string name="add">新建</string>
+    <string name="manage">管理</string>
 </resources>

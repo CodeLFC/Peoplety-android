@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.entity.dto;
 
 import gaozhi.online.peoplety.entity.Favorite;
+import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
 import io.realm.RealmObject;
@@ -23,6 +24,8 @@ public class RecordDTO extends RealmObject {
     private int favoriteNum;
     //所在的收藏夹
     private Favorite favorite;
+    //具体的收藏条目
+    private Item item;
     //子数量
     private long childNum;
     //评论数量

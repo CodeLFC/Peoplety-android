@@ -73,7 +73,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
             @Override
             public int compare(Record o1, Record o2) {
                 if ((o1.isTop() && o2.isTop()) || (!o1.isTop() && !o2.isTop())) {
-                    return super.compare(o1, o2);
+                    return (int) (o2.getId() - o1.getId());
                 }
                 return o1.isTop() ? -1 : 1;
             }

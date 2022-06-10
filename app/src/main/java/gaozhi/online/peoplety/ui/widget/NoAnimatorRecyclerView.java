@@ -116,6 +116,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <V>
      */
     public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends Adapter<T> implements Consumer<Integer> {
+        private final Class<V> klass;
 
         //item必须实现的接口
         public interface BaseItem {
@@ -134,17 +135,17 @@ public class NoAnimatorRecyclerView extends RecyclerView {
          *
          * @param <T>
          */
-        public static class BaseSortedListAdapterCallback<T extends BaseItem> {
+        public interface BaseSortedListAdapterCallback<T extends BaseItem> {
 
-            public int compare(T o1, T o2) {
+            default int compare(T o1, T o2) {
                 return (int) (o2.getItemId() - o1.getItemId());
             }
 
-            public boolean areContentsTheSame(T oldItem, T newItem) {
+            default boolean areContentsTheSame(T oldItem, T newItem) {
                 return oldItem == newItem;
             }
 
-            public boolean areItemsTheSame(T item1, T item2) {
+            default boolean areItemsTheSame(T item1, T item2) {
                 return item1.getItemId() == item2.getItemId();
             }
         }
@@ -171,21 +172,30 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         private Consumer<V> onItemClickedListener;
         //列表
-        private final SortedList<V> itemList;
+        private SortedList<V> itemList;
 
         public BaseAdapter(Class<V> klass) {
             this(klass, null);
         }
 
         public BaseAdapter(Class<V> klass, BaseSortedListAdapterCallback<V> sortedListAdapterCallback) {
+            this.klass = klass;
             //防止闪烁
             setHasStableIds(true);
             if (sortedListAdapterCallback == null) {
-                sortedListAdapterCallback = new BaseSortedListAdapterCallback<>();
+                sortedListAdapterCallback = new BaseSortedListAdapterCallback<>() {
+                };
             }
             //初始化
-            BaseSortedListAdapterCallback<V> finalSortedListAdapterCallback = sortedListAdapterCallback;
-            itemList = new SortedList<>(klass, new SortedListAdapterCallback<V>(this) {
+            init(sortedListAdapterCallback);
+        }
+
+        /**
+         * 初始化item
+         * @param finalSortedListAdapterCallback
+         */
+        protected void init(BaseSortedListAdapterCallback<V> finalSortedListAdapterCallback) {
+            itemList = new SortedList<>(klass, new SortedListAdapterCallback<>(this) {
                 @Override
                 public int compare(V o1, V o2) {
                     return finalSortedListAdapterCallback.compare(o1, o2);

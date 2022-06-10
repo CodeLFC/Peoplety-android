@@ -24,6 +24,7 @@ import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.IPInfo;
+import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Token;
@@ -33,9 +34,11 @@ import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.service.friend.GetFriendService;
+import gaozhi.online.peoplety.service.record.DeleteFavoriteItemByIdService;
 import gaozhi.online.peoplety.service.record.DeleteRecordByIdService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.personal.FavoritePopWindow;
 import gaozhi.online.peoplety.ui.activity.personal.FriendAdapter;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
@@ -101,9 +104,21 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textContent;
         private final CommentPopWindow commentPopWindow;
         private final ChildRecordPopWindow childRecordPopWindow;
+        private final FavoritePopWindow favoritePopWindow;
         //service
         //获取详情
         private final GetRecordDTOByIdService getRecordDTOByIdService = new GetRecordDTOByIdService(this);
+        private final DeleteFavoriteItemByIdService deleteFavoriteItemByIdService = new DeleteFavoriteItemByIdService(new DataHelper.OnDataListener<Result>() {
+            @Override
+            public void handle(int id, Result data) {
+                bindView(record);
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+                ToastUtil.showToastShort(message + data);
+            }
+        });
         //获取位置信息
         private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
             @Override
@@ -132,6 +147,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         //是否完整显示内容
         private boolean showDetails;
         private Record record;
+        private RecordDTO recordDTO;
 
         public RecordViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
@@ -168,7 +184,19 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 });
                 dialogPopWindow.showPopupWindow(imageDelete);
             });
+            favoritePopWindow = new FavoritePopWindow(context);
+            favoritePopWindow.setItemConsumer(item -> bindView(record));
             imageFavorite = itemView.findViewById(R.id.item_recycler_record_image_favorite);
+            imageFavorite.setOnClickListener(v -> {
+                if (recordDTO == null) return;
+                if (recordDTO.getItem() == null) {
+                    //收藏
+                    favoritePopWindow.showPopupWindow(imageFavorite, record.getId());
+                } else {
+                    //取消收藏
+                    deleteFavoriteItemByIdService.request(token, recordDTO.getItem().getId());
+                }
+            });
             imageComment = itemView.findViewById(R.id.item_recycler_record_image_comment);
             commentPopWindow = new CommentPopWindow(context);
             imageComment.setOnClickListener(v -> {
@@ -282,6 +310,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         @Override
         public void handle(int id, RecordDTO data, boolean local) {
             if (data == null || data.getRecord() == null) return;
+            this.recordDTO = data;
+            Log.i(getClass().getName(), local + ":" + recordDTO.getFavorite());
             //刷新数据
             refreshData(data.getRecord());
             //评论数量

@@ -29,20 +29,7 @@ import io.realm.Realm;
  * 收藏内容
  */
 public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.OnDataListener<PageInfo<Item>>, SwipeRefreshLayout.OnRefreshListener, NoAnimatorRecyclerView.OnLoadListener {
-    /**
-     * 收藏转 Record
-     */
-    public class FavoriteItemFunction implements Function<Item, Record> {
-        @Override
-        public Record apply(Item item) {
-            Record record = getRealm().where(Record.class).equalTo("id", item.getRecordId()).findFirst();
-            if (record == null) {
-                record = new Record();
-                record.setId(item.getRecordId());
-            }
-            return record;
-        }
-    }
+
 
     public static final String INTENT_FAVORITE = "favorite";
 
@@ -64,13 +51,11 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     //ui
     private TextView textTitle;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecordAdapter recordAdapter;
-    private FavoriteItemFunction favoriteItemFunction;
+    private FavoriteItemAdapter favoriteItemAdapter;
 
     @Override
     protected void initParams(Intent intent) {
         favorite = intent.getParcelableExtra(INTENT_FAVORITE);
-        favoriteItemFunction = new FavoriteItemFunction();
     }
 
     @Override
@@ -83,8 +68,8 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
         swipeRefreshLayout = $(R.id.favorite_item_activity_swipe);
         NoAnimatorRecyclerView recyclerView = $(R.id.favorite_item_activity_recycler_record);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
-        recordAdapter = new RecordAdapter(loginUser.getToken());
-        recyclerView.setAdapter(recordAdapter);
+        favoriteItemAdapter = new FavoriteItemAdapter(loginUser.getToken(), getRealm());
+        recyclerView.setAdapter(favoriteItemAdapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setOnLoadListener(this);
         textTitle = $(R.id.title_text);
@@ -117,9 +102,9 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
         if (data == null) return;
         itemPageInfo = data;
         if (itemPageInfo.getPageNum() <= 1) {
-            recordAdapter.clear();
+            favoriteItemAdapter.clear();
         }
-        recordAdapter.add(itemPageInfo.getList(), favoriteItemFunction);
+        favoriteItemAdapter.addItem(itemPageInfo.getList());
         swipeRefreshLayout.setRefreshing(false);
     }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/alpha_50_bg_color"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginVertical="100dp"
+        android:background="@drawable/radius_with_header_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_margin">
+
+        <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+            android:id="@+id/pop_window_favorite_item_recycler_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/widget_margin"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/pop_window_favorite_item_btn_manage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/manage"
+            android:textSize="@dimen/font_size_general" />
+    </LinearLayout>
+
+</LinearLayout>

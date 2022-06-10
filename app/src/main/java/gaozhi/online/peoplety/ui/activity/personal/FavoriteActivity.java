@@ -82,6 +82,9 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     protected void doBusiness(Context mContext) {
+        if(userid!=loginUser.getUserInfo().getId()){
+            textRight.setVisibility(View.GONE);
+        }
         onRefresh();
     }
 

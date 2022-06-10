@@ -24,10 +24,10 @@ public class ImageAdapter extends NoAnimatorRecyclerView.BaseAdapter<ImageAdapte
     private final AtomicInteger uploadedSize = new AtomicInteger(0);
 
     public ImageAdapter() {
-        super(ImageModel.class,new BaseSortedListAdapterCallback<>(){
+        super(ImageModel.class, new BaseSortedListAdapterCallback<>() {
             @Override
             public int compare(ImageModel o1, ImageModel o2) {
-                return super.compare(o2, o1);
+                return (int) (o2.getId() - o1.getId());
             }
         });
     }
