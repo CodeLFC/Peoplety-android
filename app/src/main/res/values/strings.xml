@@ -62,7 +62,7 @@
     <string name="head_image">头像</string>
     <string name="nick">名字</string>
     <string name="tip_please_enter_name">请输入名字</string>
-    <string name="remark">备注</string>
+    <string name="remark">简介</string>
     <string name="tip_please_enter_remark">请输入备注</string>
     <string name="tip_please_enter_email">请输入邮箱</string>
     <string name="email">邮箱</string>
@@ -142,4 +142,10 @@
     <string name="favorite_public">公开</string>
     <string name="add">新建</string>
     <string name="manage">管理</string>
+    <string name="update">修改</string>
+    <string name="tip_please_enter_favorite_name">请输入收藏夹名字</string>
+    <string name="tip_please_enter_favorite_remark">请输入收藏夹简介</string>
+    <string name="privilege">权限</string>
+    <string name="new_favorite">新建收藏夹</string>
+    <string name="tip_new_success">新建成功</string>
 </resources>

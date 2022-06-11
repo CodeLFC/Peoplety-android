@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.ui.activity.personal;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 
 import com.github.pagehelper.PageInfo;
 
@@ -21,7 +22,7 @@ import gaozhi.online.peoplety.util.ToastUtil;
 /**
  * 收藏夹
  */
-public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnDataListener<PageInfo<Favorite>>, Consumer<Favorite>, NoAnimatorRecyclerView.OnLoadListener {
+public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnDataListener<PageInfo<Favorite>>, Consumer<Favorite>, NoAnimatorRecyclerView.OnLoadListener, View.OnClickListener {
     public static final int PAGE_SIZE = 10;
     //service
     private final GetFavoritesByUseridService getFavoritesByUseridService = new GetFavoritesByUseridService(this);
@@ -30,6 +31,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     //ui
     private FavoriteAdapter favoriteAdapter;
     private Consumer<Item> itemConsumer;
+    private Button btnManager;
     //data
     private PageInfo<Favorite> currentPageInfo;
     private long recordId;
@@ -66,6 +68,9 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
         favoriteAdapter = new FavoriteAdapter();
         recyclerViewFavorite.setAdapter(favoriteAdapter);
         favoriteAdapter.setOnItemClickedListener(this);
+
+        btnManager = rootView.findViewById(R.id.pop_window_favorite_item_btn_manage);
+        btnManager.setOnClickListener(this);
     }
 
     @Override
@@ -106,6 +111,14 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     public void onLoad() {
         if (currentPageInfo != null && currentPageInfo.isHasNextPage()) {
             getFavoritesByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId(), currentPageInfo.getNextPage(), PAGE_SIZE);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == btnManager.getId()) {
+            dismiss();
+            FavoriteActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
         }
     }
 }

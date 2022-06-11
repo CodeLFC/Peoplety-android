@@ -96,7 +96,9 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     public void onClick(View v) {
-
+       if(v.getId() == textRight.getId()){
+           FavoriteManageActivity.startActivity(this);
+       }
     }
 
     @Override

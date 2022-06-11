@@ -16,8 +16,10 @@ import gaozhi.online.peoplety.R;
  * 弹出窗口
  */
 public abstract class BasePopupWindow extends PopupWindow {
+    private final Context context;
 
     public BasePopupWindow(Context context, int resID, boolean fullScreen) {
+        this.context = context;
         //设置软键盘输入底部不被顶起
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         View rootView = LayoutInflater.from(context).inflate(resID, null);
@@ -42,9 +44,14 @@ public abstract class BasePopupWindow extends PopupWindow {
         doBusiness(context);
     }
 
-    protected void initParam(){
+    protected void initParam() {
 
     }
+
+    public Context getContext() {
+        return context;
+    }
+
     protected abstract void initView(View rootView);
 
     protected abstract void doBusiness(Context context);
@@ -56,7 +63,8 @@ public abstract class BasePopupWindow extends PopupWindow {
     public void showPopupWindow(Activity activity) {
         showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
     }
-    public interface OnPopWindowClickListener{
-        void onClick(BasePopupWindow basePopupWindow,View view);
+
+    public interface OnPopWindowClickListener {
+        void onClick(BasePopupWindow basePopupWindow, View view);
     }
 }

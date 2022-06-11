@@ -50,6 +50,7 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
 
     //ui
     private TextView textTitle;
+    private TextView textRight;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FavoriteItemAdapter favoriteItemAdapter;
 
@@ -73,6 +74,9 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setOnLoadListener(this);
         textTitle = $(R.id.title_text);
+        textRight = $(R.id.title_text_right);
+        textRight.setText(R.string.manage);
+        textRight.setOnClickListener(this);
     }
 
     @Override
@@ -89,7 +93,9 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     public void onClick(View v) {
-
+        if (v.getId() == textRight.getId()) {
+            FavoriteManageActivity.startActivity(this,favorite);
+        }
     }
 
     @Override
