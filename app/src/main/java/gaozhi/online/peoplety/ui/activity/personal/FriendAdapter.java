@@ -53,16 +53,13 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
         private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
             @Override
-            public void handle(int id, Friend data,boolean local) {
+            public void handle(int id, Friend data, boolean local) {
                 if (data == null) {
-                    if (showAttention&&!local)
+                    if (showAttention && !local)
                         textAttention.setVisibility(View.VISIBLE);
                     return;
                 }
-                //设置备注
-                if (!StringUtil.isEmpty(data.getRemark())) {
-                    textName.setText(data.getRemark());
-                }
+                textName.setText(data.getRemark());
                 textAttention.setVisibility(View.GONE);
             }
         });
@@ -108,9 +105,6 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         public void bindView(long friendId) {
             this.friendId = friendId;
-            if (token.getUserid() != friendId) {
-                getFriendService.request(token, friendId);
-            }
             //获取用户信息
             getUserInfoService.request(token, friendId);
         }
@@ -121,12 +115,10 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         @Override
         public void handle(int id, UserDTO data) {
-            if(data==null||data.getUserInfo()==null)return;
+            if (data == null || data.getUserInfo() == null) return;
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
-            if (StringUtil.isEmpty(textName.getText().toString())) {
-                textName.setText(data.getUserInfo().getNick());
-            }
-            if(data.getStatus()!=null) {
+            textName.setText(data.getUserInfo().getNick());
+            if (data.getStatus() != null) {
                 textStatus.setText(data.getStatus().getName());
             }
             textRemark.setText(data.getUserInfo().getRemark());
