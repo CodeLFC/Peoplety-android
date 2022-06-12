@@ -28,6 +28,7 @@ public class PersonalActivity extends DBBaseActivity {
     private long userid;
     //ui
     private TextView textTitle;
+    //service
 
     @Override
     protected void initParams(Intent intent) {
@@ -41,12 +42,10 @@ public class PersonalActivity extends DBBaseActivity {
 
     @Override
     protected void initView(View view) {
-        textTitle = $(R.id.title_text);
     }
 
     @Override
-    protected void doBusiness(Context mContext) {
-        textTitle.setText("用户：" + userid);
+    protected void doBusiness(Context mContext) { 
     }
 
     @Override

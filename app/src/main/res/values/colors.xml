@@ -14,6 +14,7 @@
     <color name="theme_color">#0c8ccd</color>
     <color name="shallow_theme_color">#0d96db</color>
     <color name="pop_menu_bg_color">#7Fececec</color>
+    <color name="btn_color">#0c8ccd</color>
     <!--字体颜色-->
     <color name="deep_text_color">@color/black</color>
     <color name="shallow_text_color">#808080</color>
