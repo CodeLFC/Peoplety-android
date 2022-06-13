@@ -43,7 +43,7 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserInfo(userInfo);
         if (userInfo == null)
-            return userDTO;
+            return null;
         userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userInfo.getStatus()).findFirst());
         return userDTO;
     }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.NetConfig;
 
@@ -14,11 +15,11 @@ import java.util.function.Consumer;
 /**
  * @author LiFucheng
  * @version 1.0
- * @description: TODO
+ * @description: TODO 取消关注
  * @date 2022/4/13 18:19
  */
-public class DeleteFriendService extends ApiRequest<Result> {
-    public DeleteFriendService(OnDataListener<Result> resultHandler) {
+public class DeleteFriendService extends ApiRequest<Friend> {
+    public DeleteFriendService(OnDataListener<Friend> resultHandler) {
         super(NetConfig.friendBaseURL, Type.DELETE);
         setDataListener(resultHandler);
     }
@@ -32,12 +33,13 @@ public class DeleteFriendService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+    public Friend initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         return null;
     }
 
     @Override
-    public void getNetData(Result result, Consumer<Result> consumer) {
-        consumer.accept(result);
+    public void getNetData(Result result, Consumer<Friend> consumer) {
+        Friend friend = getGson().fromJson(result.getData(),Friend.class);
+        consumer.accept(friend);
     }
 }

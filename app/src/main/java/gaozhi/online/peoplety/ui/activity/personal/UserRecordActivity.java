@@ -49,7 +49,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
         @Override
         public void handle(int id, UserDTO data, boolean local) {
             if (data != null) {
-                textTitle.setText(data.getUserInfo().getNick() + getString(R.string.bottom_publish));
+                textTitle.setText(data.getUserInfo().getNick());
             }
         }
     });

@@ -72,12 +72,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     };
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         //build一个没有Realm绑定的副本
@@ -205,13 +199,13 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == ScanActivity.QR_RESULT_CODE){
+        if (resultCode == ScanActivity.QR_RESULT_CODE) {
             String qrContent = data.getStringExtra(ScanActivity.QR_CONTENT_KEY);
-            if(qrContent.startsWith(NetConfig.officialURL)){
+            if (qrContent.startsWith(NetConfig.officialURL)) {
                 String userid = qrContent.substring(NetConfig.officialURL.length());
-                PersonalActivity.startActivity(this,Long.parseLong(userid));
-            }else if(PatternUtil.matchUrl(qrContent)){
-                WebActivity.startActivity(this,qrContent,getString(R.string.tip_scan_result));
+                PersonalActivity.startActivity(this, Long.parseLong(userid));
+            } else if (PatternUtil.matchUrl(qrContent)) {
+                WebActivity.startActivity(this, qrContent, getString(R.string.tip_scan_result));
             }
         }
     }

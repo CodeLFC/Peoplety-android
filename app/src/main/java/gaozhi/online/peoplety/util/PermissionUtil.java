@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat;
 import java.util.LinkedList;
 import java.util.List;
 
+import gaozhi.online.base.ui.BaseActivity;
+
 /**
  * 权限请求工具
  */
@@ -22,13 +24,14 @@ public class PermissionUtil {
         void denied();
     }
 
-    private final Activity activity;
+    private final BaseActivity activity;
     private final int PERMISSION_REQUEST_CODE;
     private PermissionListener permissionListener;
 
-    public PermissionUtil(Activity activity, int PERMISSION_REQUEST_CODE) {
+    public PermissionUtil(BaseActivity activity, int PERMISSION_REQUEST_CODE) {
         this.activity = activity;
         this.PERMISSION_REQUEST_CODE = PERMISSION_REQUEST_CODE;
+        activity.setOnRequestPermissionsResultListener(this::onRequestPermissionsResult);
     }
 
     public void setPermissionListener(PermissionListener permissionListener) {

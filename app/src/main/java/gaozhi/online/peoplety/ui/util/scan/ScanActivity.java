@@ -45,13 +45,6 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
         context.startActivityForResult(intent, QR_REQUEST_CODE);
     }
 
-    //permission
-    //授权
-    private PermissionUtil permissionUtil;
-    private final String[] authorities = new String[]{
-            Manifest.permission.CAMERA
-    };
-
     //ui
     private CameraTextureView textureViewCamera;
     private CameraHelper cameraHelper;
@@ -61,7 +54,7 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     protected void initParams(Intent intent) {
-        permissionUtil = new PermissionUtil(this, 100);
+
     }
 
     @Override
@@ -71,84 +64,66 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     protected void initView(View view) {
-        permissionUtil.setPermissionListener(new PermissionUtil.PermissionListener() {
-            @Override
-            public void agreed() {
-                textureViewCamera = $(R.id.scan_activity_texture_preview);
-                textureViewCamera.setSurfaceTextureListener(ScanActivity.this);
-                cameraHelper = new CameraHelper(ScanActivity.this, PeopletyApplication.getGlobalExecutor());
-                Size[] cameraSize = cameraHelper.getBackCameraSize();
-                ScreenUtil screenUtil = new ScreenUtil(ScanActivity.this);
-                if (cameraSize == null || cameraSize.length == 0) {
-                    previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * 4 / 3);
-                } else {
-                    previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * cameraSize[0].getWidth() / cameraSize[0].getHeight());
+        textureViewCamera = $(R.id.scan_activity_texture_preview);
+        textureViewCamera.setSurfaceTextureListener(ScanActivity.this);
+        cameraHelper = new CameraHelper(ScanActivity.this, PeopletyApplication.getGlobalExecutor());
+        Size[] cameraSize = cameraHelper.getBackCameraSize();
+        ScreenUtil screenUtil = new ScreenUtil(ScanActivity.this);
+        if (cameraSize == null || cameraSize.length == 0) {
+            previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * 4 / 3);
+        } else {
+            previewSize = new Size(screenUtil.getScreenWidth(), screenUtil.getScreenWidth() * cameraSize[0].getWidth() / cameraSize[0].getHeight());
+        }
+        Log.i(TAG, "预览大小：" + previewSize);
+        textureViewCamera.resizePreview(previewSize);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            cameraHelper.openBackCamera(new CameraDevice.StateCallback() {
+                @Override
+                public void onOpened(@NonNull CameraDevice camera) {
+                    cameraDevice = camera;
+                    //                        Matrix matrix = new Matrix();
+                    //                        //第1步:把视频区移动到View区,使两者中心点重合.
+                    //                        matrix.preTranslate((textureViewWidth - videoWidth) / 2, (textureViewHeight - videoHeight) / 2);
+                    //
+                    //                        //第2步:因为默认视频是fitXY的形式显示的,所以首先要缩放还原回来.
+                    //                        matrix.preScale(videoWidth / textureViewWidth, videoHeight / textureViewHeight);
+                    //
+                    //                        //第3步,等比例放大或缩小,直到视频区的一边和View一边相等.如果另一边和view的一边不相等，则留下空隙
+                    //                        if (sx >= sy) {
+                    //                            matrix.postScale(sy, sy, textureViewWidth / 2, textureViewHeight / 2);
+                    //                        } else {
+                    //                            matrix.postScale(sx, sx, textureViewWidth / 2, textureViewHeight / 2);
+                    //                        }
+                    //
+                    //                        mTextureView.setTransform(matrix);
+                    //                        mTextureView.postInvalidate();
                 }
-                Log.i(TAG, "预览大小：" + previewSize);
-                textureViewCamera.resizePreview(previewSize);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    cameraHelper.openBackCamera(new CameraDevice.StateCallback() {
-                        @Override
-                        public void onOpened(@NonNull CameraDevice camera) {
-                            cameraDevice = camera;
-                            //                        Matrix matrix = new Matrix();
-                            //                        //第1步:把视频区移动到View区,使两者中心点重合.
-                            //                        matrix.preTranslate((textureViewWidth - videoWidth) / 2, (textureViewHeight - videoHeight) / 2);
-                            //
-                            //                        //第2步:因为默认视频是fitXY的形式显示的,所以首先要缩放还原回来.
-                            //                        matrix.preScale(videoWidth / textureViewWidth, videoHeight / textureViewHeight);
-                            //
-                            //                        //第3步,等比例放大或缩小,直到视频区的一边和View一边相等.如果另一边和view的一边不相等，则留下空隙
-                            //                        if (sx >= sy) {
-                            //                            matrix.postScale(sy, sy, textureViewWidth / 2, textureViewHeight / 2);
-                            //                        } else {
-                            //                            matrix.postScale(sx, sx, textureViewWidth / 2, textureViewHeight / 2);
-                            //                        }
-                            //
-                            //                        mTextureView.setTransform(matrix);
-                            //                        mTextureView.postInvalidate();
-                        }
 
-                        @Override
-                        public void onDisconnected(@NonNull CameraDevice camera) {
+                @Override
+                public void onDisconnected(@NonNull CameraDevice camera) {
 
-                        }
-
-                        @Override
-                        public void onError(@NonNull CameraDevice camera, int error) {
-
-                        }
-                    });
-                } else {
-                    ToastUtil.showToastShort(R.string.tip_version_not_adapter);
-                    finish();
                 }
-            }
 
-            @Override
-            public void denied() {
-                ToastUtil.showToastLong(R.string.not_permission);
-                finish();
-            }
-        });
+                @Override
+                public void onError(@NonNull CameraDevice camera, int error) {
+
+                }
+            });
+        } else {
+            ToastUtil.showToastShort(R.string.tip_version_not_adapter);
+            finish();
+        }
     }
 
     @Override
     protected void doBusiness(Context mContext) {
-        permissionUtil.requestPermission(authorities);
+
     }
 
     @Override
     public void onClick(View v) {
 
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
 
     //camera
     private CameraDevice cameraDevice;

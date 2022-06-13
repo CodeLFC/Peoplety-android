@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import gaozhi.online.peoplety.R;
@@ -35,6 +36,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * 日志输出标志
      **/
     protected final String TAG = getClass().getName();
+
+    /**
+     * 授权信息
+     *
+     * @param savedInstanceState
+     */
+    private OnRequestPermissionsResultListener onRequestPermissionsResultListener;
+
+    public void setOnRequestPermissionsResultListener(OnRequestPermissionsResultListener onRequestPermissionsResultListener) {
+        this.onRequestPermissionsResultListener = onRequestPermissionsResultListener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +77,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     /**
      * 初始化本地数据
      */
-    protected void initLocalData(){}
+    protected void initLocalData() {
+    }
 
     /**
      * [沉浸状态栏]
@@ -196,5 +209,20 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (onRequestPermissionsResultListener != null) {
+            onRequestPermissionsResultListener.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /**
+     * 响应授权
+     */
+    public interface OnRequestPermissionsResultListener {
+        void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
     }
 }

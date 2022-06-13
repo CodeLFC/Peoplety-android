@@ -25,20 +25,23 @@ import gaozhi.online.peoplety.util.ToastUtil;
 
 public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdapter.FriendViewHolder, Friend> {
     private final Token token;
+    private final long userid;
 
-    public FriendAdapter(Token token) {
+    public FriendAdapter(Token token, long userid) {
         super(Friend.class);
         this.token = token;
+        this.userid = userid;
     }
 
     @NonNull
     @Override
     public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FriendViewHolder(layoutInflate(parent, R.layout.item_recycler_friend), token);
+        return new FriendViewHolder(layoutInflate(parent, R.layout.item_recycler_friend), token, userid);
     }
 
     public static class FriendViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Friend> implements DataHelper.OnDataListener<UserDTO>, View.OnClickListener {
         private final Token token;
+        private long userid;
         private boolean showAttention;
         private long friendId;
         //ui
@@ -66,7 +69,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
         //关注
         private final AddAttentionService addAttentionService = new AddAttentionService(new DataHelper.OnDataListener<>() {
             @Override
-            public void handle(int id, Result data) {
+            public void handle(int id, Friend data) {
                 ToastUtil.showToastShort(R.string.tip_attention_success);
                 textAttention.setVisibility(View.GONE);
             }
@@ -77,10 +80,16 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             }
         });
 
+        public FriendViewHolder(@NonNull View itemView, Token token, long userid) {
+            this(itemView, token);
+            setUserid(userid);
+        }
+
         public FriendViewHolder(@NonNull View itemView, Token token) {
             super(itemView);
             context = itemView.getContext();
             this.token = token;
+            this.userid = token.getUserid();
             imageHead = itemView.findViewById(R.id.item_recycler_friend_image_head);
             imageGender = itemView.findViewById(R.id.item_recycler_friend_image_gender);
             textName = itemView.findViewById(R.id.item_recycler_friend_text_name);
@@ -94,8 +103,8 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         @Override
         public void bindView(Friend item) {
-            long anotherId = item.getUserid() == token.getUserid() ? item.getFriendId() : item.getUserid();
-            if (item.getUserid() == token.getUserid()) {
+            long anotherId = item.getUserid() == userid ? item.getFriendId() : item.getUserid();
+            if (item.getUserid() == userid) {
                 textName.setText(item.getRemark());
             }
             //获取用户信息
@@ -107,6 +116,10 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             this.friendId = friendId;
             //获取用户信息
             getUserInfoService.request(token, friendId);
+        }
+
+        public void setUserid(long userid) {
+            this.userid = userid;
         }
 
         public void showAttention(boolean show) {
@@ -124,7 +137,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
             textRemark.setText(data.getUserInfo().getRemark());
             UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
             imageGender.setImageResource(gender == UserInfo.Gender.MALE ? R.drawable.male : gender == UserInfo.Gender.FEMALE ? R.drawable.female : R.drawable.other_gender);
-            if (token.getUserid() != data.getUserInfo().getId()) {
+            if (userid != data.getUserInfo().getId()) {
                 getFriendService.request(token, data.getUserInfo().getId());
             }
         }

@@ -1,11 +1,13 @@
 package gaozhi.online.peoplety.ui.activity.home.fragment;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import gaozhi.online.base.net.http.DataHelper;
+import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.UserInfo;
@@ -22,8 +24,8 @@ import gaozhi.online.peoplety.ui.activity.personal.UserRecordActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
-import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.util.GlideUtil;
+import gaozhi.online.peoplety.util.PermissionUtil;
 import gaozhi.online.peoplety.util.StringUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
@@ -45,15 +47,26 @@ public class MeFragment extends DBBaseFragment {
     private TextView textVip;
 
     private TextView textAttentionNum;
+    private View viewAttentionNum;
     private TextView textFansNum;
+    private View viewFansNum;
     private TextView textRecordNum;
+    private View viewRecordNum;
     private TextView textFavoriteNum;
+    private View viewFavoriteNum;
     //ui views
     private View viewUserInfo;
     private View viewQRCode;
     private View viewChangeAccount;
     private View viewAbout;
     private View viewSettings;
+
+    //permission
+    private final String[] authorities = new String[]{
+            Manifest.permission.CAMERA
+    };
+    private PermissionUtil permissionUtil;
+
     //service
     private final GetRecordCountByUseridService getRecordCountByUseridService = new GetRecordCountByUseridService(new DataHelper.OnDataListener<>() {
         @Override
@@ -84,7 +97,6 @@ public class MeFragment extends DBBaseFragment {
         title_right.setImageResource(R.drawable.scan);
         title_right.setOnClickListener(this);
         imageHead = view.findViewById(R.id.fragment_me_image_head);
-        imageHead.setOnClickListener(this);
         textName = view.findViewById(R.id.fragment_me_text_name);
         imageGender = view.findViewById(R.id.fragment_me_image_gender);
         textStatus = view.findViewById(R.id.fragment_me_text_status);
@@ -93,12 +105,20 @@ public class MeFragment extends DBBaseFragment {
 
         textAttentionNum = view.findViewById(R.id.fragment_me_text_attention_num);
         textAttentionNum.setOnClickListener(this);
+        viewAttentionNum = view.findViewById(R.id.fragment_me_view_attention);
+        viewAttentionNum.setOnClickListener(this);
         textFansNum = view.findViewById(R.id.fragment_me_text_fans_num);
         textFansNum.setOnClickListener(this);
+        viewFansNum = view.findViewById(R.id.fragment_me_view_fans);
+        viewFansNum.setOnClickListener(this);
         textRecordNum = view.findViewById(R.id.fragment_me_text_record_num);
         textRecordNum.setOnClickListener(this);
+        viewRecordNum = view.findViewById(R.id.fragment_me_view_record);
+        viewRecordNum.setOnClickListener(this);
         textFavoriteNum = view.findViewById(R.id.fragment_me_text_favorite_num);
         textFavoriteNum.setOnClickListener(this);
+        viewFavoriteNum = view.findViewById(R.id.fragment_me_view_favorite);
+        viewFavoriteNum.setOnClickListener(this);
 
         viewUserInfo = view.findViewById(R.id.fragment_me_view_account);
         viewUserInfo.setOnClickListener(this);
@@ -119,7 +139,19 @@ public class MeFragment extends DBBaseFragment {
 
     @Override
     public void initParams(Bundle bundle) {
+        permissionUtil = new PermissionUtil((BaseActivity) getActivity(), 100);
+        permissionUtil.setPermissionListener(new PermissionUtil.PermissionListener() {
+            @Override
+            public void agreed() {
+                //打开扫码
+                ScanActivity.startActivityForResult(getActivity(), 0);
+            }
 
+            @Override
+            public void denied() {
+                ToastUtil.showToastLong(R.string.not_permission);
+            }
+        });
     }
 
     @Override
@@ -155,10 +187,6 @@ public class MeFragment extends DBBaseFragment {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == imageHead.getId()) {
-            ShowImageActivity.startActivity(getContext(), loginUser.getUserInfo().getHeadUrl());
-            return;
-        }
         if (v.getId() == viewQRCode.getId()) {
             QRCodeActivity.startActivity(getContext());
             return;
@@ -180,24 +208,24 @@ public class MeFragment extends DBBaseFragment {
             SettingsActivity.startActivity(getContext());
             return;
         }
-        if (v.getId() == textRecordNum.getId()) {
+        if (v.getId() == textRecordNum.getId() || v.getId() == viewRecordNum.getId()) {
             UserRecordActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
             return;
         }
-        if (v.getId() == textFavoriteNum.getId()) {
+        if (v.getId() == textFavoriteNum.getId() || v.getId() == viewFavoriteNum.getId()) {
             FavoriteActivity.startActivity(getContext(), loginUser.getUserInfo().getId());
             return;
         }
-        if (v.getId() == textAttentionNum.getId()) {
+        if (v.getId() == textAttentionNum.getId() || v.getId() == viewAttentionNum.getId()) {
             FriendsActivity.startActivityForAttention(getContext(), loginUser.getUserInfo().getId());
             return;
         }
-        if (v.getId() == textFansNum.getId()) {
+        if (v.getId() == textFansNum.getId() || v.getId() == viewFansNum.getId()) {
             FriendsActivity.startActivityForFan(getContext(), loginUser.getUserInfo().getId());
             return;
         }
         if (v.getId() == title_right.getId()) {
-            ScanActivity.startActivityForResult(getActivity(), 0);
+            permissionUtil.requestPermission(authorities);
         }
     }
 
@@ -208,6 +236,4 @@ public class MeFragment extends DBBaseFragment {
         doBusiness();
         getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
     }
-
-
 }

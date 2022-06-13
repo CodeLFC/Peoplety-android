@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
-                android:gravity="center"
+                android:gravity="center|start"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/edit_widget_margin"
                 android:paddingVertical="@dimen/edit_widget_margin">
@@ -100,11 +100,12 @@
 
                 <TextView
                     android:id="@+id/userinfo_activity_text_ip"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:paddingHorizontal="@dimen/widget_margin"
+                    android:layout_marginStart="@dimen/widget_margin"
                     android:textColor="@color/deep_text_color"
+                    android:background="@drawable/rectangle_bg"
                     android:textSize="@dimen/font_size_title" />
             </LinearLayout>
 
@@ -127,33 +128,6 @@
 
                 <TextView
                     android:id="@+id/userinfo_activity_text_phone"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingHorizontal="@dimen/widget_margin"
-                    android:textColor="@color/deep_text_color"
-                    android:textSize="@dimen/font_size_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:background="@color/widget_color"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/edit_widget_margin"
-                android:paddingVertical="@dimen/edit_widget_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status"
-                    android:textColor="@color/deep_text_color"
-                    android:textSize="@dimen/font_size_title" />
-
-                <TextView
-                    android:id="@+id/userinfo_activity_text_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

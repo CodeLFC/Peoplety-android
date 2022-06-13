@@ -17,10 +17,10 @@ import gaozhi.online.peoplety.service.NetConfig;
  * @description: TODO 添加关注关系
  * @date 2022/4/13 16:38
  */
-public class AddAttentionService extends ApiRequest<Result> {
-    public AddAttentionService(OnDataListener<Result> resultHandler) {
+public class AddAttentionService extends ApiRequest<Friend> {
+    public AddAttentionService(OnDataListener<Friend> onDataListener) {
         super(NetConfig.friendBaseURL, Type.POST);
-        setDataListener(resultHandler);
+        setDataListener(onDataListener);
     }
 
     public void request(Token token, long friendId) {
@@ -33,12 +33,13 @@ public class AddAttentionService extends ApiRequest<Result> {
     }
 
     @Override
-    public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+    public Friend initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         return null;
     }
 
     @Override
-    public void getNetData(Result result, Consumer<Result> consumer) {
-        consumer.accept(result);
+    public void getNetData(Result result, Consumer<Friend> consumer) {
+        Friend friend = getGson().fromJson(result.getData(),Friend.class);
+        consumer.accept(friend);
     }
 }

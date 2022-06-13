@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/widget_margin"
-                        android:background="@drawable/tag_bg"
+                        android:background="@drawable/rectangle_bg"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/widget_margin"
                         android:text="@string/app_name"
@@ -90,11 +90,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/widget_margin"
-                        android:background="@drawable/tag_bg"
+                        android:background="@drawable/rectangle_bg"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/widget_margin"
                         android:text="@string/app_name"
-                        android:textColor="@color/white"
+                        android:textColor="@color/deep_text_color"
                         android:textSize="@dimen/font_size_small" />
 
                     <TextView
@@ -103,11 +103,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/widget_margin"
-                        android:background="@drawable/tag_bg"
+                        android:background="@drawable/rectangle_bg"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/widget_margin"
                         android:text="@string/app_name"
-                        android:textColor="@color/white"
+                        android:textColor="@color/deep_text_color"
                         android:textSize="@dimen/font_size_small" />
                 </LinearLayout>
             </LinearLayout>

@@ -55,7 +55,7 @@
             android:name=".ui.activity.userinfo.QRCodeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.userinfo.UserInfoActivity"
+            android:name=".ui.activity.userinfo.EditUserInfoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.SettingsActivity"

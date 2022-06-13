@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import java.util.Calendar;
 
 import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.IPInfo;
@@ -35,7 +34,6 @@ import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
 import gaozhi.online.peoplety.service.user.UpdateUserInfoService;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
-import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
 import gaozhi.online.peoplety.util.DateTimeUtil;
 import gaozhi.online.peoplety.util.GlideUtil;
@@ -48,10 +46,9 @@ import io.realm.Realm;
 /**
  * 个人信息
  */
-public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDataListener<Result> {
+public class EditUserInfoActivity extends DBBaseActivity implements DataHelper.OnDataListener<Result> {
     private static final int REQUEST_CODE_CHOOSE_PHOTO = 1000;
     private UserDTO loginUser;
-    private Status status;
     //service
     private final UpdateUserInfoService updateUserInfoService = new UpdateUserInfoService(this);
     //获取位置信息
@@ -69,7 +66,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
     private TextView textId;
     private TextView textIp;
     private TextView textPhone;
-    private TextView textStatus;
     private EditText editName;
     private EditText editRemark;
     private EditText editEmail;
@@ -89,7 +85,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         //build一个没有Realm绑定的副本
         loginUser = realm.copyFromRealm(loginUser);
-        status = realm.where(Status.class).equalTo("id", loginUser.getUserInfo().getStatus()).findFirst();
     }
 
     @Override
@@ -116,7 +111,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         textId = $(R.id.userinfo_activity_text_id);
         textIp = $(R.id.userinfo_activity_text_ip);
         textPhone = $(R.id.userinfo_activity_text_phone);
-        textStatus = $(R.id.userinfo_activity_text_status);
         editName = $(R.id.userinfo_activity_edit_name);
         editRemark = $(R.id.userinfo_activity_edit_remark);
         editEmail = $(R.id.userinfo_activity_edit_email);
@@ -138,7 +132,6 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         GlideUtil.loadRoundRectangleImage(this, userInfo.getHeadUrl(), R.drawable.default_head, imageHead);
         textId.setText(Long.toString(userInfo.getId()));
         textPhone.setText(userInfo.getPhone());
-        textStatus.setText(status.getName());
         editName.setText(userInfo.getNick());
         editRemark.setText(userInfo.getRemark());
         editEmail.setText(userInfo.getEmail());
@@ -286,7 +279,7 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
     }
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, UserInfoActivity.class);
+        Intent intent = new Intent(context, EditUserInfoActivity.class);
         context.startActivity(intent);
     }
 
@@ -339,7 +332,7 @@ public class UserInfoActivity extends DBBaseActivity implements DataHelper.OnDat
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             TextView text = (TextView) super.getView(position, convertView, parent);
-            text.setGravity(Gravity.LEFT);
+            text.setGravity(Gravity.START);
             text.setText(getItem(position).getDescription());
             return text;
         }

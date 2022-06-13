@@ -78,11 +78,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/widget_margin"
-                            android:background="@drawable/tag_bg"
+                            android:background="@drawable/rectangle_bg"
                             android:gravity="center"
                             android:paddingHorizontal="@dimen/widget_margin"
                             android:text="@string/app_name"
-                            android:textColor="@color/white"
+                            android:textColor="@color/deep_text_color"
                             android:textSize="@dimen/font_size_small" />
 
                         <TextView
@@ -90,11 +90,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/widget_margin"
-                            android:background="@drawable/tag_bg"
+                            android:background="@drawable/rectangle_bg"
                             android:gravity="center"
                             android:paddingHorizontal="@dimen/widget_margin"
                             android:text="@string/app_name"
-                            android:textColor="@color/white"
+                            android:textColor="@color/deep_text_color"
                             android:textSize="@dimen/font_size_small" />
 
                         <TextView
@@ -102,7 +102,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/widget_margin"
-                            android:background="@drawable/tag_bg"
+                            android:background="@drawable/rectangle_bg"
                             android:gravity="center"
                             android:paddingHorizontal="@dimen/widget_margin"
                             android:text="@string/app_name"
@@ -122,6 +122,7 @@
                 android:padding="@dimen/widget_margin">
 
                 <LinearLayout
+                    android:id="@+id/fragment_me_view_attention"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -147,6 +148,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/fragment_me_view_fans"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -172,6 +174,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/fragment_me_view_record"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -197,6 +200,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/fragment_me_view_favorite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

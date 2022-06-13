@@ -88,7 +88,7 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
         swipeRefreshLayout = $(R.id.friends_activity_swipe);
         NoAnimatorRecyclerView recyclerView = $(R.id.friends_activity_recycler_friend);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
-        friendAdapter = new FriendAdapter(loginUser.getToken());
+        friendAdapter = new FriendAdapter(loginUser.getToken(),userid);
         recyclerView.setAdapter(friendAdapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setOnLoadListener(this);
