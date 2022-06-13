@@ -145,7 +145,7 @@ public class FavoriteManageActivity extends DBBaseActivity {
             return;
         }
         favorite.setName(editName.getText().toString());
-        favorite.setDescription(editName.getText().toString());
+        favorite.setDescription(editRemark.getText().toString());
         if (btnUpdate.getId() == v.getId()) {
             if (StringUtil.isEmpty(favorite.getName())) {
                 ToastUtil.showToastShort(R.string.tip_please_enter_favorite_name);

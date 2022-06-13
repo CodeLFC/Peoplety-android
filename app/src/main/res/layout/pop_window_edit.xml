@@ -16,7 +16,7 @@
             android:id="@+id/pop_widow_edit_btn_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/send"
+            android:text="@string/ok"
             android:textSize="@dimen/font_size_general" />
 
         <EditText
