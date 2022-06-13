@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -223,6 +225,9 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         @Override
         public void bindView(Record item) {
             if (item == null) return;
+            if (item.isManaged()) {
+                item = realm.copyFromRealm(item);
+            }
             //刷新数据
             refreshData(item);
             //获取详细内容
@@ -237,7 +242,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
          * @param item
          */
         public void bindView(RecordDTO item) {
-            if (item == null) return;
+            if (item == null || item.getRecord() == null) return;
             //绑定详细内容
             handle(-1, item, false);
         }
@@ -247,14 +252,24 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         }
 
         //刷新数据
-        private void refreshData(Record item) {
+        private void refreshData(@NotNull Record item) {
             this.record = item;
+            if (!item.isEnable()) {
+                item.setTitle(context.getString(R.string.already_delete));
+                item.setDescription(context.getString(R.string.already_delete));
+                item.setContent(context.getString(R.string.already_delete));
+            }
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
             } else {
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
+            }
+            if (token.getUserid() == item.getUserid()) {
+                imageDelete.setVisibility(View.VISIBLE);
+            } else {
+                imageDelete.setVisibility(View.GONE);
             }
             friendViewHolder.showAttention(showDetails);
             imageAdapter.clear();
@@ -312,8 +327,12 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (data == null || data.getRecord() == null) return;
             this.recordDTO = data;
             Log.i(getClass().getName(), local + ":" + recordDTO.getFavorite());
+            Record item = data.getRecord();
+            if (item.isManaged()) {
+                item = realm.copyFromRealm(item);
+            }
             //刷新数据
-            refreshData(data.getRecord());
+            refreshData(item);
             //评论数量
             textComment.setText(StringUtil.numLong2Str(data.getCommentNum()));
             //收藏数量

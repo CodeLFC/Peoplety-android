@@ -56,7 +56,8 @@
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:layout_gravity="end"
-                android:src="@drawable/bin" />
+                android:src="@drawable/bin"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <TextView

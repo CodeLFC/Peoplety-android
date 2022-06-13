@@ -21,6 +21,7 @@ import io.realm.Realm;
  * 获取卷宗详情
  */
 public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
+    private long recordId;
 
     public GetRecordDTOByIdService(OnDataListener<RecordDTO> dataListener) {
         super(NetConfig.recordBaseURL, Type.GET);
@@ -41,7 +42,7 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
 
     @Override
     public RecordDTO initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
-        long recordId = Long.parseLong(params.get("recordId"));
+        recordId = Long.parseLong(params.get("recordId"));
         return getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst();
     }
 
@@ -51,7 +52,7 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
         consumer.accept(recordDTO);
         getRealm().executeTransactionAsync(realm -> {
             if (recordDTO.getRecord() == null) {
-                RecordDTO temp = realm.where(RecordDTO.class).equalTo("id", recordDTO.getId()).findFirst();
+                RecordDTO temp = realm.where(RecordDTO.class).equalTo("id", recordId).findFirst();
                 if (temp != null)
                     temp.deleteFromRealm();
             }
