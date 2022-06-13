@@ -30,7 +30,7 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
         params.put("userid", "" + userid);
         params.put("pageNum", "" + pageNum);
         params.put("pageSize", "" + pageSize);
-        request("get/user/records", headers, params);
+        request("get/attention/records", headers, params);
     }
 
     @Override
