@@ -28,6 +28,7 @@ import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.home.fragment.AttentionFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.home.HomeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MessageFragment;
@@ -47,10 +48,11 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
-    private static final int HOME = 0;
-    private static final int PUBLISH = 1;
-    private static final int MESSAGE = 2;
-    private static final int ME = 3;
+    private static final int ATTENTION = 0;
+    private static final int HOME = 1;
+    private static final int PUBLISH = 2;
+    private static final int MESSAGE = 3;
+    private static final int ME = 4;
 
     private BaseFragment[] fragments;
     //service
@@ -101,6 +103,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         bottomNavigationView.setOnItemSelectedListener(this);
         // 初始化碎片
         fragments = new BaseFragment[]{
+                new AttentionFragment(),
                 new HomeFragment(),
                 new PublishFragment(),
                 new MessageFragment(),
@@ -160,6 +163,9 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.main_bottom_attention:
+                viewPager.setCurrentItem(ATTENTION);
+                return true;
             case R.id.main_bottom_me:
                 viewPager.setCurrentItem(ME);
                 return true;
