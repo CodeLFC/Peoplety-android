@@ -70,7 +70,7 @@ public class AttentionFragment extends DBBaseFragment implements NoAnimatorRecyc
     @Override
     public void doBusiness() {
         //请求某个地区的资料
-        getAttentionRecordByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId(),1, PAGE_SIZE);
+        getAttentionRecordByUseridService.request(loginUser.getToken(),1, PAGE_SIZE);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class AttentionFragment extends DBBaseFragment implements NoAnimatorRecyc
         }
         if (currentRecordPageInfo.isHasNextPage()) {
             //请求某个地区的资料
-            getAttentionRecordByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId(), currentRecordPageInfo.getNextPage(), PAGE_SIZE);
+            getAttentionRecordByUseridService.request(loginUser.getToken(), currentRecordPageInfo.getNextPage(), PAGE_SIZE);
         } else {
             recordRecyclerView.setLoading(false);
             //提醒到底了

@@ -4,18 +4,20 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
+import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
 
 /**
- * 获取关注的人发布的内容
+ * 获取关注的人发布的内容 - 未完成
  */
 public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<Record>> {
     public GetAttentionRecordByUseridService(OnDataListener<PageInfo<Record>> onDataListener) {
@@ -23,11 +25,11 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
         setDataListener(onDataListener);
     }
 
-    public void request(Token token, long userid, int pageNum, int pageSize) {
+    public void request(Token token, int pageNum, int pageSize) {
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
-        params.put("userid", "" + userid);
+        params.put("userid_local", "" + token.getUserid());
         params.put("pageNum", "" + pageNum);
         params.put("pageSize", "" + pageSize);
         request("get/attention/records", headers, params);
@@ -35,12 +37,16 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
 
     @Override
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
-        long userid = Long.parseLong(params.get("userid"));
-        int pageNum = Integer.parseInt(params.get("pageNum"));
-        if (pageNum <= 1) {
-            return new PageInfo<>(getRealm().where(Record.class).equalTo("userid", userid).findAll());
+        //联表查询
+        long userid = Long.parseLong(params.get("userid_local"));
+        List<Friend> friends = getRealm().where(Friend.class).equalTo("userid", userid).findAll();
+        List<Long> friendIds = new LinkedList<>();
+        for (Friend friend : friends) {
+            friendIds.add(friend.getFriendId());
         }
-        return null;
+        List<Record> records = getRealm().where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
+
+        return new PageInfo<>(records);
     }
 
     @Override
