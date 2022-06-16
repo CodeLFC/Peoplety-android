@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.service.record;
 
+import android.util.Log;
+
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
@@ -63,8 +65,9 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
         getRealm().executeTransactionAsync(realm -> {
             if (pageInfo.getList().size() > 0) {//删除这一类的第一页
                 int areaId = pageInfo.getList().get(0).getAreaId();
-                RealmResults<Record> old = getRealm().where(Record.class).equalTo("areaId", areaId).findAll();
+                RealmResults<Record> old =realm.where(Record.class).equalTo("areaId", areaId).findAll();
                 for (Record record : old) {
+                    Log.i(getClass().getName(),"删除卷宗内容："+record);
                     record.deleteFromRealm();
                 }
             }

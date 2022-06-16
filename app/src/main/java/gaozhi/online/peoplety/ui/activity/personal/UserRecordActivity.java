@@ -16,6 +16,7 @@ import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetRecordByUserIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.record.RecordAdapter;
+import gaozhi.online.peoplety.ui.activity.record.RecordDetailActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
@@ -78,6 +79,8 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
                 return o1.isTop() ? -1 : 1;
             }
         });
+        //点击条目打开详情
+        recordAdapter.setOnItemClickedListener(record -> RecordDetailActivity.startActivity(this, record.getId()));
         recyclerView.setAdapter(recordAdapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setOnLoadListener(this);
