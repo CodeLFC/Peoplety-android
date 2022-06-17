@@ -12,15 +12,18 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraDevice;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +31,11 @@ import java.util.List;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.ui.activity.userinfo.ShowUpdateHeadActivity;
+import gaozhi.online.peoplety.util.ImageUtil;
 import gaozhi.online.peoplety.util.PermissionUtil;
 import gaozhi.online.peoplety.util.ScreenUtil;
+import gaozhi.online.peoplety.util.SystemUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import gaozhi.online.peoplety.util.ZxingUtil;
 
@@ -39,6 +45,7 @@ import gaozhi.online.peoplety.util.ZxingUtil;
 public class ScanActivity extends BaseActivity implements TextureView.SurfaceTextureListener, ImageReader.OnImageAvailableListener {
     public static final int QR_RESULT_CODE = 8888;
     public static final String QR_CONTENT_KEY = "qr-content";
+    private static final int REQUEST_CODE_CHOOSE_PHOTO = 0;
 
     public static void startActivityForResult(Activity context, int QR_REQUEST_CODE) {
         Intent intent = new Intent(context, ScanActivity.class);
@@ -49,6 +56,7 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
     private CameraTextureView textureViewCamera;
     private CameraHelper cameraHelper;
     private ImageReader imageReader;
+    private ImageView imageOpenAlbum;
     //data
     private Size previewSize;
 
@@ -64,6 +72,8 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     protected void initView(View view) {
+        imageOpenAlbum = $(R.id.scan_activity_open_album);
+        imageOpenAlbum.setOnClickListener(this);
         textureViewCamera = $(R.id.scan_activity_texture_preview);
         textureViewCamera.setSurfaceTextureListener(ScanActivity.this);
         cameraHelper = new CameraHelper(ScanActivity.this, PeopletyApplication.getGlobalExecutor());
@@ -122,7 +132,35 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
 
     @Override
     public void onClick(View v) {
+        if (imageOpenAlbum.getId() == v.getId()) {
+            SystemUtil.openAlbum(this, REQUEST_CODE_CHOOSE_PHOTO);
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_CHOOSE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Uri imagePath = data.getData();
+                    String content = null;
+                    try {
+                        content = ZxingUtil.QRCodeAnalyser.analyzeBitmap(ImageUtil.getBitmapFormUri(this, imagePath));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (content != null) {
+                        imageReader.close();
+                        Intent intent = new Intent();
+                        intent.putExtra(QR_CONTENT_KEY, content);
+                        setResult(QR_RESULT_CODE, intent);
+                        finish();
+                    }else{
+                        ToastUtil.showToastShort(R.string.tip_recognize_qr_code_fail);
+                    }
+                }
+        }
     }
 
     //camera

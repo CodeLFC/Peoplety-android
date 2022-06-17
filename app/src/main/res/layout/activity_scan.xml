@@ -6,9 +6,17 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/scan_foreground"
-    tools:context=".ui.util.scan.ScanActivity">
 
+    tools:context=".ui.util.scan.ScanActivity">
+    <ImageView
+        android:id="@+id/scan_activity_open_album"
+        android:layout_width="@dimen/icon_size_title"
+        android:layout_height="@dimen/icon_size_title"
+        android:src="@drawable/album"
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="@dimen/activity_margin"
+        android:layout_marginVertical="@dimen/widget_margin"
+        />
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -24,12 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
-
         <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/scan_foreground" />
-
+            android:layout_height="match_parent"
+            android:background="@drawable/scan_foreground"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
