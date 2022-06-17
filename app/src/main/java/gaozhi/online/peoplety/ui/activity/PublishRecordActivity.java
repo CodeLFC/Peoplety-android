@@ -414,8 +414,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
 
     @Override
     public void handle(int id, Result result) {
-        btnPublish.setText(R.string.bottom_publish);
-        btnPublish.setEnabled(true);
         if (id == getCosTempSecretService.getId()) {
             TencentCOS.CosResponse cosResponse = new Gson().fromJson(result.getData(), TencentCOS.CosResponse.class);
             //检查图片是否全部上传
