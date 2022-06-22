@@ -56,9 +56,7 @@ public class GetAttentionService extends BaseApiRequest<PageInfo<Friend>> {
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
-            if (pageInfo.getList().size() > 0) {//删除这一类的第一页
-                realm.delete(Friend.class);
-            }
+            realm.delete(Friend.class);
             List<Friend> friends = pageInfo.getList();
             for (Friend friend : friends) {
                 realm.copyToRealmOrUpdate(friend);

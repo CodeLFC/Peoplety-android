@@ -1,8 +1,11 @@
 package gaozhi.online.peoplety.service.record;
 
+import android.util.Log;
+
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +23,8 @@ import gaozhi.online.peoplety.service.NetConfig;
  * 获取关注的人发布的内容 - 未完成
  */
 public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<Record>> {
+    private long userid;
+
     public GetAttentionRecordByUseridService(OnDataListener<PageInfo<Record>> onDataListener) {
         super(NetConfig.recordBaseURL, Type.GET);
         setDataListener(onDataListener);
@@ -38,14 +43,13 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
     @Override
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         //联表查询
-        long userid = Long.parseLong(params.get("userid_local"));
+        userid = Long.parseLong(params.get("userid_local"));
         List<Friend> friends = getRealm().where(Friend.class).equalTo("userid", userid).findAll();
         List<Long> friendIds = new LinkedList<>();
         for (Friend friend : friends) {
             friendIds.add(friend.getFriendId());
         }
         List<Record> records = getRealm().where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
-
         return new PageInfo<>(records);
     }
 
@@ -60,6 +64,15 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
+            List<Friend> friends = realm.where(Friend.class).equalTo("userid", userid).findAll();
+            List<Long> friendIds = new LinkedList<>();
+            for (Friend friend : friends) {
+                friendIds.add(friend.getFriendId());
+            }
+            List<Record> locals = realm.where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
+            for(Record record:locals){
+                record.deleteFromRealm();
+            }
             List<Record> records = pageInfo.getList();
             realm.copyToRealmOrUpdate(records);
         });
