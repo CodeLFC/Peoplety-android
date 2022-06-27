@@ -20,5 +20,5 @@
     <color name="shallow_text_color">#808080</color>
 
     <!--首页底部选择颜色-->
-    <color name="bottom_color">#f6f6f6</color>
+    <color name="bottom_color">@color/widget_color</color>
 </resources>

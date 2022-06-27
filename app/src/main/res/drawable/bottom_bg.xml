@@ -15,7 +15,7 @@
     <item
         android:top="3dp">
         <shape android:shape="rectangle" >
-            <solid android:color="@color/widget_color"/>
+            <solid android:color="@color/bottom_color"/>
         </shape>
     </item>
 </layer-list>
