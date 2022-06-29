@@ -37,7 +37,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataListener<UserDTO>, BiConsumer<Integer, Boolean> {
-
     //登陆保护时间
     private static final long LOGIN_PROTECTED_TIME = 1000 * 60 * 60 * 2;
     // service
@@ -207,6 +206,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             }
             loginUser.setCurrent(true);
             realm.copyToRealmOrUpdate(loginUser);
+            //loginUser = realm.copyFromRealm(loginUser);
         }, () -> {//success 登陆成功
             if (System.currentTimeMillis() > loginUser.getResourceValidateTime()) {
                 textProcess.setText(R.string.request_ing);
@@ -231,7 +231,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
      * 进入主页面
      */
     private void enterMainWindow() {
-        MainActivity.startActivity(LoginActivity.this);
+        MainActivity.startActivity(this);
         finish();
     }
 

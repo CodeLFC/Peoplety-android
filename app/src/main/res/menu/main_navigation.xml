@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/main_bottom_attention"
-        android:icon="@drawable/bottom_attention"
-        android:title="@string/attention" />
-    <item
         android:id="@+id/main_bottom_home"
         android:icon="@drawable/bottom_home"
         android:title="@string/bottom_home" />
-
+    <item
+        android:id="@+id/main_bottom_attention"
+        android:icon="@drawable/bottom_attention"
+        android:title="@string/attention" />
     <item
         android:id="@+id/main_bottom_publish"
         android:icon="@drawable/bottom_publish"

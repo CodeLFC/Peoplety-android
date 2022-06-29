@@ -48,8 +48,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
-    private static final int ATTENTION = 0;
-    private static final int HOME = 1;
+    private static final int HOME = 0;
+    private static final int ATTENTION = 1;
     private static final int PUBLISH = 2;
     private static final int MESSAGE = 3;
     private static final int ME = 4;
@@ -103,8 +103,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         bottomNavigationView.setOnItemSelectedListener(this);
         // 初始化碎片
         fragments = new BaseFragment[]{
-                new AttentionFragment(),
                 new HomeFragment(),
+                new AttentionFragment(),
                 new PublishFragment(),
                 new MessageFragment(),
                 new MeFragment()
