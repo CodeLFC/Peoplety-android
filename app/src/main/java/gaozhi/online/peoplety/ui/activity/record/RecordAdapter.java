@@ -253,12 +253,15 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         //刷新数据
         private void refreshData(@NotNull Record item) {
-            this.record = item;
+            if (item.isManaged()) {
+                item = realm.copyFromRealm(item);
+            }
             if (!item.isEnable()) {
                 item.setTitle(context.getString(R.string.already_delete));
                 item.setDescription(context.getString(R.string.already_delete));
                 item.setContent(context.getString(R.string.already_delete));
             }
+            this.record = item;
             if (showDetails) {
                 textDescription.setMaxLines(Integer.MAX_VALUE);
                 textContent.setMaxLines(Integer.MAX_VALUE);
@@ -273,36 +276,36 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             }
             friendViewHolder.showAttention(showDetails);
             imageAdapter.clear();
-            textTitle.setText(item.getTitle());
-            imageTop.setVisibility(item.isTop() ? View.VISIBLE : View.GONE);
+            textTitle.setText(record.getTitle());
+            imageTop.setVisibility(record.isTop() ? View.VISIBLE : View.GONE);
 
-            RecordType recordType = realm.where(RecordType.class).equalTo("id", item.getRecordTypeId()).findFirst();
+            RecordType recordType = realm.where(RecordType.class).equalTo("id", record.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());
                 Log.i(getClass().getName(), recordType.getName());
             }
-            Area area = realm.where(Area.class).equalTo("id", item.getAreaId()).findFirst();
+            Area area = realm.where(Area.class).equalTo("id", record.getAreaId()).findFirst();
             if (area != null) {
                 textArea.setText(area.getName());
             }
 
-            textDescription.setText(item.getDescription());
-            textContent.setText(item.getContent());
+            textDescription.setText(record.getDescription());
+            textContent.setText(record.getContent());
 
-            textTime.setText(DateTimeUtil.getRecordTime(item.getTime()));
-            imgList = new Gson().fromJson(item.getImgs(), new TypeToken<List<String>>() {
+            textTime.setText(DateTimeUtil.getRecordTime(record.getTime()));
+            imgList = new Gson().fromJson(record.getImgs(), new TypeToken<List<String>>() {
             }.getType());
             if (imgList != null)
                 for (String img : imgList) {
                     imageAdapter.add(new ImageModel(imageAdapter.getItemCount(), 0, img, ""));
                 }
-            imageLink.setVisibility(PatternUtil.matchUrl(item.getUrl()) ? View.VISIBLE : View.GONE);
-            imageLink.setOnClickListener(v -> WebActivity.startActivity(context, item.getUrl(), item.getTitle()));
-            textParent.setText(item.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
+            imageLink.setVisibility(PatternUtil.matchUrl(record.getUrl()) ? View.VISIBLE : View.GONE);
+            imageLink.setOnClickListener(v -> WebActivity.startActivity(context, record.getUrl(), record.getTitle()));
+            textParent.setText(record.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //卷宗编号
-            textFloor.setText(item.getId() + context.getString(R.string.floor));
+            textFloor.setText(record.getId() + context.getString(R.string.floor));
 
-            friendViewHolder.bindView(item.getUserid());
+            friendViewHolder.bindView(record.getUserid());
         }
 
         @Override
@@ -327,12 +330,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             if (data == null || data.getRecord() == null) return;
             this.recordDTO = data;
             Log.i(getClass().getName(), local + ":" + recordDTO.getFavorite());
-            Record item = data.getRecord();
-            if (item.isManaged()) {
-                item = realm.copyFromRealm(item);
-            }
             //刷新数据
-            refreshData(item);
+            refreshData(data.getRecord());
             //评论数量
             textComment.setText(StringUtil.numLong2Str(data.getCommentNum()));
             //收藏数量

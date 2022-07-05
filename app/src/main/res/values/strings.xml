@@ -55,7 +55,7 @@
     <string name="id">ID&#160;</string>
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
-    <string name="record">卷宗</string>
+    <string name="record">博客</string>
     <string name="favorite">收藏夹</string>
     <string name="default_num">0</string>
     <!--    个人信息-->
@@ -92,7 +92,7 @@
     <string name="new_fans">新增粉丝</string>
 
     <!--发布页-->
-    <string name="super_record">父卷宗</string>
+    <string name="super_record">父</string>
     <string name="title">标题</string>
     <string name="record_title_hint">一句话突出主要内容</string>
     <string name="description">摘要&#160;</string>
