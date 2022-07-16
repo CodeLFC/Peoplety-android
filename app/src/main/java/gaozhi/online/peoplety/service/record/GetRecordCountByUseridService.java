@@ -37,7 +37,9 @@ public class GetRecordCountByUseridService extends BaseApiRequest<UserRecordCoun
     @Override
     public void getNetData(Result result, Consumer<UserRecordCount> consumer) {
         UserRecordCount userRecordCount = getGson().fromJson(result.getData(), UserRecordCount.class);
-        consumer.accept(userRecordCount);
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(userRecordCount));
+        getRealm().executeTransaction(realm -> {
+            realm.copyToRealmOrUpdate(userRecordCount);
+            });
+        consumer.accept(copyFromRealm(userRecordCount));
     }
 }

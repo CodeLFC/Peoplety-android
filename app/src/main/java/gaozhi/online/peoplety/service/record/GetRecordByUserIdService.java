@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 获取用户的卷宗
@@ -44,21 +46,22 @@ public class GetRecordByUserIdService extends BaseApiRequest<PageInfo<Record>> {
         }
         return null;
     }
-
     @Override
     public void getNetData(Result result, Consumer<PageInfo<Record>> consumer) {
         PageInfo<Record> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
         }.getType());
-        consumer.accept(pageInfo);
         if (pageInfo.getPageNum() > 1) {
+            consumer.accept(pageInfo);
             return;
         }
         //装入数据库
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             //删除过期缓存
-            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
+            realm.where(Record.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
-            realm.copyToRealmOrUpdate(records);
+            records = realm.copyToRealmOrUpdate(records);
+            pageInfo.setList(copyFromRealm(realm,records));
         });
+        consumer.accept(pageInfo);
     }
 }

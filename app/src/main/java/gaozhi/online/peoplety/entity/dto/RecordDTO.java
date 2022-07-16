@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.entity.dto;
 
+import androidx.annotation.NonNull;
+
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Record;

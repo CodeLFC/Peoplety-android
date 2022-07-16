@@ -50,17 +50,18 @@ public class GetAttentionService extends BaseApiRequest<PageInfo<Friend>> {
     public void getNetData(Result result, Consumer<PageInfo<Friend>> consumer) {
         PageInfo<Friend> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Friend>>() {
         }.getType());
-        consumer.accept(pageInfo);
         if (pageInfo.getPageNum() > 1) {
+            consumer.accept(pageInfo);
             return;
         }
         //装入数据库
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             realm.delete(Friend.class);
             List<Friend> friends = pageInfo.getList();
             for (Friend friend : friends) {
                 realm.copyToRealmOrUpdate(friend);
             }
         });
+        consumer.accept(pageInfo);
     }
 }

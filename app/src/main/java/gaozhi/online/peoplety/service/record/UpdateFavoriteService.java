@@ -9,6 +9,7 @@ import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 修改收藏夹
@@ -34,6 +35,7 @@ public class UpdateFavoriteService extends BaseApiRequest<Favorite> {
     public void getNetData(Result result, Consumer<Favorite> consumer) {
         Favorite favorite = getGson().fromJson(result.getData(), Favorite.class);
         consumer.accept(favorite);
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(favorite));
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(favorite));
+        consumer.accept(copyFromRealm(favorite));
     }
 }

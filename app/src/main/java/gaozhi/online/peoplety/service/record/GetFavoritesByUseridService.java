@@ -13,6 +13,7 @@ import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 获取收藏夹
@@ -48,16 +49,19 @@ public class GetFavoritesByUseridService extends BaseApiRequest<PageInfo<Favorit
     public void getNetData(Result result, Consumer<PageInfo<Favorite>> consumer) {
         PageInfo<Favorite> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Favorite>>() {
         }.getType());
-        consumer.accept(pageInfo);
+
         if (pageInfo.getPageNum() > 1) {
+            consumer.accept(pageInfo);
             return;
         }
         //装入数据库
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             //删除过期缓存
-            realm.where(Favorite.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
+            realm.where(Favorite.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Favorite> favorites = pageInfo.getList();
-            realm.copyToRealmOrUpdate(favorites);
+            favorites = realm.copyToRealmOrUpdate(favorites);
+            pageInfo.setList(copyFromRealm(realm, favorites));
         });
+        consumer.accept(pageInfo);
     }
 }

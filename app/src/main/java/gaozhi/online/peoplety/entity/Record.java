@@ -17,7 +17,7 @@ import lombok.Data;
  * @date 2022/5/14 9:35
  */
 @Data
-public class Record extends RealmObject implements Parcelable, NoAnimatorRecyclerView.BaseAdapter.BaseItem {
+public class Record extends RealmObject implements Parcelable, NoAnimatorRecyclerView.BaseAdapter.BaseItem{
     @PrimaryKey
     private long id;
     private long parentId;
@@ -107,5 +107,4 @@ public class Record extends RealmObject implements Parcelable, NoAnimatorRecycle
     public int hashCode() {
         return Objects.hash(id, parentId, userid, areaId, recordTypeId, enable, title, description, content, imgs, url, time, ip, top);
     }
-
 }

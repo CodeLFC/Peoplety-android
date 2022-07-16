@@ -10,20 +10,13 @@ public abstract class DBBaseFragment extends BaseFragment {
     private Realm realm;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        realm =Realm.getDefaultInstance();
-        doBusiness(realm);
+        doBusiness(getRealm());
         super.onCreate(savedInstanceState);
 
     }
     protected abstract void doBusiness(Realm realm);
 
     public Realm getRealm() {
-        return realm;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
+        return Realm.getInstance(Realm.getDefaultConfiguration());
     }
 }

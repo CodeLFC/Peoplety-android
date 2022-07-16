@@ -42,11 +42,11 @@ public class DeleteFriendService extends BaseApiRequest<Friend> {
     @Override
     public void getNetData(Result result, Consumer<Friend> consumer) {
         Friend friend = getGson().fromJson(result.getData(), Friend.class);
-        consumer.accept(friend);
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             Friend fDB = realm.where(Friend.class).equalTo("id", friend.getId()).findFirst();
             if (fDB == null) return;
             fDB.deleteFromRealm();
         });
+        consumer.accept(friend);
     }
 }

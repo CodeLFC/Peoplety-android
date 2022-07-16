@@ -29,6 +29,7 @@ public class ShowImageActivity extends BaseActivity {
 
     @Override
     protected void initParams(Intent intent) {
+        setSteepStatusBar(false);
         urls = intent.getStringArrayListExtra(INTENT_IMG_URL);
         current = intent.getIntExtra(INTENT_IMG_CUR_LOC, 0);
         imageShowFragments = new ImageShowFragment[urls.size()];

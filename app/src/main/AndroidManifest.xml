@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Peoplety">
         <activity
+            android:name=".ui.activity.home.fragment.message.MessageActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.personal.FavoriteManageActivity"
             android:exported="false" />
         <activity

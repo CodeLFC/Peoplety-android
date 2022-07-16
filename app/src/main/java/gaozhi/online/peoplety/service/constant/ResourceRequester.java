@@ -54,37 +54,35 @@ public class ResourceRequester implements DataHelper.OnDataListener<Result> {
     @Override
     public void handle(int id, Result result) {
         if (id == getUserStatusService.getId()) {//请求身份资源成功
-            realm.executeTransactionAsync(realm -> {
+            realm.executeTransaction(realm -> {
                 List<Status> statuses = gson.fromJson(result.getData(), new TypeToken<List<Status>>() {
                 }.getType());
                 for (Status status : statuses) {
                     realm.copyToRealmOrUpdate(status);
                 }
-            }, () -> {
-                requestConsumer.accept(count++, false);
-                // 开始请求地区资源
-                getRecordAreaService.request(loginUser.getToken());
             });
+            requestConsumer.accept(count++, false);
+            // 开始请求地区资源
+            getRecordAreaService.request(loginUser.getToken());
             return;
         }
 
         if (id == getRecordAreaService.getId()) {
-            realm.executeTransactionAsync(realm -> {
+            realm.executeTransaction(realm -> {
                 List<Area> areas = gson.fromJson(result.getData(), new TypeToken<List<Area>>() {
                 }.getType());
                 for (Area area : areas) {
                     realm.copyToRealmOrUpdate(area);
                 }
-            }, () -> {
-                requestConsumer.accept(count++, false);
-                //开始请求类型资源
-                getRecordTypeService.request(loginUser.getToken());
             });
+            requestConsumer.accept(count++, false);
+            //开始请求类型资源
+            getRecordTypeService.request(loginUser.getToken());
             return;
         }
 
         if (id == getRecordTypeService.getId()) {
-            realm.executeTransactionAsync(realm -> {
+            realm.executeTransaction(realm -> {
                 List<RecordType> recordTypes = gson.fromJson(result.getData(), new TypeToken<List<RecordType>>() {
                 }.getType());
                 for (RecordType recordType : recordTypes) {
@@ -95,18 +93,15 @@ public class ResourceRequester implements DataHelper.OnDataListener<Result> {
                     }
                     realm.copyToRealmOrUpdate(recordType);
                 }
-            }, () -> {
-                //修改资源有效时间，并进入主页
-                realm.executeTransactionAsync(realm -> {
-                    //刷新资源有效期
-                    loginUser.setResourceValidateTime(System.currentTimeMillis() + RESOURCE_VALIDATE_PERIOD);
-                    realm.copyToRealmOrUpdate(loginUser);
-
-                }, () -> {
-                    //资源更新完成
-                    requestConsumer.accept(count++, true);
-                });
             });
+            //修改资源有效时间，并进入主页
+            realm.executeTransaction(realm -> {
+                //刷新资源有效期
+                loginUser.setResourceValidateTime(System.currentTimeMillis() + RESOURCE_VALIDATE_PERIOD);
+                realm.copyToRealmOrUpdate(loginUser);
+            });
+            //资源更新完成
+            requestConsumer.accept(count++, true);
         }
     }
 

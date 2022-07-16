@@ -9,6 +9,7 @@ import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 添加收藏内容
@@ -33,8 +34,7 @@ public class PublishFavoriteItemService extends BaseApiRequest<Item> {
     @Override
     public void getNetData(Result result, Consumer<Item> consumer) {
         Item item = getGson().fromJson(result.getData(), Item.class);
-        consumer.accept(item);
-        if (item == null) return;
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(item));
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(item));
+        consumer.accept(copyFromRealm(item));
     }
 }

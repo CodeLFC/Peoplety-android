@@ -37,17 +37,18 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
     @Override
     public RecordDTO initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         long recordId = Long.parseLong(params.get("recordId"));
-        return getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst();
+        return copyFromRealm(getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst());
     }
 
     @Override
     public void getNetData(Result result, Consumer<RecordDTO> consumer) {
         final RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
         recordDTO.setTime(recordDTO.getRecord() == null ? 0 : recordDTO.getRecord().getTime());
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             realm.copyToRealmOrUpdate(recordDTO);
             //删除过期缓存
             realm.where(RecordDTO.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
-        }, () -> consumer.accept(recordDTO));
+        });
+        consumer.accept(copyFromRealm(recordDTO));
     }
 }

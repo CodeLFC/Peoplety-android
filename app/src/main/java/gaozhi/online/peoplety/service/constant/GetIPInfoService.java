@@ -40,6 +40,7 @@ public class GetIPInfoService extends BaseApiRequest<IPInfo> {
     @Override
     public void getNetData(Result result, Consumer<IPInfo> consumer) {
         IPInfo ipInfo = getGson().fromJson(result.getData(), IPInfo.class);
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(new IPInfoDB().setIPInfo(ipInfo)), () -> consumer.accept(ipInfo));
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(new IPInfoDB().setIPInfo(ipInfo)));
+        consumer.accept(ipInfo);
     }
 }

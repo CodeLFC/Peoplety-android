@@ -9,6 +9,7 @@ import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 发布评论
@@ -29,8 +30,8 @@ public class PublishCommentService extends BaseApiRequest<Comment> {
     public void getNetData(Result result, Consumer<Comment> consumer) {
         Comment comment = getGson().fromJson(result.getData(), Comment.class);
         if (comment == null) return;
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(comment));
-        consumer.accept(comment);
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(comment));
+        consumer.accept(copyFromRealm(comment));
     }
 
     public void request(Token token, Comment comment) {

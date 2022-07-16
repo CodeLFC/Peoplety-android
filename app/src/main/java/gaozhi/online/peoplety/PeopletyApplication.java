@@ -42,7 +42,7 @@ public class PeopletyApplication extends Application implements Application.Acti
         fontScale = getFontScale();
         registerActivityLifecycleCallbacks(this);
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().name(RDB_NAME).schemaVersion(RDB_VERSION).deleteRealmIfMigrationNeeded().build();
+        RealmConfiguration config = new RealmConfiguration.Builder().name(RDB_NAME).schemaVersion(RDB_VERSION).deleteRealmIfMigrationNeeded().allowWritesOnUiThread(true).build();
         Realm.setDefaultConfiguration(config);
 
         globalExecutor = new GlobalExecutor();

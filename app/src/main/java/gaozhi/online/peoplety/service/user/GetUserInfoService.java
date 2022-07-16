@@ -52,7 +52,7 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
     public void getNetData(Result result, Consumer<UserDTO> consumer) {
         UserDTO userDTO = getGson().fromJson(result.getData(), UserDTO.class);
 
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             UserDTO temp = realm.where(UserDTO.class).equalTo("account", userDTO.getUserInfo().getPhone()).findFirst();
             if (temp == null) {
                 temp = realm.where(UserDTO.class).equalTo("account", Long.toString(userDTO.getUserInfo().getId())).findFirst();
@@ -62,9 +62,8 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
                 temp.setFanNum(userDTO.getFanNum());
                 realm.copyToRealmOrUpdate(temp);
             }
-        }, () -> {//success
-            userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
-            consumer.accept(userDTO);
         });
+        userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
+        consumer.accept(userDTO);
     }
 }

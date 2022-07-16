@@ -44,10 +44,10 @@ public class GetFriendService extends BaseApiRequest<Friend> {
     @Override
     public void getNetData(Result result, Consumer<Friend> consumer) {
         Friend friend = getGson().fromJson(result.getData(), Friend.class);
-        consumer.accept(friend);
         if (friend == null) {
             return;
         }
-        getRealm().executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(friend));
+        getRealm().executeTransaction(realm -> realm.copyToRealmOrUpdate(friend));
+        consumer.accept(friend);
     }
 }

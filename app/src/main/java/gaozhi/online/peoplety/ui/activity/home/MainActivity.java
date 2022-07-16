@@ -2,24 +2,17 @@ package gaozhi.online.peoplety.ui.activity.home;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
@@ -31,7 +24,7 @@ import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.home.fragment.AttentionFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.home.HomeFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.MeFragment;
-import gaozhi.online.peoplety.ui.activity.home.fragment.MessageFragment;
+import gaozhi.online.peoplety.ui.activity.home.fragment.message.MessageFragment;
 import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;

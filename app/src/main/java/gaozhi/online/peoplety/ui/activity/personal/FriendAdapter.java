@@ -62,7 +62,9 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
                         textAttention.setVisibility(View.VISIBLE);
                     return;
                 }
-                textName.setText(data.getRemark());
+                if(!StringUtil.isEmpty(data.getRemark())) {
+                    textName.setText(data.getRemark());
+                }
                 textAttention.setVisibility(View.GONE);
             }
         });

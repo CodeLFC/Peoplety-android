@@ -48,16 +48,17 @@ public class GetChildByRecordIdService extends BaseApiRequest<PageInfo<Record>> 
     public void getNetData(Result result, Consumer<PageInfo<Record>> consumer) {
         PageInfo<Record> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
         }.getType());
-        consumer.accept(pageInfo);
-        //装入数据库
         if (pageInfo.getPageNum() > 1) {
+            consumer.accept(pageInfo);
             return;
         }
+        //装入数据库
         getRealm().executeTransactionAsync(realm -> {
             //删除过期缓存
-            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
+            realm.where(Record.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
-            realm.copyToRealmOrUpdate(records);
-        });
+            records = realm.copyToRealmOrUpdate(records);
+            pageInfo.setList(copyFromRealm(realm,records));
+        }, () -> consumer.accept(pageInfo));
     }
 }

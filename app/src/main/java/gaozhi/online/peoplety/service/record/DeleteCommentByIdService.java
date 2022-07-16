@@ -31,7 +31,7 @@ public class DeleteCommentByIdService extends BaseApiRequest<Result> {
     @Override
     public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         long id = Long.parseLong(params.get("id"));
-        getRealm().executeTransactionAsync(new Realm.Transaction() {
+        getRealm().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 realm.where(Comment.class).equalTo("id", id).findAll().deleteAllFromRealm();

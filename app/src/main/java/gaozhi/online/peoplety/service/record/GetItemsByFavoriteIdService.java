@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -47,14 +48,16 @@ public class GetItemsByFavoriteIdService extends BaseApiRequest<PageInfo<Item>> 
     public void getNetData(Result result, Consumer<PageInfo<Item>> consumer) {
         PageInfo<Item> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Item>>() {
         }.getType());
-        consumer.accept(pageInfo);
         if (pageInfo.getPageNum() > 1) {
+            consumer.accept(pageInfo);
             return;
         }
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             //删除过期缓存
             realm.where(Item.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
-            realm.copyToRealmOrUpdate(pageInfo.getList());
+            List<Item> items = realm.copyToRealmOrUpdate(pageInfo.getList());
+            pageInfo.setList(copyFromRealm(realm, items));
         });
+        consumer.accept(pageInfo);
     }
 }
