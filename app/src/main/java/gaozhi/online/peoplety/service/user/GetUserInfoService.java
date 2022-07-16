@@ -51,9 +51,8 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
     @Override
     public void getNetData(Result result, Consumer<UserDTO> consumer) {
         UserDTO userDTO = getGson().fromJson(result.getData(), UserDTO.class);
+
         getRealm().executeTransactionAsync(realm -> {
-            //更新数据库中的用户信息
-            //realm.copyToRealmOrUpdate(userDTO.getUserInfo());
             UserDTO temp = realm.where(UserDTO.class).equalTo("account", userDTO.getUserInfo().getPhone()).findFirst();
             if (temp == null) {
                 temp = realm.where(UserDTO.class).equalTo("account", Long.toString(userDTO.getUserInfo().getId())).findFirst();

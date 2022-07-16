@@ -5,14 +5,16 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
-import gaozhi.online.base.net.http.ApiRequest;
+import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Token;
+import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 删除评论
  */
-public class DeleteCommentByIdService extends ApiRequest<Result> {
+public class DeleteCommentByIdService extends BaseApiRequest<Result> {
     public DeleteCommentByIdService(OnDataListener<Result> onDataListener) {
         super(NetConfig.recordBaseURL, Type.DELETE);
         setDataListener(onDataListener);
@@ -28,6 +30,13 @@ public class DeleteCommentByIdService extends ApiRequest<Result> {
 
     @Override
     public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+        long id = Long.parseLong(params.get("id"));
+        getRealm().executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(Comment.class).equalTo("id", id).findAll().deleteAllFromRealm();
+            }
+        });
         return null;
     }
 

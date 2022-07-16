@@ -14,7 +14,6 @@ import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
-import io.realm.RealmResults;
 
 /**
  * 获取子卷宗列表
@@ -55,13 +54,8 @@ public class GetChildByRecordIdService extends BaseApiRequest<PageInfo<Record>> 
             return;
         }
         getRealm().executeTransactionAsync(realm -> {
-            if (pageInfo.getList().size() > 0) {//删除这一类的第一页
-                long parentId = pageInfo.getList().get(0).getParentId();
-                RealmResults<Record> old = getRealm().where(Record.class).equalTo("parentId", parentId).findAll();
-                for (Record record : old) {
-                    record.deleteFromRealm();
-                }
-            }
+            //删除过期缓存
+            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
             realm.copyToRealmOrUpdate(records);
         });

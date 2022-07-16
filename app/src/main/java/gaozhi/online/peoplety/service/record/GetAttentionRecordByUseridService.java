@@ -1,11 +1,9 @@
 package gaozhi.online.peoplety.service.record;
 
-import android.util.Log;
 
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,15 +62,8 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
-            List<Friend> friends = realm.where(Friend.class).equalTo("userid", userid).findAll();
-            List<Long> friendIds = new LinkedList<>();
-            for (Friend friend : friends) {
-                friendIds.add(friend.getFriendId());
-            }
-            List<Record> locals = realm.where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
-            for(Record record:locals){
-                record.deleteFromRealm();
-            }
+            //删除过期缓存
+            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
             realm.copyToRealmOrUpdate(records);
         });

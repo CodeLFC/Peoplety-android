@@ -30,6 +30,7 @@ public class RecordDTO extends RealmObject {
     private long childNum;
     //评论数量
     private long commentNum;
-
+    private long time;
+    //类型
     private RecordType recordType;
 }

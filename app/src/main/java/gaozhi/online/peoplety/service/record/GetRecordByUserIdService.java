@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
-import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
@@ -20,6 +19,7 @@ import gaozhi.online.peoplety.service.NetConfig;
  * 获取用户的卷宗
  */
 public class GetRecordByUserIdService extends BaseApiRequest<PageInfo<Record>> {
+
     public GetRecordByUserIdService(DataHelper.OnDataListener<PageInfo<Record>> resultHandler) {
         super(NetConfig.recordBaseURL, Type.GET);
         setDataListener(resultHandler);
@@ -55,6 +55,8 @@ public class GetRecordByUserIdService extends BaseApiRequest<PageInfo<Record>> {
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
+            //删除过期缓存
+            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
             realm.copyToRealmOrUpdate(records);
         });

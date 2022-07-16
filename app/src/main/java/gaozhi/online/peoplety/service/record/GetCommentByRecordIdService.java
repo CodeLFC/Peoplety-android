@@ -13,7 +13,6 @@ import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -57,13 +56,8 @@ public class GetCommentByRecordIdService extends BaseApiRequest<PageInfo<Comment
             return;
         }
         getRealm().executeTransactionAsync(realm -> {
-            if (commentPageInfo.getList().size() > 0) {
-                long recordId = commentPageInfo.getList().get(0).getRecordId();
-                RealmResults<Comment> old = realm.where(Comment.class).equalTo("recordId", recordId).findAll();
-                for (Comment comment : old) {
-                    comment.deleteFromRealm();
-                }
-            }
+            //删除过期缓存
+            realm.where(Comment.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             realm.copyToRealmOrUpdate(commentPageInfo.getList());
         });
     }

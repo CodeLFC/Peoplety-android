@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -14,7 +13,6 @@ import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
-import io.realm.RealmResults;
 
 /**
  * 获取收藏夹
@@ -56,9 +54,8 @@ public class GetFavoritesByUseridService extends BaseApiRequest<PageInfo<Favorit
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
-            if (pageInfo.getList().size() > 0) {//删除库中的内容
-                realm.delete(Favorite.class);
-            }
+            //删除过期缓存
+            realm.where(Favorite.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Favorite> favorites = pageInfo.getList();
             realm.copyToRealmOrUpdate(favorites);
         });

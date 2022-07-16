@@ -12,6 +12,7 @@ import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
+import io.realm.Realm;
 
 /**
  * 获取收藏夹中的收藏内容
@@ -51,7 +52,8 @@ public class GetItemsByFavoriteIdService extends BaseApiRequest<PageInfo<Item>> 
             return;
         }
         getRealm().executeTransactionAsync(realm -> {
-            realm.delete(Item.class);
+            //删除过期缓存
+            realm.where(Item.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             realm.copyToRealmOrUpdate(pageInfo.getList());
         });
     }

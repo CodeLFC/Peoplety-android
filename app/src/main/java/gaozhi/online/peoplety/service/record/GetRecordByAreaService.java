@@ -1,7 +1,5 @@
 package gaozhi.online.peoplety.service.record;
 
-import android.util.Log;
-
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 
@@ -12,18 +10,17 @@ import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
-import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * 根据地区获取卷宗列表
  */
 public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
+
+
     public GetRecordByAreaService(DataHelper.OnDataListener<PageInfo<Record>> resultHandler) {
         super(NetConfig.recordBaseURL, Type.GET);
         setDataListener(resultHandler);
@@ -63,14 +60,8 @@ public class GetRecordByAreaService extends BaseApiRequest<PageInfo<Record>> {
         }
         //装入数据库
         getRealm().executeTransactionAsync(realm -> {
-            if (pageInfo.getList().size() > 0) {//删除这一类的第一页
-                int areaId = pageInfo.getList().get(0).getAreaId();
-                RealmResults<Record> old =realm.where(Record.class).equalTo("areaId", areaId).findAll();
-                for (Record record : old) {
-                    Log.i(getClass().getName(),"删除卷宗内容："+record);
-                    record.deleteFromRealm();
-                }
-            }
+            //删除过期缓存
+            realm.where(Record.class).lessThan("time",System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
             realm.copyToRealmOrUpdate(records);
         });

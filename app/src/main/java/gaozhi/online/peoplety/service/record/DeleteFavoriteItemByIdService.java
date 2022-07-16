@@ -15,7 +15,6 @@ import io.realm.Realm;
  * 删除收藏条目
  */
 public class DeleteFavoriteItemByIdService extends BaseApiRequest<Result> {
-    private long favoriteItemId;
 
     public DeleteFavoriteItemByIdService(OnDataListener<Result> onDataListener) {
         super(NetConfig.favoriteBaseURL, Type.DELETE);
@@ -23,7 +22,6 @@ public class DeleteFavoriteItemByIdService extends BaseApiRequest<Result> {
     }
 
     public void request(Token token, long favoriteItemId) {
-        this.favoriteItemId = favoriteItemId;
         Map<String, String> headers = new HashMap<>();
         headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
@@ -33,16 +31,18 @@ public class DeleteFavoriteItemByIdService extends BaseApiRequest<Result> {
 
     @Override
     public Result initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
+        long id = Long.parseLong(params.get("id"));
+        getRealm().executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(Item.class).equalTo("id", id).findAll().deleteAllFromRealm();
+            }
+        });
         return null;
     }
 
     @Override
     public void getNetData(Result result, Consumer<Result> consumer) {
         consumer.accept(result);
-        getRealm().executeTransactionAsync(realm -> {
-            Item item = getRealm().where(Item.class).equalTo("id", favoriteItemId).findFirst();
-            if (item == null) return;
-            item.deleteFromRealm();
-        });
     }
 }
