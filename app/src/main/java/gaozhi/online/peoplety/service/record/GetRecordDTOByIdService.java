@@ -37,7 +37,10 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
     @Override
     public RecordDTO initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         long recordId = Long.parseLong(params.get("recordId"));
-        return copyFromRealm(getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst());
+        RecordDTO recordDTO =copyFromRealm(getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst());
+        if(recordDTO==null)return null;
+        recordDTO.setRecord(copyFromRealm(recordDTO.getRecord()));
+        return recordDTO;
     }
 
     @Override
@@ -49,6 +52,8 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
             //删除过期缓存
             realm.where(RecordDTO.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
         });
-        consumer.accept(copyFromRealm(recordDTO));
+        RecordDTO record =copyFromRealm(recordDTO);
+        record.setRecord(copyFromRealm(record.getRecord()));
+        consumer.accept(record);
     }
 }

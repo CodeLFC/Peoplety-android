@@ -88,7 +88,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
     public void handle(int id, RecordDTO data, boolean local) {
         if (!local) {
             swipeRefreshLayout.setRefreshing(false);
-            if(data.getRecord()==null){
+            if (data.getRecord() == null) {
                 ToastUtil.showToastShort(R.string.tip_delete_success);
                 finish();
                 return;
@@ -96,11 +96,7 @@ public class RecordDetailActivity extends DBBaseActivity implements DataHelper.O
         }
         //本地数据非可能返回null
         if (data == null) return;
-        if (!local) {
-            recordDTO = data;
-        } else {
-            recordDTO = getRealm().copyFromRealm(data);
-        }
+        recordDTO = data;
         title.setText(recordDTO.getRecord().getTitle());
         recordViewHolder.bindView(recordDTO);
         Log.d(TAG, "" + recordDTO);

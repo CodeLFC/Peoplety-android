@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.entity;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -45,7 +47,7 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
         NEW_COMMENT(1, "新的评论"),
         NEW_FANS(2, "新的粉丝"),
         NEW_EXTEND(3, "新的派生"),
-        ;
+        NEW_FAVORITE(4, "新的收藏");
         private final int type;
         private final String remark;
 
@@ -78,6 +80,7 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
 
     public static Stream<Message> filter(List<Message> messages, Type[] type, boolean onlyUnread) {
         Stream<Message> stream = messages.stream().filter(message -> {
+            Log.i(Message.class.getName(), " message: " + message);
             boolean filter = false;
             for (Type e : type) {
                 if (message.getType() == e.getType()) {//通过断言

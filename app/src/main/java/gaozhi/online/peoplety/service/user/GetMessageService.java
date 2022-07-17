@@ -35,13 +35,6 @@ public class GetMessageService extends BaseApiRequest<List<Message>> {
         request("get/messages", headers, params);
     }
 
-    public void read(Message message) {
-        getRealm().executeTransactionAsync(realm -> {
-            message.setRead(true);
-            realm.copyToRealmOrUpdate(message);
-        });
-    }
-
     @Override
     public List<Message> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         return getRealm().where(Message.class).equalTo("toId", Long.parseLong(params.get("toId"))).sort("time", Sort.DESCENDING).findAll();

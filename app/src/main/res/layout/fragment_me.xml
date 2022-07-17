@@ -34,8 +34,8 @@
 
                 <ImageView
                     android:id="@+id/fragment_me_image_head"
-                    android:layout_width="@dimen/logo_bigger_size"
-                    android:layout_height="@dimen/logo_bigger_size"
+                    android:layout_width="@dimen/header_big_size"
+                    android:layout_height="@dimen/header_big_size"
                     android:paddingHorizontal="@dimen/widget_margin"
                     android:src="@drawable/app_logo" />
 
@@ -257,7 +257,8 @@
                 android:layout_marginBottom="1dp"
                 android:background="@color/widget_color"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/icon_size_general"

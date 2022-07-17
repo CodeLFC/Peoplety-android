@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 
 import java.util.function.Consumer;
 
@@ -12,9 +13,12 @@ import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Message;
+import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.record.GetFavoritesByUseridService;
 import gaozhi.online.peoplety.service.record.PublishFavoriteItemService;
+import gaozhi.online.peoplety.service.user.PostMessageService;
 import gaozhi.online.peoplety.ui.base.DBBasePopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
@@ -34,7 +38,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     private Button btnManager;
     //data
     private PageInfo<Favorite> currentPageInfo;
-    private long recordId;
+    private Record record;
 
     //service
     //收藏
@@ -42,11 +46,22 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
         @Override
         public void handle(int id, Item data) {
             //收藏成功
+            //发送收藏消息
+            Message message = new Message();
+            message.setType(Message.Type.NEW_FAVORITE.getType());
+            message.setToId(record.getUserid());
+            message.setMsg(new Gson().toJson(record));
+            message.setRemark(getContext().getString(R.string.id) + loginUser.getUserInfo().getId() + getContext().getString(R.string.favorite)  + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record)+ record.getTitle());
+            postMessageService.request(loginUser.getToken(), message);
             dismiss();
             if (itemConsumer != null) {
                 itemConsumer.accept(data);
             }
         }
+    });
+    //发送消息
+    private final PostMessageService postMessageService = new PostMessageService(new DataHelper.OnDataListener<Message>() {
+
     });
 
     public void setItemConsumer(Consumer<Item> itemConsumer) {
@@ -78,8 +93,8 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
 
     }
 
-    public void showPopupWindow(View parent, long recordId) {
-        this.recordId = recordId;
+    public void showPopupWindow(View parent, Record record) {
+        this.record = record;
         super.showPopupWindow(parent);
         getFavoritesByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId(), 1, PAGE_SIZE);
     }
@@ -103,7 +118,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     public void accept(Favorite favorite) {
         Item item = new Item();
         item.setFavoriteId(favorite.getId());
-        item.setRecordId(recordId);
+        item.setRecordId(record.getId());
         publishFavoriteItemService.request(loginUser.getToken(), item);
     }
 

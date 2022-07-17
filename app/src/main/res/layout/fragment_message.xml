@@ -33,7 +33,7 @@
                 android:padding="@dimen/widget_margin"
                 android:src="@drawable/comment" />
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/comment"
+                    android:text="@string/new_record_msg"
                     android:textColor="@color/deep_text_color"
                     android:textSize="@dimen/font_size_small" />
 
@@ -52,8 +52,9 @@
                     android:layout_width="@dimen/icon_size_smaller"
                     android:layout_height="@dimen/icon_size_smaller"
                     android:layout_gravity="center|end"
-                    android:src="@drawable/red_dot" />
-            </LinearLayout>
+                    android:src="@drawable/red_dot"
+                    android:visibility="gone" />
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -91,10 +92,18 @@
                     android:layout_height="@dimen/icon_size_smaller"
                     android:layout_gravity="center|end"
                     android:src="@drawable/red_dot"
-                    />
+                    android:visibility="gone" />
             </FrameLayout>
 
         </LinearLayout>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/fragment_message_image_ad"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/widget_color"
+        android:src="@drawable/default_ad"
+        android:scaleType="fitXY" />
 </LinearLayout>

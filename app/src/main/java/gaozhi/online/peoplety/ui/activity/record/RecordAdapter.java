@@ -27,6 +27,7 @@ import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Token;
@@ -40,6 +41,7 @@ import gaozhi.online.peoplety.service.record.DeleteFavoriteItemByIdService;
 import gaozhi.online.peoplety.service.record.DeleteRecordByIdService;
 import gaozhi.online.peoplety.service.record.GetRecordDTOByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.service.user.PostMessageService;
 import gaozhi.online.peoplety.ui.activity.personal.FavoritePopWindow;
 import gaozhi.online.peoplety.ui.activity.personal.FriendAdapter;
 import gaozhi.online.peoplety.ui.util.WebActivity;
@@ -90,7 +92,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final TextView textIp;
         private final TextView textTime;
         private final ImageAdapter imageAdapter;
-        private final Realm realm;
         private List<String> imgList;
         private final TextView textComment;
         private final TextView textFavorite;
@@ -108,6 +109,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         private final ChildRecordPopWindow childRecordPopWindow;
         private final FavoritePopWindow favoritePopWindow;
         //service
+
         //获取详情
         private final GetRecordDTOByIdService getRecordDTOByIdService = new GetRecordDTOByIdService(this);
         private final DeleteFavoriteItemByIdService deleteFavoriteItemByIdService = new DeleteFavoriteItemByIdService(new DataHelper.OnDataListener<Result>() {
@@ -121,6 +123,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 ToastUtil.showToastShort(message + data);
             }
         });
+
         //获取位置信息
         private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
             @Override
@@ -128,6 +131,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 textIp.setText(data.getShowArea());
             }
         });
+
         //删除评论
         private final DeleteRecordByIdService deleteRecordByIdService = new DeleteRecordByIdService(new DataHelper.OnDataListener<Result>() {
             @Override
@@ -155,7 +159,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             super(itemView);
             this.token = token;
             context = itemView.getContext();
-            realm = Realm.getDefaultInstance();
             View view = itemView.findViewById(R.id.item_recycler_record_friend_info_view);
             friendViewHolder = new FriendAdapter.FriendViewHolder(view, token);
             textTitle = itemView.findViewById(R.id.item_recycler_record_text_title);
@@ -193,7 +196,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 if (recordDTO == null) return;
                 if (recordDTO.getItem() == null) {
                     //收藏
-                    favoritePopWindow.showPopupWindow(imageFavorite, record.getId());
+                    favoritePopWindow.showPopupWindow(imageFavorite, record);
                 } else {
                     //取消收藏
                     deleteFavoriteItemByIdService.request(token, recordDTO.getItem().getId());
@@ -225,9 +228,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
         @Override
         public void bindView(Record item) {
             if (item == null) return;
-            if (item.isManaged()) {
-                item = realm.copyFromRealm(item);
-            }
+
             //刷新数据
             refreshData(item);
             //获取详细内容
@@ -253,9 +254,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         //刷新数据
         private void refreshData(@NotNull Record item) {
-            if (item.isManaged()) {
-                item = realm.copyFromRealm(item);
-            }
+
             if (!item.isEnable()) {
                 item.setTitle(context.getString(R.string.already_delete));
                 item.setDescription(context.getString(R.string.already_delete));
@@ -278,7 +277,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imageAdapter.clear();
             textTitle.setText(record.getTitle());
             imageTop.setVisibility(record.isTop() ? View.VISIBLE : View.GONE);
-
+            Realm realm =Realm.getInstance(Realm.getDefaultConfiguration());
             RecordType recordType = realm.where(RecordType.class).equalTo("id", record.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());

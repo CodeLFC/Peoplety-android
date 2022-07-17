@@ -101,13 +101,13 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
                 }
                 getRealm().executeTransactionAsync(realm -> {
                     realm.copyToRealmOrUpdate(temps);
-                }, (Realm.Transaction.OnSuccess) this::doBusiness);
+                }, (Realm.Transaction.OnSuccess) this::refreshData);
 
                 return;
             }
             //确认选择
             if (option.getId() == OK) {
-                doBusiness();
+                refreshData();
                 return;
             }
             //非全选按钮，耿勋数据库
@@ -131,31 +131,6 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void doBusiness() {
-        if (loginUser.getArea() == null) {
-            areaPopWindow.showPopupWindow(getActivity());
-            return;
-        }
-        titleTextLeft.setText(loginUser.getArea().getName());
-        selectedLabel = new LinkedList<>();
-
-        List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
-        List<OptionsPopWindow.Option> options = new LinkedList<>();
-
-        for (RecordType recordType : recordTypes) {
-            if (recordType.isSelected()) {
-                selectedLabel.add(recordType.getId());
-            }
-            options.add(new OptionsPopWindow.Option(recordType.getId(), recordType.getName(), recordType.isSelected(), false));
-        }
-        //添加全选按钮
-        options.add(new OptionsPopWindow.Option(SELECT_ALL, getContext().getString(R.string.all_selected), false, true));
-        //添加确认按钮
-        options.add(new OptionsPopWindow.Option(OK, getContext().getString(R.string.ok), false, true));
-        optionsPopWindow.setOptions(options);
-        //访问内容
-        if (!getRecordByAreaService.isRequesting()) {
-            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), selectedLabel, 1, PAGE_SIZE);
-        }
 
     }
 
@@ -191,7 +166,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
         }, () -> {
             titleTextLeft.setText(area.getName());
             //请求某个地区的资料
-            doBusiness();
+            refreshData();
         });
 
     }
@@ -222,7 +197,7 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void onRefresh() {
-        doBusiness();
+        refreshData();
     }
 
     @Override
@@ -243,8 +218,36 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
     @Override
     public void onResume() {
         super.onResume();
-        if (recordAdapter == null || recordAdapter.getItemCount() == 0) {
-            doBusiness();
+        if (recordAdapter.getItemCount() == 0) {
+            refreshData();
+        }
+    }
+
+    private void refreshData() {
+        if (loginUser.getArea() == null) {
+            areaPopWindow.showPopupWindow(getActivity());
+            return;
+        }
+        titleTextLeft.setText(loginUser.getArea().getName());
+        selectedLabel = new LinkedList<>();
+
+        List<RecordType> recordTypes = getRealm().where(RecordType.class).findAll();
+        List<OptionsPopWindow.Option> options = new LinkedList<>();
+
+        for (RecordType recordType : recordTypes) {
+            if (recordType.isSelected()) {
+                selectedLabel.add(recordType.getId());
+            }
+            options.add(new OptionsPopWindow.Option(recordType.getId(), recordType.getName(), recordType.isSelected(), false));
+        }
+        //添加全选按钮
+        options.add(new OptionsPopWindow.Option(SELECT_ALL, getContext().getString(R.string.all_selected), false, true));
+        //添加确认按钮
+        options.add(new OptionsPopWindow.Option(OK, getContext().getString(R.string.ok), false, true));
+        optionsPopWindow.setOptions(options);
+        //访问内容
+        if (!getRecordByAreaService.isRequesting()) {
+            getRecordByAreaService.request(loginUser.getToken(), loginUser.getArea().getId(), selectedLabel, 1, PAGE_SIZE);
         }
     }
 }

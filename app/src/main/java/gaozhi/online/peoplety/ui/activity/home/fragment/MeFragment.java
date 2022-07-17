@@ -156,6 +156,10 @@ public class MeFragment extends DBBaseFragment {
 
     @Override
     public void doBusiness() {
+
+    }
+    private void refreshData(){
+        getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
         GlideUtil.loadRoundRectangleImage(getContext(), loginUser.getUserInfo().getHeadUrl(), R.drawable.app_logo, imageHead);
         textName.setText(loginUser.getUserInfo().getNick());
         textStatus.setText(status.getName());
@@ -174,7 +178,6 @@ public class MeFragment extends DBBaseFragment {
         textAttentionNum.setText(StringUtil.numLong2Str(loginUser.getAttentionNum()));
         textFansNum.setText(StringUtil.numLong2Str(loginUser.getFanNum()));
     }
-
     @Override
     public void onPageScrolled(float positionOffset, int positionOffsetPixels) {
 
@@ -233,7 +236,6 @@ public class MeFragment extends DBBaseFragment {
     public void onResume() {
         super.onResume();
         doBusiness(getRealm());
-        doBusiness();
-        getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
+        refreshData();
     }
 }

@@ -15,7 +15,7 @@ public abstract class BaseApiRequest<T> extends ApiRequest<T> {
     protected static final long cathePeriod = 1000L * 60 * 60 * 24 * 30;
 
     protected Realm getRealm() {
-        return Realm.getDefaultInstance();
+        return Realm.getInstance(Realm.getDefaultConfiguration());
     }
 
     public BaseApiRequest(String baseURL, Type type) {

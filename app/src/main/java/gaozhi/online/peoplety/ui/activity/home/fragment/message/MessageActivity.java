@@ -83,7 +83,7 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
 
         titleRight.setText(R.string.tip_all_read);
 
-        TextView title =$(R.id.title_text);
+        TextView title = $(R.id.title_text);
         title.setText(R.string.bottom_message);
     }
 
@@ -91,10 +91,12 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
     protected void doBusiness(Context mContext) {
 
     }
-    private void refreshData(){
+
+    private void refreshData() {
         messageAdapter.clear();
         getMessageService.request(loginUser.getToken());
     }
+
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
@@ -103,13 +105,9 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == titleRight.getId()){
-            getRealm().executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.where(Message.class).findAll().setBoolean("read", true);
-                }
-            }, () -> refreshData());
+        if (v.getId() == titleRight.getId()) {
+            getRealm().executeTransaction(realm -> realm.where(Message.class).findAll().setBoolean("read", true));
+            refreshData();
             return;
         }
     }
@@ -130,15 +128,11 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
     public void accept(Message message) {
         Log.i(TAG, "查阅消息：" + message);
         Message msg = getRealm().copyFromRealm(message);
-        getRealm().executeTransactionAsync(realm -> {
+        getRealm().executeTransaction(realm -> {
             msg.setRead(true);
             realm.copyToRealmOrUpdate(msg);
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                handleMsg(message);
-            }
         });
+        handleMsg(message);
     }
 
     //处理消息
@@ -153,6 +147,7 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
                 return;
             case NEW_EXTEND:
             case NEW_COMMENT:
+            case NEW_FAVORITE:
                 Record record = gson.fromJson(message.getMsg(), Record.class);
                 RecordDetailActivity.startActivity(this, record.getId());
                 return;

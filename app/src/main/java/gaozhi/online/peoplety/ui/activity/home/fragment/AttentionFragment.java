@@ -69,8 +69,7 @@ public class AttentionFragment extends DBBaseFragment implements NoAnimatorRecyc
 
     @Override
     public void doBusiness() {
-        //请求某个地区的资料
-        getAttentionRecordByUseridService.request(loginUser.getToken(),1, PAGE_SIZE);
+
     }
 
     @Override
@@ -119,8 +118,8 @@ public class AttentionFragment extends DBBaseFragment implements NoAnimatorRecyc
     }
 
     @Override
-    public void onRefresh() {
-       doBusiness();
+    public void onRefresh() {  //请求内容
+        getAttentionRecordByUseridService.request(loginUser.getToken(),1, PAGE_SIZE);
     }
 
     @Override
@@ -141,8 +140,8 @@ public class AttentionFragment extends DBBaseFragment implements NoAnimatorRecyc
     @Override
     public void onResume() {
         super.onResume();
-        if (recordAdapter == null || recordAdapter.getItemCount() == 0) {
-            doBusiness();
+        if (recordAdapter.getItemCount() == 0) {
+          onRefresh();
         }
     }
 }
