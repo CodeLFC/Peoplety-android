@@ -20,6 +20,10 @@ import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Comment;
+import gaozhi.online.peoplety.entity.Favorite;
+import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserAuth;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
@@ -219,7 +223,6 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     }
 
 
-
     @Override
     public void error(int id, int code, String message, String data) {
         btn_login.setText(R.string.login);
@@ -227,10 +230,19 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
         showLoginView();
         new TipPopWindow(this, true).setMessage(message + data).showPopupWindow(this);
     }
+
     /**
      * 进入主页面
      */
     private void enterMainWindow() {
+        //清除旧数据
+         getRealm().executeTransaction(realm -> {
+             realm.delete(Record.class);
+             realm.delete(Comment.class);
+             realm.delete(Favorite.class);
+             realm.delete(Item.class);
+         });
+
         MainActivity.startActivity(this);
         finish();
     }
@@ -240,6 +252,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
         layout_bottom.setVisibility(View.INVISIBLE);
         layout_top.setVisibility(View.VISIBLE);
     }
+
     /**
      * 其他地方调用启动登陆页面，不允许自动登陆
      *

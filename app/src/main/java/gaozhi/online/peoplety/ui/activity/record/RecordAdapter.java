@@ -254,7 +254,10 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
 
         //刷新数据
         private void refreshData(@NotNull Record item) {
-
+            Realm realm = Realm.getInstance(Realm.getDefaultConfiguration());
+            if (item.isManaged()) {
+                item = realm.copyFromRealm(item);
+            }
             if (!item.isEnable()) {
                 item.setTitle(context.getString(R.string.already_delete));
                 item.setDescription(context.getString(R.string.already_delete));
@@ -268,7 +271,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
                 textDescription.setMaxLines(2);
                 textContent.setMaxLines(5);
             }
-            if (token.getUserid() == item.getUserid()) {
+            if (token.getUserid() == record.getUserid()) {
                 imageDelete.setVisibility(View.VISIBLE);
             } else {
                 imageDelete.setVisibility(View.GONE);
@@ -277,7 +280,6 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             imageAdapter.clear();
             textTitle.setText(record.getTitle());
             imageTop.setVisibility(record.isTop() ? View.VISIBLE : View.GONE);
-            Realm realm =Realm.getInstance(Realm.getDefaultConfiguration());
             RecordType recordType = realm.where(RecordType.class).equalTo("id", record.getRecordTypeId()).findFirst();
             if (recordType != null) {
                 textType.setText(recordType.getName());
@@ -303,8 +305,8 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             textParent.setText(record.getParentId() == 0 ? R.string.parent_record : R.string.child_record);
             //卷宗编号
             textFloor.setText(record.getId() + context.getString(R.string.floor));
-
-            friendViewHolder.bindView(record.getUserid());
+            if (record.getUserid() != 0)
+                friendViewHolder.bindView(record.getUserid());
         }
 
         @Override
@@ -330,15 +332,16 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             this.recordDTO = data;
             Log.i(getClass().getName(), local + ":" + recordDTO.getFavorite());
             //刷新数据
-            refreshData(data.getRecord());
+            if (recordDTO.getRecord() != null)
+                refreshData(recordDTO.getRecord());
             //评论数量
-            textComment.setText(StringUtil.numLong2Str(data.getCommentNum()));
+            textComment.setText(StringUtil.numLong2Str(recordDTO.getCommentNum()));
             //收藏数量
-            textFavorite.setText(StringUtil.numLong2Str(data.getFavoriteNum()));
+            textFavorite.setText(StringUtil.numLong2Str(recordDTO.getFavoriteNum()));
             //是否 收藏
-            imageFavorite.setImageResource(data.getFavorite() != null ? R.drawable.favorited : R.drawable.favorite);
+            imageFavorite.setImageResource(recordDTO.getFavorite() != null ? R.drawable.favorited : R.drawable.favorite);
             //派生数量
-            textFork.setText(StringUtil.numLong2Str(data.getChildNum()));
+            textFork.setText(StringUtil.numLong2Str(recordDTO.getChildNum()));
         }
 
         @Override

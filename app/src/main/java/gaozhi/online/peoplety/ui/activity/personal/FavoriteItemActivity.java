@@ -82,7 +82,6 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     @Override
     protected void doBusiness(Context mContext) {
         textTitle.setText(favorite.getName());
-        onRefresh();
     }
 
     @Override
@@ -124,5 +123,11 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     public void onLoad() {
         if (itemPageInfo != null && itemPageInfo.isHasNextPage())
             getItemsByFavoriteIdService.request(loginUser.getToken(), favorite.getId(), itemPageInfo.getNextPage(), PAGE_SIZE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onRefresh();
     }
 }

@@ -48,6 +48,7 @@ public class FavoriteItemAdapter extends RecordAdapter implements Function<Item,
         if (record == null) {
             record = new Record();
             record.setId(item.getRecordId());
+            record.setImgs("[]");
         }
         return record;
     }
