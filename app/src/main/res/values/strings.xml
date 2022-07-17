@@ -43,7 +43,7 @@
     <string name="bottom_me">我</string>
     <string name="bottom_home">倾听</string>
     <string name="bottom_publish">发布</string>
-    <string name="not_permission">申请权限被拒绝，app运行受限</string>
+    <string name="not_permission">申请基本权限被拒绝，app运行可能发生错误</string>
     <string name="welcome">欢迎您！</string>
     <!--   碎片 我-->
     <string name="change_account">退出登录</string>

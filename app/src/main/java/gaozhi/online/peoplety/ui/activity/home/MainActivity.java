@@ -113,7 +113,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     protected void doBusiness(Context mContext) {
         permissionUtil.setPermissionListener(() -> {
             ToastUtil.showToastLong(R.string.not_permission);
-            finish();
         });
         //请求权限
         permissionUtil.requestPermission(authorities);
