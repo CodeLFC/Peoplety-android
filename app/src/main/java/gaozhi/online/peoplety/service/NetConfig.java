@@ -6,9 +6,9 @@ package gaozhi.online.peoplety.service;
  */
 public class NetConfig {
     //用户
-    private static final String baseURL = "http://gaozhi.online";
+    private static final String baseURL = "http://gaozhi.online:8100";
     //用户微服务
-    private static final String userServiceBaseURL = baseURL + ":8101/general";
+    private static final String userServiceBaseURL = baseURL + "/user/general";
     //权限
     public static final String userBaseURL = userServiceBaseURL + "/user/";
     //朋友
@@ -19,7 +19,7 @@ public class NetConfig {
     public static final String cosBaseURL = userServiceBaseURL + "/cos/";
 
     // 卷宗微服务
-    private static final String recordServiceBaseURL = baseURL + ":8102/general";
+    private static final String recordServiceBaseURL = baseURL + "/record/general";
     //卷宗常量
     public static final String recordConstantBaseURL = recordServiceBaseURL + "/constant/";
     //卷宗服务

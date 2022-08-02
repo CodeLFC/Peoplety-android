@@ -18,6 +18,10 @@ import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.entity.Comment;
+import gaozhi.online.peoplety.entity.Favorite;
+import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
@@ -192,6 +196,18 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         super.onResume();
         //更新信息
         getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //清除旧数据
+        getRealm().executeTransaction(realm -> {
+            realm.delete(Record.class);
+            realm.delete(Comment.class);
+            realm.delete(Favorite.class);
+            realm.delete(Item.class);
+        });
     }
 
     @Override

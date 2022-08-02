@@ -235,14 +235,6 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
      * 进入主页面
      */
     private void enterMainWindow() {
-        //清除旧数据
-         getRealm().executeTransaction(realm -> {
-             realm.delete(Record.class);
-             realm.delete(Comment.class);
-             realm.delete(Favorite.class);
-             realm.delete(Item.class);
-         });
-
         MainActivity.startActivity(this);
         finish();
     }

@@ -4,9 +4,12 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.UserRecordCount;
+import gaozhi.online.peoplety.util.IBase64;
+import gaozhi.online.peoplety.util.StringUtil;
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -53,4 +56,5 @@ public abstract class BaseApiRequest<T> extends ApiRequest<T> {
         }
         return newValue;
     }
+
 }
