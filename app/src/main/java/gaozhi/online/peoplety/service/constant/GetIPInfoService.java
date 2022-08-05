@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.IPInfoDB;
+import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.service.BaseApiRequest;
 import gaozhi.online.peoplety.service.NetConfig;
 import io.realm.Realm;
@@ -20,10 +21,12 @@ public class GetIPInfoService extends BaseApiRequest<IPInfo> {
         setDataListener(onDataListener);
     }
 
-    public void request(String ip) {
+    public void request(Token token, String ip) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("token", getGson().toJson(token));
         Map<String, String> params = new HashMap<>();
         params.put("ip", ip);
-        request("get/ip_info", params);
+        request("get/ip_info", headers,params);
     }
 
     @Override

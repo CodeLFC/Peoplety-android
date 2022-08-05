@@ -159,7 +159,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             } else {
                 textUrl.setVisibility(View.GONE);
             }
-            getIPInfoService.request(item.getIp());
+            getIPInfoService.request(token,item.getIp());
             getUserInfoService.request(token, item.getUserid());
             textFloor.setText(item.getId() + context.getString(R.string.floor));
         }

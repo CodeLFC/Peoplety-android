@@ -115,7 +115,7 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
             textEmail.setText(userInfo.getEmail());
             textWechat.setText(userInfo.getWechat());
             textQQ.setText(userInfo.getQq());
-            getIPInfoService.request(userInfo.getIp());
+            getIPInfoService.request(loginUser.getToken(),userInfo.getIp());
             textVip.setText(Integer.toString(userInfo.getVip()));
             textAttentionNum.setText(StringUtil.numLong2Str(data.getAttentionNum()));
             textFansNum.setText(StringUtil.numLong2Str(data.getFanNum()));

@@ -225,7 +225,7 @@ public class EditUserInfoActivity extends DBBaseActivity implements DataHelper.O
             }
         });
 
-        getIPInfoService.request(userInfo.getIp());
+        getIPInfoService.request(loginUser.getToken(),userInfo.getIp());
     }
 
     @Override

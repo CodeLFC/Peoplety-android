@@ -234,7 +234,7 @@ public class RecordAdapter extends NoAnimatorRecyclerView.BaseAdapter<RecordAdap
             //获取详细内容
             getRecordDTOByIdService.request(token, item.getId());
             //获取地址信息
-            getIPInfoService.request(item.getIp());
+            getIPInfoService.request(token,item.getIp());
         }
 
         /**
