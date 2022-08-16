@@ -49,6 +49,7 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
         for (Friend friend : friends) {
             friendIds.add(friend.getFriendId());
         }
+        friendIds.add(userid);
         if (pageNum <= 1) {
             List<Record> records = getRealm().where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
             return new PageInfo<>(records);
