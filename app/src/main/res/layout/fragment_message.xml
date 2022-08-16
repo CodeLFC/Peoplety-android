@@ -101,7 +101,7 @@
     <ImageView
         android:id="@+id/fragment_message_image_ad"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_margin"
         android:src="@drawable/default_ad"
         android:scaleType="centerInside" />
