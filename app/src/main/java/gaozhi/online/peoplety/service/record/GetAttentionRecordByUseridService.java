@@ -22,7 +22,7 @@ import io.realm.Realm;
  * 获取关注的人发布的内容 - 未完成
  */
 public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<Record>> {
-    private long userid;
+    private final int MIN_NUM = 100;
 
     public GetAttentionRecordByUseridService(OnDataListener<PageInfo<Record>> onDataListener) {
         super(NetConfig.recordBaseURL, Type.GET);
@@ -42,31 +42,33 @@ public class GetAttentionRecordByUseridService extends BaseApiRequest<PageInfo<R
     @Override
     public PageInfo<Record> initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         //联表查询
-        userid = Long.parseLong(params.get("userid_local"));
+        long userid = Long.parseLong(params.get("userid_local"));
+        int pageNum = Integer.parseInt(params.get("pageNum"));
         List<Friend> friends = getRealm().where(Friend.class).equalTo("userid", userid).findAll();
         List<Long> friendIds = new LinkedList<>();
         for (Friend friend : friends) {
             friendIds.add(friend.getFriendId());
         }
-        List<Record> records = getRealm().where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
-        return new PageInfo<>(records);
+        if (pageNum <= 1) {
+            List<Record> records = getRealm().where(Record.class).in("userid", friendIds.toArray(new Long[]{})).findAll();
+            return new PageInfo<>(records);
+        }
+        return null;
     }
 
     @Override
     public void getNetData(Result result, Consumer<PageInfo<Record>> consumer) {
         PageInfo<Record> pageInfo = getGson().fromJson(result.getData(), new TypeToken<PageInfo<Record>>() {
         }.getType());
-        if (pageInfo.getPageNum() > 1) {
-            consumer.accept(pageInfo);
-            return;
-        }
+
         //装入数据库
         getRealm().executeTransaction(realm -> {
             //删除过期缓存
-            realm.where(Record.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
+            if (realm.where(Record.class).findAll().size() > MIN_NUM)
+                realm.where(Record.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Record> records = pageInfo.getList();
             records = realm.copyToRealmOrUpdate(records);
-            pageInfo.setList(copyFromRealm(realm,records));
+            pageInfo.setList(copyFromRealm(realm, records));
         });
         consumer.accept(pageInfo);
     }

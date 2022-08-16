@@ -189,10 +189,10 @@ public class HomeFragment extends DBBaseFragment implements Consumer<Area>, Data
 
     @Override
     public void error(int id, int code, String message, String data) {
+
         //停止刷新状态
         recyclerSwipeRefreshView.setRefreshing(false);
         recordRecyclerView.setLoading(false);
-        new TipPopWindow(getContext(), true).setMessage(message + data).showPopupWindow(getActivity());
     }
 
     @Override

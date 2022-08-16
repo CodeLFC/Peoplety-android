@@ -86,7 +86,6 @@ public class ResourceRequester implements DataHelper.OnDataListener<Result> {
                 List<RecordType> recordTypes = gson.fromJson(result.getData(), new TypeToken<List<RecordType>>() {
                 }.getType());
                 for (RecordType recordType : recordTypes) {
-                    recordType.setSelected(true);
                     RecordType old = realm.where(RecordType.class).equalTo("id", recordType.getId()).findFirst();
                     if (old != null) {
                         recordType.setSelected(old.isSelected());

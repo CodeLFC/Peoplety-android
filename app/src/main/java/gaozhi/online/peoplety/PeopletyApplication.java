@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import gaozhi.online.base.asynchronization.GlobalExecutor;
+import gaozhi.online.peoplety.entity.*;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -21,7 +21,7 @@ import io.realm.RealmConfiguration;
  */
 public class PeopletyApplication extends Application implements Application.ActivityLifecycleCallbacks {
     //软件版本
-    public static final Version version = Version._1_0Beta;
+    public static final Version version = Version._1_1;
     private static Context context;
     private static PeopletyApplication application;
     private float fontScale;
@@ -109,4 +109,5 @@ public class PeopletyApplication extends Application implements Application.Acti
     public static GlobalExecutor getGlobalExecutor() {
         return globalExecutor;
     }
+
 }

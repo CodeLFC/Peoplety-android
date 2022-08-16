@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
+import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.service.BaseApiRequest;
@@ -37,8 +38,8 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
     @Override
     public RecordDTO initLocalData(Map<String, String> headers, Map<String, String> params, Object body) {
         long recordId = Long.parseLong(params.get("recordId"));
-        RecordDTO recordDTO =copyFromRealm(getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst());
-        if(recordDTO==null)return null;
+        RecordDTO recordDTO = copyFromRealm(getRealm().where(RecordDTO.class).equalTo("id", recordId).findFirst());
+        if (recordDTO == null) return null;
         recordDTO.setRecord(copyFromRealm(recordDTO.getRecord()));
         return recordDTO;
     }
@@ -48,11 +49,18 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
         final RecordDTO recordDTO = getGson().fromJson(result.getData(), RecordDTO.class);
         recordDTO.setTime(recordDTO.getRecord() == null ? 0 : recordDTO.getRecord().getTime());
         getRealm().executeTransaction(realm -> {
-            realm.copyToRealmOrUpdate(recordDTO);
+            if (recordDTO.getRecord() != null && !recordDTO.getRecord().isEnable()) {
+                //删除
+                realm.where(Comment.class).equalTo("recordId", recordDTO.getRecord().getId()).findAll().deleteAllFromRealm();
+                recordDTO.getRecord().deleteFromRealm();
+                recordDTO.deleteFromRealm();
+            } else {
+                realm.copyToRealmOrUpdate(recordDTO);
+            }
             //删除过期缓存
             realm.where(RecordDTO.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
         });
-        RecordDTO record =copyFromRealm(recordDTO);
+        RecordDTO record = copyFromRealm(recordDTO);
         record.setRecord(copyFromRealm(record.getRecord()));
         consumer.accept(record);
     }

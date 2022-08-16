@@ -1,6 +1,7 @@
 package gaozhi.online.peoplety.ui.activity.personal;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -130,6 +131,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
 
         @Override
         public void handle(int id, UserDTO data) {
+            Log.i(getClass().getName(),"userDTO: "+data);
             if (data == null || data.getUserInfo() == null) return;
             GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
             textName.setText(data.getUserInfo().getNick());

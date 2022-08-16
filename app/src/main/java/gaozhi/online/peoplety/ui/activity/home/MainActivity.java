@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
@@ -61,8 +62,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     //授权
     private PermissionUtil permissionUtil;
     private final String[] authorities = new String[]{
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_WIFI_STATE,
 //            Manifest.permission.READ_PHONE_STATE,
@@ -180,6 +181,9 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     public void error(int id, int code, String message, String data) {
+        if(code == Result.NET_ERROR){
+            return;
+        }
         viewPager.post(() -> new TipPopWindow(MainActivity.this, true)
                 .setOkClickListener((window, v) -> {
                     window.dismiss();
@@ -202,9 +206,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     protected void onStart() {
         super.onStart();
         //清除旧数据
-        getRealm().executeTransaction(realm -> {
-            realm.delete(Record.class);
-            realm.delete(Comment.class);
+        Realm.getDefaultInstance().executeTransaction(realm -> {
             realm.delete(Favorite.class);
             realm.delete(Item.class);
         });

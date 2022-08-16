@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/activity_margin"
-            android:text="@string/request_ing"
             android:textColor="@color/deep_text_color"
             android:textSize="@dimen/font_size_small" />
     </LinearLayout>

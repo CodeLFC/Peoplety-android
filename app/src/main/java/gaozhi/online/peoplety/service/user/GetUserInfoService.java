@@ -60,8 +60,26 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
             if (temp != null) {
                 temp.setAttentionNum(userDTO.getAttentionNum());
                 temp.setFanNum(userDTO.getFanNum());
-                realm.copyToRealmOrUpdate(temp);
+            } else {
+                temp = userDTO;
             }
+            if (temp.getUserInfo() != null)
+                realm.copyToRealmOrUpdate(temp.getUserInfo());
+            realm.copyToRealmOrUpdate(temp);
+            realm.where(UserDTO.class).findAll().stream().forEach(new Consumer<UserDTO>() {
+                private int count = 0;
+
+                @Override
+                public void accept(UserDTO userDTO) {
+                    if (userDTO.isCurrent()) return;
+                    if (++count > 200) {
+                        if (userDTO.getUserInfo() != null) {
+                            userDTO.getUserInfo().deleteFromRealm();
+                        }
+                        userDTO.deleteFromRealm();
+                    }
+                }
+            });
         });
         userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
         consumer.accept(userDTO);

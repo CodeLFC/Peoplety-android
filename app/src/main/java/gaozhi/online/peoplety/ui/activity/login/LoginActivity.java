@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.ui.activity.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -10,14 +11,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
+import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseActivity;
+import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Comment;
@@ -139,6 +144,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             enterMainWindow();
             return;
         }
+        showSloganView();
         //更新常量
         resourceRequester.refreshResource(loginUser);
     }
@@ -235,14 +241,28 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
      * 进入主页面
      */
     private void enterMainWindow() {
-        MainActivity.startActivity(this);
-        finish();
+        Handler handler = new Handler(msg -> {
+            MainActivity.startActivity(LoginActivity.this);
+            finish();
+        });
+        PeopletyApplication.getGlobalExecutor().executeInBackground(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(0);
+            }
+        }, 200);
     }
 
     //显示登陆界面
     private void showLoginView() {
         layout_bottom.setVisibility(View.INVISIBLE);
         layout_top.setVisibility(View.VISIBLE);
+    }
+
+    //显示slogan界面
+    private void showSloganView() {
+        layout_bottom.setVisibility(View.VISIBLE);
+        layout_top.setVisibility(View.INVISIBLE);
     }
 
     /**
