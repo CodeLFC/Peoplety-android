@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.ui.activity.personal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,11 +40,10 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
         context.startActivity(intent);
     }
 
-    //ui
-    private TextView textTitle;
     private TextView textRight;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FavoriteAdapter favoriteAdapter;
+    private NoAnimatorRecyclerView recyclerViewFavorite;
     //intent
     private long userid;
     //service
@@ -65,14 +65,15 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     protected void initView(View view) {
-        textTitle = $(R.id.title_text);
+        //ui
+        TextView textTitle = $(R.id.title_text);
         textTitle.setText(R.string.favorite);
         textRight = $(R.id.title_text_right);
         textRight.setText(R.string.add);
         textRight.setOnClickListener(this);
         swipeRefreshLayout = $(R.id.favorite_activity_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-        NoAnimatorRecyclerView recyclerViewFavorite = $(R.id.favorite_activity_recycler_favorite);
+        recyclerViewFavorite = $(R.id.favorite_activity_recycler_favorite);
         recyclerViewFavorite.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
         recyclerViewFavorite.setOnLoadListener(this);
         favoriteAdapter = new FavoriteAdapter();
@@ -82,7 +83,7 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     protected void doBusiness(Context mContext) {
-        if(userid!=loginUser.getUserInfo().getId()){
+        if (userid != loginUser.getUserInfo().getId()) {
             textRight.setVisibility(View.GONE);
         }
         onRefresh();
@@ -96,9 +97,9 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     public void onClick(View v) {
-       if(v.getId() == textRight.getId()){
-           FavoriteManageActivity.startActivity(this);
-       }
+        if (v.getId() == textRight.getId()) {
+            FavoriteManageActivity.startActivity(this);
+        }
     }
 
     @Override
@@ -108,6 +109,7 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     public void onLoad() {
+        Log.i(TAG, "currentPageInfo:" + currentPageInfo);
         if (currentPageInfo != null && currentPageInfo.isHasNextPage()) {
             getFavoritesByUseridService.request(loginUser.getToken(), userid, currentPageInfo.getNextPage(), PAGE_SIZE);
         }
@@ -115,19 +117,24 @@ public class FavoriteActivity extends DBBaseActivity implements DataHelper.OnDat
 
     @Override
     public void handle(int id, PageInfo<Favorite> data, boolean local) {
+        Log.i(TAG, "currentPageInfo:" + data + local);
         if (data == null) return;
         currentPageInfo = data;
-        if (currentPageInfo.getPageNum() <= 1) {
+        if (data.getPageNum() <= 1) {
             favoriteAdapter.clear();
         }
-        favoriteAdapter.add(data.getList());
-        swipeRefreshLayout.setRefreshing(false);
+        favoriteAdapter.add(currentPageInfo.getList());
+        if (!local) {
+            swipeRefreshLayout.setRefreshing(false);
+            recyclerViewFavorite.setLoading(false);
+        }
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
         swipeRefreshLayout.setRefreshing(false);
+        recyclerViewFavorite.setLoading(false);
     }
 
     @Override

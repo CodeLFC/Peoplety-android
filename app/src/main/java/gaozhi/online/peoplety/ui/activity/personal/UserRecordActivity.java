@@ -43,6 +43,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
     private TextView textTitle;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecordAdapter recordAdapter;
+    private NoAnimatorRecyclerView recyclerView;
     //service
     private PageInfo<Record> recordPageInfo;
     private final GetRecordByUserIdService getRecordByUserIdService = new GetRecordByUserIdService(this);
@@ -68,7 +69,7 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
     @Override
     protected void initView(View view) {
         swipeRefreshLayout = $(R.id.user_record_activity_swipe);
-        NoAnimatorRecyclerView recyclerView = $(R.id.user_record_activity_recycler_record);
+        recyclerView = $(R.id.user_record_activity_recycler_record);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
         recordAdapter = new RecordAdapter(loginUser.getToken(), new NoAnimatorRecyclerView.BaseAdapter.BaseSortedListAdapterCallback<>() {
             @Override
@@ -123,12 +124,16 @@ public class UserRecordActivity extends DBBaseActivity implements SwipeRefreshLa
             recordAdapter.clear();
         }
         recordAdapter.add(data.getList());
-        swipeRefreshLayout.setRefreshing(false);
+        if (!local) {
+            swipeRefreshLayout.setRefreshing(false);
+            recyclerView.setLoading(false);
+        }
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
         swipeRefreshLayout.setRefreshing(false);
+        recyclerView.setLoading(false);
     }
 }

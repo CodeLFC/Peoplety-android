@@ -24,7 +24,7 @@ import gaozhi.online.peoplety.util.ToastUtil;
 /**
  * 评论
  */
-public class CommentPopWindow extends DBBasePopWindow implements View.OnClickListener, DataHelper.OnDataListener<PageInfo<Comment>>, Consumer<Comment>, NoAnimatorRecyclerView.OnLoadListener , SwipeRefreshLayout.OnRefreshListener {
+public class CommentPopWindow extends DBBasePopWindow implements View.OnClickListener, DataHelper.OnDataListener<PageInfo<Comment>>, Consumer<Comment>, NoAnimatorRecyclerView.OnLoadListener, SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private NoAnimatorRecyclerView recyclerView;
     private CommentAdapter commentAdapter;
@@ -88,6 +88,7 @@ public class CommentPopWindow extends DBBasePopWindow implements View.OnClickLis
         }
         Log.i(getClass().getName(), "pageNum:" + currentPageInfo.getPageNum());
         commentAdapter.add(data.getList());
+        if (local) return;
         recyclerView.setLoading(false);
         swipeRefreshLayout.setRefreshing(false);
     }

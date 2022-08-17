@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.ui.widget;
 import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * 处理加载数据的逻辑
      */
     private void loadData() {
-        System.out.println("加载数据...");
+        Log.i(getClass().getName(),"recyclerView 上拉加载数据...");
         if (mOnLoadListener != null) {
             // 设置加载状态，让布局显示出来
             setLoading(true);

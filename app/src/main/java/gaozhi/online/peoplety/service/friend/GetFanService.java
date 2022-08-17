@@ -59,7 +59,9 @@ public class GetFanService extends BaseApiRequest<PageInfo<Friend>> {
         }
         //装入数据库
         getRealm().executeTransaction(realm -> {
-            realm.delete(Friend.class);
+            //删除过期缓存
+            if (realm.where(Friend.class).findAll().size() > MIN_SIZE)
+                realm.where(Friend.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Friend> friends = pageInfo.getList();
             for (Friend friend : friends) {
                 realm.copyToRealmOrUpdate(friend);

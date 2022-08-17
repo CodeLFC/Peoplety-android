@@ -66,6 +66,7 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
     private final GetFanService getFanService = new GetFanService(this);
     private PageInfo<Friend> currentPageInfo;
     //ui
+    private  NoAnimatorRecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FriendAdapter friendAdapter;
     private TextView textTitle;
@@ -86,7 +87,7 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
     @Override
     protected void initView(View view) {
         swipeRefreshLayout = $(R.id.friends_activity_swipe);
-        NoAnimatorRecyclerView recyclerView = $(R.id.friends_activity_recycler_friend);
+        recyclerView = $(R.id.friends_activity_recycler_friend);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
         friendAdapter = new FriendAdapter(loginUser.getToken(),userid);
         recyclerView.setAdapter(friendAdapter);
@@ -149,12 +150,16 @@ public class FriendsActivity extends DBBaseActivity implements DataHelper.OnData
             friendAdapter.clear();
         }
         friendAdapter.add(data.getList());
-        swipeRefreshLayout.setRefreshing(false);
+        if(!local) {
+            swipeRefreshLayout.setRefreshing(false);
+            recyclerView.setLoading(false);
+        }
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
         swipeRefreshLayout.setRefreshing(false);
+        recyclerView.setLoading(false);
     }
 }

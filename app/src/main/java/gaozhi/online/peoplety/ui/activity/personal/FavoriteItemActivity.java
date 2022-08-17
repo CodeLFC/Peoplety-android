@@ -53,7 +53,7 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     private TextView textRight;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FavoriteItemAdapter favoriteItemAdapter;
-
+    private NoAnimatorRecyclerView recyclerView;
     @Override
     protected void initParams(Intent intent) {
         favorite = intent.getParcelableExtra(INTENT_FAVORITE);
@@ -67,7 +67,7 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
     @Override
     protected void initView(View view) {
         swipeRefreshLayout = $(R.id.favorite_item_activity_swipe);
-        NoAnimatorRecyclerView recyclerView = $(R.id.favorite_item_activity_recycler_record);
+        recyclerView = $(R.id.favorite_item_activity_recycler_record);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(this));
         favoriteItemAdapter = new FavoriteItemAdapter(loginUser.getToken(), getRealm());
         recyclerView.setAdapter(favoriteItemAdapter);
@@ -110,13 +110,17 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
             favoriteItemAdapter.clear();
         }
         favoriteItemAdapter.addItem(itemPageInfo.getList());
-        swipeRefreshLayout.setRefreshing(false);
+        if(!local) {
+            swipeRefreshLayout.setRefreshing(false);
+            recyclerView.setLoading(false);
+        }
     }
 
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
         swipeRefreshLayout.setRefreshing(false);
+        recyclerView.setLoading(false);
     }
 
     @Override

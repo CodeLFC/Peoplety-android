@@ -16,7 +16,7 @@ import io.realm.RealmObject;
 public abstract class BaseApiRequest<T> extends ApiRequest<T> {
     //一年缓存期
     protected static final long cathePeriod = 1000L * 60 * 60 * 24 * 30;
-
+    protected static final int MIN_SIZE = 100;
     protected Realm getRealm() {
         return Realm.getInstance(Realm.getDefaultConfiguration());
     }

@@ -117,7 +117,6 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
 
     @Override
     public void handle(int id, List<Message> data, boolean local) {
-        if (!local) return;
         Stream<Message> newFan = Message.filter(data, Message.Type.NEW_FANS, true);
         Stream<Message> newComment = Message.filter(data, new Message.Type[]{Message.Type.NEW_COMMENT, Message.Type.NEW_FAVORITE, Message.Type.NEW_EXTEND}, true);
         redDotFriend.setVisibility(newFan.count() > 0 ? View.VISIBLE : View.INVISIBLE);

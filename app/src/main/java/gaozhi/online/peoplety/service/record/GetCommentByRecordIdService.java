@@ -60,7 +60,8 @@ public class GetCommentByRecordIdService extends BaseApiRequest<PageInfo<Comment
         }
         getRealm().executeTransaction(realm -> {
             //删除过期缓存
-            realm.where(Comment.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
+            if (realm.where(Comment.class).findAll().size() > MIN_SIZE)
+                realm.where(Comment.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Comment> comments = realm.copyToRealmOrUpdate(commentPageInfo.getList());
             commentPageInfo.setList(copyFromRealm(realm, comments));
         });

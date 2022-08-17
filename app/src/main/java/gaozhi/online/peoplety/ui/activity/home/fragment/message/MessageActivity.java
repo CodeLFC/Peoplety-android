@@ -93,7 +93,6 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
     }
 
     private void refreshData() {
-        messageAdapter.clear();
         getMessageService.request(loginUser.getToken());
     }
 
@@ -108,13 +107,11 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
         if (v.getId() == titleRight.getId()) {
             getRealm().executeTransaction(realm -> realm.where(Message.class).findAll().setBoolean("read", true));
             refreshData();
-            return;
         }
     }
 
     @Override
     public void handle(int id, List<Message> data, boolean local) {
-        if (!local) return;
         Stream<Message> messageStream = Message.filter(data, msgTypes, false);
         messageAdapter.add(messageStream.collect(Collectors.toList()));
     }

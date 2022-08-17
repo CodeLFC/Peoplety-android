@@ -33,6 +33,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     //db
     private UserDTO loginUser;
     //ui
+    private NoAnimatorRecyclerView recyclerViewFavorite;
     private FavoriteAdapter favoriteAdapter;
     private Consumer<Item> itemConsumer;
     private Button btnManager;
@@ -77,7 +78,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
         loginUser = getRealm().where(UserDTO.class).equalTo("current", true).findFirst();
         loginUser = getRealm().copyFromRealm(loginUser);
 
-        NoAnimatorRecyclerView recyclerViewFavorite = rootView.findViewById(R.id.pop_window_favorite_item_recycler_items);
+        recyclerViewFavorite = rootView.findViewById(R.id.pop_window_favorite_item_recycler_items);
         recyclerViewFavorite.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(rootView.getContext()));
         recyclerViewFavorite.setOnLoadListener(this);
         favoriteAdapter = new FavoriteAdapter();
@@ -101,6 +102,9 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
 
     @Override
     public void handle(int id, PageInfo<Favorite> data, boolean local) {
+        if(!local){
+            recyclerViewFavorite.setLoading(false);
+        }
         if (data == null) return;
         currentPageInfo = data;
         if (currentPageInfo.getPageNum() <= 1) {
@@ -112,6 +116,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
     @Override
     public void error(int id, int code, String message, String data) {
         ToastUtil.showToastShort(message + data);
+        recyclerViewFavorite.setLoading(false);
     }
 
     @Override

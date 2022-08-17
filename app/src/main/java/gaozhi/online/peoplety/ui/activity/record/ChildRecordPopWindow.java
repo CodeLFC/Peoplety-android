@@ -30,6 +30,7 @@ public class ChildRecordPopWindow extends DBBasePopWindow implements View.OnClic
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecordAdapter childRecordAdapter;
     private Button btnPublish;
+    private NoAnimatorRecyclerView recyclerView;
     //data
     private UserDTO loginUser;
     private Record record;
@@ -54,7 +55,7 @@ public class ChildRecordPopWindow extends DBBasePopWindow implements View.OnClic
 
         swipeRefreshLayout = rootView.findViewById(R.id.pop_window_child_record_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-        NoAnimatorRecyclerView recyclerView = rootView.findViewById(R.id.pop_window_child_record_recycler);
+        recyclerView = rootView.findViewById(R.id.pop_window_child_record_recycler);
         recyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(rootView.getContext()));
         childRecordAdapter = new RecordAdapter(loginUser.getToken());
         childRecordAdapter.setOnItemClickedListener(this);
@@ -95,6 +96,7 @@ public class ChildRecordPopWindow extends DBBasePopWindow implements View.OnClic
     public void handle(int id, PageInfo<Record> data, boolean local) {
         if (!local) {
             swipeRefreshLayout.setRefreshing(false);
+            recyclerView.setLoading(false);
         }
         if (data == null) return;
         childRecordAdapter.add(data.getList());
@@ -103,6 +105,7 @@ public class ChildRecordPopWindow extends DBBasePopWindow implements View.OnClic
     @Override
     public void error(int id, int code, String message, String data) {
         swipeRefreshLayout.setRefreshing(false);
+        recyclerView.setLoading(false);
         ToastUtil.showToastShort(message + data);
     }
 
