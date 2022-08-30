@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.peoplety.entity.Comment;
+import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.dto.RecordDTO;
 import gaozhi.online.peoplety.service.BaseApiRequest;
@@ -52,8 +53,8 @@ public class GetRecordDTOByIdService extends BaseApiRequest<RecordDTO> {
             if (recordDTO.getRecord() != null && !recordDTO.getRecord().isEnable()) {
                 //删除
                 realm.where(Comment.class).equalTo("recordId", recordDTO.getRecord().getId()).findAll().deleteAllFromRealm();
-                recordDTO.getRecord().deleteFromRealm();
-                recordDTO.deleteFromRealm();
+                realm.where(Record.class).equalTo("id", recordDTO.getRecord().getId()).findAll().deleteAllFromRealm();
+                realm.where(RecordDTO.class).equalTo("id",recordDTO.getId()).findAll().deleteAllFromRealm();
             } else {
                 realm.copyToRealmOrUpdate(recordDTO);
             }

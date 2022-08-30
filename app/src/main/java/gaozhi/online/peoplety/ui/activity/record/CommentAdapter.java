@@ -13,13 +13,16 @@ import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Comment;
+import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.IPInfo;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.constant.GetIPInfoService;
+import gaozhi.online.peoplety.service.friend.GetFriendService;
 import gaozhi.online.peoplety.service.record.DeleteCommentByIdService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.pop.DialogPopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
@@ -46,7 +49,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
         return new CommentViewHolder(layoutInflate(parent, R.layout.item_recycler_comment), token);
     }
 
-    public static class CommentViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Comment> {
+    public static class CommentViewHolder extends NoAnimatorRecyclerView.BaseViewHolder<Comment> implements View.OnClickListener {
         private final Context context;
         private final ImageView imageHead;
         private final TextView textName;
@@ -61,16 +64,35 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
         private final TextView textFloor;
         private final Token token;
         private Comment comment;
+        private long friendId;
         //service
+        private final GetFriendService getFriendService = new GetFriendService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, Friend data, boolean local) {
+                Log.i(getClass().getName(), "GetFriendService:" + local + ":" + (data != null ? "" + data : "null"));
+                if (data == null) {
+                    return;
+                }
+                if (!StringUtil.isEmpty(data.getRemark())) {
+                    textName.setText(data.getRemark());
+                }
+            }
+        });
+
         private final GetUserInfoService getUserInfoService = new GetUserInfoService(new DataHelper.OnDataListener<>() {
 
             @Override
             public void handle(int id, UserDTO data, boolean local) {
                 Log.i(getClass().getName(), local + ":" + (data != null ? "" + data : "null"));
+
                 if (data == null || data.getUserInfo() == null) {
                     return;
                 }
+                friendId = data.getUserInfo().getId();
                 textName.setText(data.getUserInfo().getNick());
+                if (token.getUserid() != data.getUserInfo().getId()) {
+                    getFriendService.request(token, data.getUserInfo().getId());
+                }
                 GlideUtil.loadRoundRectangleImage(context, data.getUserInfo().getHeadUrl(), imageHead);
                 textRemark.setText(data.getUserInfo().getRemark());
                 UserInfo.Gender gender = UserInfo.Gender.getGender(data.getUserInfo().getGender());
@@ -145,7 +167,7 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             });
             textStatus = itemView.findViewById(R.id.item_recycler_comment_text_status);
             textFloor = itemView.findViewById(R.id.item_recycler_comment_text_floor);
-
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -159,9 +181,21 @@ public class CommentAdapter extends NoAnimatorRecyclerView.BaseAdapter<CommentAd
             } else {
                 textUrl.setVisibility(View.GONE);
             }
-            getIPInfoService.request(token,item.getIp());
+            getIPInfoService.request(token, item.getIp());
             getUserInfoService.request(token, item.getUserid());
             textFloor.setText(item.getId() + context.getString(R.string.floor));
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == itemView.getId()) {
+                PersonalActivity.startActivity(context, friendId);
+            }
         }
     }
 }

@@ -111,6 +111,7 @@ public class FriendAdapter extends NoAnimatorRecyclerView.BaseAdapter<FriendAdap
                 textName.setText(item.getRemark());
             }
             //获取用户信息
+            if(anotherId!=0)
             getUserInfoService.request(token, anotherId);
             friendId = anotherId;
         }

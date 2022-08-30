@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.service.friend;
 
+import android.util.Log;
+
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.ApiRequest;
 import gaozhi.online.peoplety.entity.Friend;
@@ -30,6 +32,7 @@ public class GetFriendService extends BaseApiRequest<Friend> {
         Map<String, String> params = new HashMap<>();
         params.put("friendId", "" + friendId);
         params.put("userId", "" + token.getUserid());
+        Log.i(getClass().getName(),params.toString());
         request("get/friend", headers, params);
     }
 
@@ -43,6 +46,7 @@ public class GetFriendService extends BaseApiRequest<Friend> {
 
     @Override
     public void getNetData(Result result, Consumer<Friend> consumer) {
+        Log.i(getClass().getName(),result.toString());
         Friend friend = getGson().fromJson(result.getData(), Friend.class);
         if (friend == null) {
             return;

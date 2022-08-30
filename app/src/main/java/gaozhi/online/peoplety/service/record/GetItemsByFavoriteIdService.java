@@ -39,7 +39,7 @@ public class GetItemsByFavoriteIdService extends BaseApiRequest<PageInfo<Item>> 
         long favoriteId = Long.parseLong(params.get("favoriteId"));
         int pageNum = Integer.parseInt(params.get("pageNum"));
         if (pageNum <= 1) {
-            return new PageInfo<>(getRealm().where(Item.class).equalTo("favoriteId", favoriteId).findAll());
+            return new PageInfo<>(copyFromRealm(getRealm(), getRealm().where(Item.class).equalTo("favoriteId", favoriteId).findAll()));
         }
         return null;
     }
