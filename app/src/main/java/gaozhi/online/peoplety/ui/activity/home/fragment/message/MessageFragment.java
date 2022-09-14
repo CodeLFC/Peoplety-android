@@ -11,15 +11,10 @@ import java.util.stream.Stream;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
-import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
-import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetMessageService;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
-import gaozhi.online.peoplety.ui.util.WebActivity;
-import gaozhi.online.peoplety.util.GlideUtil;
-import gaozhi.online.peoplety.util.StringUtil;
 import io.realm.Realm;
 
 /**
@@ -31,7 +26,6 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
     private View friendView;
     private ImageView redDotComment;
     private ImageView redDotFriend;
-    private ImageView imageAd;
 
     //当前登陆用户
     private UserDTO loginUser;
@@ -54,8 +48,6 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
         friendView.setOnClickListener(this);
         redDotFriend = view.findViewById(R.id.fragment_message_view_friends_new_friend_point);
         redDotComment = view.findViewById(R.id.fragment_message_view_friends_new_comment_point);
-        imageAd = view.findViewById(R.id.fragment_message_image_ad);
-        imageAd.setOnClickListener(this);
     }
 
     @Override
@@ -93,26 +85,12 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
             MessageActivity.startActivity(getContext(), new int[]{Message.Type.NEW_COMMENT.getType(), Message.Type.NEW_EXTEND.getType(), Message.Type.NEW_FAVORITE.getType()});
             return;
         }
-        if (v.getId() == imageAd.getId()) {
-            Area area = loginUser.getArea();
-            if (area != null&& !StringUtil.isEmpty(area.getDescription())) {
-                WebActivity.startActivity(getContext(), area.getDescription(), area.getName());
-            }else{
-                WebActivity.startActivity(getContext(), getString(R.string.default_ad), getString(R.string.app_name));
-            }
-            return;
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getMessageService.request(loginUser.getToken());
-        Area area = loginUser.getArea();
-        if (area != null) {
-            //加载广告
-            GlideUtil.loadImage(getContext(), area.getUrl(), R.drawable.default_ad, imageAd);
-        }
     }
 
     @Override

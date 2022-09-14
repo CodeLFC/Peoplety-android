@@ -1,5 +1,6 @@
 package gaozhi.online.base.ui;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -89,7 +90,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         // 透明导航栏
         getWindow().setNavigationBarColor(getResources().getColor(R.color.bottom_color, getTheme()));
     }
-
     /**
      * [绑定控件]
      *
@@ -224,5 +224,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      */
     public interface OnRequestPermissionsResultListener {
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
+    }
+
+    /**
+     * 获取 Application
+     *
+     * @param tClass
+     * @param <T>
+     * @return
+     */
+    public <T extends Application> T getApplication(Class<T> tClass) {
+        return (T) getApplicationContext();
     }
 }

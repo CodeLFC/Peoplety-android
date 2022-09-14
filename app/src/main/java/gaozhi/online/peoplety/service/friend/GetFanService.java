@@ -63,9 +63,7 @@ public class GetFanService extends BaseApiRequest<PageInfo<Friend>> {
             if (realm.where(Friend.class).findAll().size() > MIN_SIZE)
                 realm.where(Friend.class).lessThan("time", System.currentTimeMillis() - cathePeriod).findAll().deleteAllFromRealm();
             List<Friend> friends = pageInfo.getList();
-            for (Friend friend : friends) {
-                realm.copyToRealmOrUpdate(friend);
-            }
+            realm.copyToRealmOrUpdate(friends);
         });
         consumer.accept(pageInfo);
     }

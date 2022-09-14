@@ -65,7 +65,7 @@ public final class GlobalExecutor implements Executor {
      *
      * @param command
      */
-    public void executeInUiThread(final Runnable command, int delay) {
+    public void executeInUiThread(final Runnable command, long delay) {
         mainHandler.postDelayed(command, delay);
     }
 

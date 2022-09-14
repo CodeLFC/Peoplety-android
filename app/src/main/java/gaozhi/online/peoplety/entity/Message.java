@@ -1,5 +1,4 @@
 package gaozhi.online.peoplety.entity;
-
 import android.util.Log;
 
 import java.util.List;
@@ -27,6 +26,7 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
     @PrimaryKey
     private long id;
     private int type;
+    private int typeMsg;
     //消息来源
     private long fromId;
     //消息去向
@@ -47,7 +47,8 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
         NEW_COMMENT(1, "新的评论"),
         NEW_FANS(2, "新的粉丝"),
         NEW_EXTEND(3, "新的派生"),
-        NEW_FAVORITE(4, "新的收藏");
+        NEW_FAVORITE(4, "新的收藏"),
+        NEW_FRIEND_MESSAGE(5,"新朋友消息");
         private final int type;
         private final String remark;
 

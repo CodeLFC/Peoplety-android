@@ -27,6 +27,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -38,11 +43,12 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
+    //implementation fileTree(dir: 'libs', include: ['**/*.aar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //图片glide工具
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     //json工具
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
     //photoview 图片预览工具
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //zxing工具
@@ -63,4 +69,6 @@ dependencies {
         // 增加这行
         exclude group: 'com.tencent.qcloud', module: 'beacon-android-release'
     }
+    //netty
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.50.Final'
 }

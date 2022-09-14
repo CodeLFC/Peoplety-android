@@ -5,8 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -34,6 +38,7 @@ import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
+import gaozhi.online.peoplety.ui.service.GeniusService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.ui.util.scan.ScanActivity;
@@ -70,6 +75,42 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 //            Manifest.permission.ACCESS_COARSE_LOCATION,
 //            Manifest.permission.ACCESS_FINE_LOCATION
     };
+    //--------------------------------------------------------------- 前台服务相关代码 START
+    /**
+     * 前台服务对象（绑定MobileIMSDK的Demo后，确保Demo能常驻内存，因为Andriod高版本对于进程保活、网络保活现在限制非常严格）
+     */
+    private GeniusService boundService;
+
+    /**
+     * 绑定时需要使用的连接对象
+     */
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            boundService = ((GeniusService.LocalBinder) service).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            boundService = null;
+        }
+    };
+
+    /**
+     * 将本activity与后台服务绑定起来.
+     */
+    protected void doBindService() {
+        this.getApplicationContext().bindService(new Intent(this.getApplicationContext(), GeniusService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    /**
+     * 解绑服务（服务将失去功能，随时会被系统回收）.
+     */
+    protected void doUnbindService() {
+        try {
+            this.getApplicationContext().unbindService(serviceConnection);
+        } catch (Exception e) {
+			Log.w(TAG, e);
+        }
+    }
 
     @Override
     protected void doBusiness(Realm realm) {
@@ -122,6 +163,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         //请求权限
         permissionUtil.requestPermission(authorities);
     }
+
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -181,7 +223,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     public void error(int id, int code, String message, String data) {
-        if(code == Result.NET_ERROR){
+        if (code == Result.NET_ERROR) {
             return;
         }
         viewPager.post(() -> new TipPopWindow(MainActivity.this, true)

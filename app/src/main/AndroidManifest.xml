@@ -5,10 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Android 9.0中需要此权限的添加，不然崩溃 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:name=".PeopletyApplication"
         android:icon="@drawable/app_logo_rectangle"
@@ -17,7 +20,8 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Peoplety">
+        android:theme="@style/Theme.Peoplety"
+        >
         <activity
             android:name=".ui.activity.home.fragment.message.MessageActivity"
             android:exported="false" />
@@ -86,7 +90,11 @@
         </activity>
         <activity
             android:name=".ui.activity.home.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance"/>
+
+        <!-- 一个为了Demo能更好保活的前台服务 -->
+        <service android:name=".ui.service.GeniusService" />
     </application>
 
 </manifest>

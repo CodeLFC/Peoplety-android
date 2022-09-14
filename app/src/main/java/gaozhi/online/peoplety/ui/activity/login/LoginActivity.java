@@ -3,7 +3,7 @@ package gaozhi.online.peoplety.ui.activity.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,27 +11,23 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.google.gson.Gson;
+
+import net.x52im.mobileimsdk.protocal.c.PLoginInfo;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
 import gaozhi.online.base.asynchronization.Handler;
-import gaozhi.online.base.net.Result;
+import gaozhi.online.base.im.core.LocalDataSender;
 import gaozhi.online.base.net.http.DataHelper;
-import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
-import gaozhi.online.peoplety.entity.Comment;
-import gaozhi.online.peoplety.entity.Favorite;
-import gaozhi.online.peoplety.entity.Item;
-import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserAuth;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.im.IMClient;
 import gaozhi.online.peoplety.service.constant.ResourceRequester;
 import gaozhi.online.peoplety.service.user.LoginService;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
@@ -57,10 +53,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     private EditText edit_id;
     private EditText edit_pass;
     private Button btn_login;
-    private TextView text_register;
-    private TextView text_forget_pass;
     private CheckBox checkBox_agree_privacy;
-    private TextView text_privacy;
     //资源请求进度
     private TextView textProcess;
     //intent
@@ -73,7 +66,10 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     private UserDTO loginUser;
     //资源请求服务
     private ResourceRequester resourceRequester;
-
+    public LoginActivity(){
+        setAllowFullScreen(true);
+        setSteepStatusBar(true);
+    }
     @Override
     protected void doBusiness(Realm realm) {
         loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
@@ -83,8 +79,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
 
     @Override
     protected void initParams(Intent intent) {
-        //取消沉浸状态栏
-        setSteepStatusBar(false);
+
         auto_login = intent.getBooleanExtra(INTENT_TAG_AUTO_LOGIN, true);
     }
 
@@ -107,12 +102,12 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
         edit_pass = $(R.id.login_activity_edit_pass);
         btn_login = $(R.id.login_activity_btn_login);
         btn_login.setOnClickListener(this);
-        text_register = $(R.id.login_activity_text_register);
+        TextView text_register = $(R.id.login_activity_text_register);
         text_register.setOnClickListener(this);
-        text_forget_pass = $(R.id.login_activity_text_find_pass);
+        TextView text_forget_pass = $(R.id.login_activity_text_find_pass);
         text_forget_pass.setOnClickListener(this);
         checkBox_agree_privacy = $(R.id.login_activity_check_agree);
-        text_privacy = $(R.id.login_activity_text_privacy);
+        TextView text_privacy = $(R.id.login_activity_text_privacy);
         text_privacy.setOnClickListener(this);
         textProcess = $(R.id.login_activity_text_process);
     }
@@ -141,7 +136,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
         }
         //常量有效期没过
         if (loginUser.getResourceValidateTime() > System.currentTimeMillis()) {
-            enterMainWindow();
+            connectIM();
             return;
         }
         showSloganView();
@@ -223,7 +218,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
                 //请求资源
                 resourceRequester.refreshResource(loginUser);
             } else {
-                enterMainWindow();
+                connectIM();
             }
         });
     }
@@ -240,17 +235,60 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     /**
      * 进入主页面
      */
-    private void enterMainWindow() {
+    private void connectIM() {
+
+        loginIM();
+    }
+
+    //登陆服务器
+    private void loginIM() {
+        // 无条件重置socket，防止首次登陆时用了错误的ip或域名，下次登陆时sendData中仍然使用老的ip
+        // 说明：本行代码建议仅用于Demo时，生产环境下是没有意义的，因为你的APP里不可能连IP都搞错了
+        // LocalSocketProvider.getInstance().closeLocalSocket();
+
+        // * 设置好服务端反馈的登陆结果观察者（当客户端收到服务端反馈过来的登陆消息时将被通知）
+        IMClient.getInstance(this).getChatBaseListener().setLoginOkForLaunchObserver((o, data) -> {
+            // 服务端返回的登陆结果值
+            int code = (Integer) data;
+            // 登陆成功
+            if (code != 0) {
+                //** 提示：登陆/连接 MobileIMSDK服务器成功后的事情在此实现即可
+                ToastUtil.showToastShort(getString(R.string.tip_im_login_error) + code);
+            }
+            //进入主页面
+            enterMainView();
+        });
+
+        String loginName = String.valueOf(loginUser.getUserInfo().getId());
+        String loginToken = new Gson().toJson(loginUser.getToken());
+
+        // 异步提交登陆id和token
+        new LocalDataSender.SendLoginDataAsync(new PLoginInfo(loginName, loginToken)) {
+            /**
+             * 登陆信息发送完成后将调用本方法（注意：此处仅是登陆信息发送完成
+             * ，真正的登陆结果要在异步回调中处理哦）。
+             *
+             * @param code 数据发送返回码，0 表示数据成功发出，否则是错误码
+             */
+            @Override
+            protected void fireAfterSendLogin(int code) {
+                if (code == 0) {
+                    // ToastUtil.showToastShort("数据发送成功！");
+                    Log.d(MainActivity.class.getSimpleName(), "登陆/连接信息已成功发出！");
+                } else {
+                    ToastUtil.showToastShort("数据发送失败。错误码是：" + code + "！");
+                }
+            }
+        }.execute();
+    }
+
+    private void enterMainView() {
         Handler handler = new Handler(msg -> {
             MainActivity.startActivity(LoginActivity.this);
             finish();
         });
-        PeopletyApplication.getGlobalExecutor().executeInBackground(new Runnable() {
-            @Override
-            public void run() {
-                handler.sendEmptyMessage(0);
-            }
-        }, 200);
+        //延时进入主页面
+        PeopletyApplication.getGlobalExecutor().executeInBackground(() -> handler.sendEmptyMessage(0), 200);
     }
 
     //显示登陆界面
@@ -280,7 +318,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     public void accept(Integer integer, Boolean aBoolean) {
         textProcess.setText(getString(R.string.request_ing) + integer + "/" + resourceRequester.getResourceSize());
         if (aBoolean) {//资源请求完成
-            enterMainWindow();
+            connectIM();
         }
     }
 }
