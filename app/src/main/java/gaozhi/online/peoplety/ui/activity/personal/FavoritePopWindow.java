@@ -16,9 +16,9 @@ import gaozhi.online.peoplety.entity.Item;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.im.io.IMSender;
 import gaozhi.online.peoplety.service.record.GetFavoritesByUseridService;
 import gaozhi.online.peoplety.service.record.PublishFavoriteItemService;
-import gaozhi.online.peoplety.service.user.PostMessageService;
 import gaozhi.online.peoplety.ui.base.DBBasePopWindow;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
@@ -52,17 +52,13 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
             message.setType(Message.Type.NEW_FAVORITE.getType());
             message.setToId(record.getUserid());
             message.setMsg(new Gson().toJson(record));
-            message.setRemark(getContext().getString(R.string.id) + loginUser.getUserInfo().getId() + getContext().getString(R.string.favorite)  + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record)+ record.getTitle());
-            postMessageService.request(loginUser.getToken(), message);
+            message.setRemark(getContext().getString(R.string.id) + loginUser.getUserInfo().getId() + getContext().getString(R.string.favorite) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) + record.getTitle());
+            new IMSender(message).execute();
             dismiss();
             if (itemConsumer != null) {
                 itemConsumer.accept(data);
             }
         }
-    });
-    //发送消息
-    private final PostMessageService postMessageService = new PostMessageService(new DataHelper.OnDataListener<Message>() {
-
     });
 
     public void setItemConsumer(Consumer<Item> itemConsumer) {
@@ -102,7 +98,7 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
 
     @Override
     public void handle(int id, PageInfo<Favorite> data, boolean local) {
-        if(!local){
+        if (!local) {
             recyclerViewFavorite.setLoading(false);
         }
         if (data == null) return;

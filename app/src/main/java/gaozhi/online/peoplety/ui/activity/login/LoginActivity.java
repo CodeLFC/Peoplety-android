@@ -236,7 +236,9 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
      * 进入主页面
      */
     private void connectIM() {
-
+        // 确保MobileIMSDK被初始化哦（整个APP生生命周期中只需调用一次哦）
+        // 提示：在不退出APP的情况下退出登陆后再重新登陆时，请确保调用本方法一次，不然会报code=203错误哦！
+        IMClient.getInstance(this).initMobileIMSDK();
         loginIM();
     }
 
@@ -254,9 +256,10 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             if (code != 0) {
                 //** 提示：登陆/连接 MobileIMSDK服务器成功后的事情在此实现即可
                 ToastUtil.showToastShort(getString(R.string.tip_im_login_error) + code);
+            }else{
+                //进入主页面
+                enterMainView();
             }
-            //进入主页面
-            enterMainView();
         });
 
         String loginName = String.valueOf(loginUser.getUserInfo().getId());

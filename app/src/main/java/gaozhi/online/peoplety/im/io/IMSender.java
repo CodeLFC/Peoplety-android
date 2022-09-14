@@ -7,7 +7,8 @@ import gaozhi.online.peoplety.im.MessageUtils;
 /**
  * 消息发送者
  */
-public abstract class IMSender extends LocalDataSender.SendCommonDataAsync {
+public class IMSender extends LocalDataSender.SendCommonDataAsync {
+    private OnIMSendListener onIMSendListener;
 
     public IMSender(String dataContentWidthStr, String to_user_id) {
         super(dataContentWidthStr, to_user_id);
@@ -22,27 +23,41 @@ public abstract class IMSender extends LocalDataSender.SendCommonDataAsync {
     }
 
     public IMSender(Message message) {
-        super(MessageUtils.toProtocol(message));
+        super(MessageUtils.toCommonProtocol(message));
+    }
+
+    public OnIMSendListener getOnIMSendListener() {
+        return onIMSendListener;
+    }
+
+    public void setOnIMSendListener(OnIMSendListener onIMSendListener) {
+        this.onIMSendListener = onIMSendListener;
     }
 
     @Override
     protected void onPostExecute(Integer code) {
+        if (onIMSendListener == null) return;
         if (code == 0) {
-            onSuccess(MessageUtils.toMessage(p));
+            onIMSendListener.onSuccess(MessageUtils.toMessage(p));
         } else {
-            onFail(MessageUtils.toMessage(p));
+            onIMSendListener.onFail(MessageUtils.toMessage(p));
         }
     }
 
-    /**
-     * 发送成功，不代表已送达
-     * @param message
-     */
-    public abstract void onSuccess(Message message);
+    public interface OnIMSendListener {
+        /**
+         * 发送成功，不代表已送达
+         *
+         * @param message
+         */
+        void onSuccess(Message message);
 
-    /**
-     * 发送失败 还没有生成ID
-     * @param message
-     */
-    public abstract void onFail(Message message);
+        /**
+         * 发送失败 还没有生成ID
+         *
+         * @param message
+         */
+        void onFail(Message message);
+    }
+
 }

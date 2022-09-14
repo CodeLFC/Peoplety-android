@@ -13,8 +13,8 @@ import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.Token;
+import gaozhi.online.peoplety.im.io.IMSender;
 import gaozhi.online.peoplety.service.record.PublishCommentService;
-import gaozhi.online.peoplety.service.user.PostMessageService;
 import gaozhi.online.peoplety.ui.util.pop.EditTextPopWindow;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
@@ -24,8 +24,7 @@ import gaozhi.online.peoplety.util.ToastUtil;
  * 评论输入
  */
 public class RecordCommentPopWindow extends EditTextPopWindow implements DataHelper.OnDataListener<Comment>, View.OnClickListener {
-    private final PostMessageService postMessageService = new PostMessageService(new DataHelper.OnDataListener<Message>() {
-    });
+
     private final PublishCommentService publishCommentService = new PublishCommentService(this);
     private Token token;
     private Record record;
@@ -59,7 +58,7 @@ public class RecordCommentPopWindow extends EditTextPopWindow implements DataHel
         message.setToId(record.getUserid());
         message.setMsg(new Gson().toJson(record));
         message.setRemark(getContext().getString(R.string.id) + token.getUserid() + getContext().getString(R.string.comment) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) + record.getTitle());
-        postMessageService.request(token, message);
+        new IMSender(message).execute();
         ToastUtil.showToastShort(R.string.tip_publish_success);
         dismiss();
         getEditContent().setText("");

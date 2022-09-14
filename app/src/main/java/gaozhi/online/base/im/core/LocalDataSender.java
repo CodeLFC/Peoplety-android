@@ -80,7 +80,7 @@ public class LocalDataSender {
         return code;
     }
 
-    public int sendLoginout() {
+    public int sendLoginOut() {
         int code = ErrorCode.COMMON_CODE_OK;
         if (ClientCoreSDK.getInstance().isLoginHasInit()) {
 			byte[] b = ProtocalFactory.createPLoginoutInfo(ClientCoreSDK.getInstance().getCurrentLoginUserId()).toBytes();
@@ -172,6 +172,7 @@ public class LocalDataSender {
                 Log.w(TAG, "【IMCORE-TCP】无效的参数p==null!");
                 return;
             }
+            p.setFrom(ClientCoreSDK.getInstance().getCurrentLoginUserId());
             this.p = p;
         }
 

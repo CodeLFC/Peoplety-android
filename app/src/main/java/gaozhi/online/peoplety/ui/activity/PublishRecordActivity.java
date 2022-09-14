@@ -43,9 +43,9 @@ import gaozhi.online.peoplety.entity.RecordType;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.client.ImageModel;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.im.io.IMSender;
 import gaozhi.online.peoplety.service.cos.GetCosTempSecretService;
 import gaozhi.online.peoplety.service.record.PublishRecordService;
-import gaozhi.online.peoplety.service.user.PostMessageService;
 import gaozhi.online.peoplety.ui.activity.record.ImageAdapter;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.util.image.ShowImageActivity;
@@ -105,8 +105,6 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
     //service
     private final GetCosTempSecretService getCosTempSecretService = new GetCosTempSecretService(this);
     private final PublishRecordService publishRecordService = new PublishRecordService(this);
-    private final PostMessageService postMessageService = new PostMessageService(new DataHelper.OnDataListener<>() {
-    });
     //handler,发送图片上传状态
     private final Handler handlerImgUploadProcess = new Handler(this);
 
@@ -435,7 +433,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
                 message.setToId(parent.getUserid());
                 message.setMsg(gson.toJson(record));
                 message.setRemark(getString(R.string.id) + token.getUserid() + getString(R.string.child_record) + parent.getId() + getString(R.string.floor) + getString(R.string.record) + parent.getTitle());
-                postMessageService.request(token, message);
+                new IMSender(message).execute();
             }
             ToastUtil.showToastLong(R.string.tip_publish_success);
             finish();
