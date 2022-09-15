@@ -26,7 +26,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.c.PLoginInfo;
+import net.x52im.mobileimsdk.protocol.c.PLoginInfo;
 
 import gaozhi.online.base.im.core.AutoReLoginDaemon;
 import gaozhi.online.base.im.core.KeepAliveDaemon;

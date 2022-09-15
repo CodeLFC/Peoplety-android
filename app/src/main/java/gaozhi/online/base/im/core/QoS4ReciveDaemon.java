@@ -19,11 +19,10 @@ package gaozhi.online.base.im.core;
 import java.util.Observer;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import android.os.Handler;
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.Protocal;
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 import gaozhi.online.base.im.ClientCoreSDK;
 
@@ -124,7 +123,7 @@ public class QoS4ReciveDaemon {
         return init;
     }
 
-    public void addRecieved(Protocal p) {
+    public void addRecieved(Protocol p) {
         if (p != null && p.isQoS())
             addRecieved(p.getFp());
     }

@@ -22,13 +22,13 @@ import java.util.Observer;
 
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.ErrorCode;
-import net.x52im.mobileimsdk.protocal.Protocal;
-import net.x52im.mobileimsdk.protocal.ProtocalFactory;
-import net.x52im.mobileimsdk.protocal.ProtocalType;
-import net.x52im.mobileimsdk.protocal.s.PErrorResponse;
-import net.x52im.mobileimsdk.protocal.s.PKickoutInfo;
-import net.x52im.mobileimsdk.protocal.s.PLoginInfoResponse;
+import net.x52im.mobileimsdk.protocol.ErrorCode;
+import net.x52im.mobileimsdk.protocol.Protocol;
+import net.x52im.mobileimsdk.protocol.ProtocolFactory;
+import net.x52im.mobileimsdk.protocol.ProtocolType;
+import net.x52im.mobileimsdk.protocol.s.PErrorResponse;
+import net.x52im.mobileimsdk.protocol.s.PKickoutInfo;
+import net.x52im.mobileimsdk.protocol.s.PLoginInfoResponse;
 
 import gaozhi.online.base.im.ClientCoreSDK;
 import gaozhi.online.base.im.utils.MBThreadPoolExecutor;
@@ -64,11 +64,11 @@ public class LocalDataReceiver {
         }
 
         try {
-            final Protocal pFromServer = ProtocalFactory.parse(fullProtocalOfBody, fullProtocalOfBody.length);
+            final Protocol pFromServer = ProtocolFactory.parse(fullProtocalOfBody, fullProtocalOfBody.length);
 
             if (pFromServer.isQoS()) {
-                if (pFromServer.getType() == ProtocalType.S.FROM_SERVER_TYPE_OF_RESPONSE$LOGIN
-                        && ProtocalFactory.parsePLoginInfoResponse(pFromServer.getDataContent()).getCode() != 0) {
+                if (pFromServer.getType() == ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$LOGIN
+                        && ProtocolFactory.parsePLoginInfoResponse(pFromServer.getDataContent()).getCode() != 0) {
                     if (ClientCoreSDK.DEBUG)
                         Log.d(TAG, "【IMCORE-TCP】【BugFIX】这是服务端的登陆返回响应包，" +
                                 "且服务端判定登陆失败(即code!=0)，本次无需发送ACK应答包！");
@@ -89,27 +89,27 @@ public class LocalDataReceiver {
             }
 
             switch (pFromServer.getType()) {
-                case ProtocalType.C.FROM_CLIENT_TYPE_OF_COMMON$DATA: {
+                case ProtocolType.C.FROM_CLIENT_TYPE_OF_COMMON$DATA: {
                     onRecievedCommonData(pFromServer);
                     break;
                 }
-                case ProtocalType.S.FROM_SERVER_TYPE_OF_RESPONSE$KEEP$ALIVE: {
+                case ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$KEEP$ALIVE: {
                     onServerResponseKeepAlive();
                     break;
                 }
-                case ProtocalType.C.FROM_CLIENT_TYPE_OF_RECIVED: {
+                case ProtocolType.C.FROM_CLIENT_TYPE_OF_RECIVED: {
                     onMessageRecievedACK(pFromServer);
                     break;
                 }
-                case ProtocalType.S.FROM_SERVER_TYPE_OF_RESPONSE$LOGIN: {
+                case ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$LOGIN: {
                     onServerResponseLogined(pFromServer);
                     break;
                 }
-                case ProtocalType.S.FROM_SERVER_TYPE_OF_RESPONSE$FOR$ERROR: {
+                case ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$FOR$ERROR: {
                     onServerResponseError(pFromServer);
                     break;
                 }
-                case ProtocalType.S.FROM_SERVER_TYPE_OF_KICKOUT: {
+                case ProtocolType.S.FROM_SERVER_TYPE_OF_KICKOUT: {
                     onKickout(pFromServer);
                     break;
                 }
@@ -122,7 +122,7 @@ public class LocalDataReceiver {
         }
     }
 
-    protected void onRecievedCommonData(Protocal pFromServer) {
+    protected void onRecievedCommonData(Protocol pFromServer) {
 //		Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>收到"+pFromServer.getFrom()+"发过来的消息："+pFromServer.getDataContent()+".["+pFromServer.getTo()+"]");
         if (ClientCoreSDK.getInstance().getChatMessageEvent() != null) {
             ClientCoreSDK.getInstance().getChatMessageEvent().onReceiveMessage(pFromServer);
@@ -135,7 +135,7 @@ public class LocalDataReceiver {
         KeepAliveDaemon.getInstance().updateGetKeepAliveResponseFromServerTimstamp();
     }
 
-    protected void onMessageRecievedACK(Protocal pFromServer) {
+    protected void onMessageRecievedACK(Protocol pFromServer) {
         String theFingerPrint = pFromServer.getDataContent();
         if (ClientCoreSDK.DEBUG)
             Log.d(TAG, "【IMCORE-TCP】【QoS】收到" + pFromServer.getFrom() + "发过来的指纹为" + theFingerPrint + "的应答包.");
@@ -146,8 +146,8 @@ public class LocalDataReceiver {
         QoS4SendDaemon.getInstance().remove(theFingerPrint);
     }
 
-    protected void onServerResponseLogined(Protocal pFromServer) {
-        PLoginInfoResponse loginInfoRes = ProtocalFactory.parsePLoginInfoResponse(pFromServer.getDataContent());
+    protected void onServerResponseLogined(Protocol pFromServer) {
+        PLoginInfoResponse loginInfoRes = ProtocolFactory.parsePLoginInfoResponse(pFromServer.getDataContent());
         if (loginInfoRes.getCode() == 0) {
             if (!ClientCoreSDK.getInstance().isLoginHasInit()) {
                 ClientCoreSDK.getInstance().saveFirstLoginTime(loginInfoRes.getFirstLoginTime());
@@ -165,8 +165,8 @@ public class LocalDataReceiver {
         }
     }
 
-    protected void onServerResponseError(Protocal pFromServer) {
-        PErrorResponse errorRes = ProtocalFactory.parsePErrorResponse(pFromServer.getDataContent());
+    protected void onServerResponseError(Protocol pFromServer) {
+        PErrorResponse errorRes = ProtocolFactory.parsePErrorResponse(pFromServer.getDataContent());
         if (errorRes.getErrorCode() == ErrorCode.ForS.RESPONSE_FOR_UNLOGIN) {
             ClientCoreSDK.getInstance().setLoginHasInit(false);
 
@@ -181,13 +181,13 @@ public class LocalDataReceiver {
         }
     }
 
-    protected void onKickout(Protocal pFromServer) {
+    protected void onKickout(Protocol pFromServer) {
         if (ClientCoreSDK.DEBUG)
             Log.d(TAG, "【IMCORE-TCP】收到服务端发过来的“被踢”指令.");
 
         ClientCoreSDK.getInstance().release();
 
-        PKickoutInfo kickoutInfo = ProtocalFactory.parsePKickoutInfo(pFromServer.getDataContent());
+        PKickoutInfo kickoutInfo = ProtocolFactory.parsePKickoutInfo(pFromServer.getDataContent());
         if (ClientCoreSDK.getInstance().getChatBaseEvent() != null)
             ClientCoreSDK.getInstance().getChatBaseEvent().onKickOut(kickoutInfo);
 
@@ -222,9 +222,9 @@ public class LocalDataReceiver {
         AutoReLoginDaemon.getInstance().start(true);// 建议：此参数可由true改为false，防止服务端重启等情况下，客户端立即重连等
     }
 
-    private void sendRecievedBack(final Protocal pFromServer) {
+    private void sendRecievedBack(final Protocol pFromServer) {
         if (pFromServer.getFp() != null) {
-            new LocalDataSender.SendCommonDataAsync(ProtocalFactory.createRecivedBack(pFromServer.getTo(), pFromServer.getFrom(), pFromServer.getFp(), pFromServer.isBridge())) {
+            new LocalDataSender.SendCommonDataAsync(ProtocolFactory.createRecivedBack(pFromServer.getTo(), pFromServer.getFrom(), pFromServer.getFp(), pFromServer.isBridge())) {
                 @Override
                 protected void onPostExecute(Integer code) {
                     if (ClientCoreSDK.DEBUG)

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import net.x52im.mobileimsdk.protocal.c.PLoginInfo;
+import net.x52im.mobileimsdk.protocol.c.PLoginInfo;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
@@ -256,6 +256,8 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             if (code != 0) {
                 //** 提示：登陆/连接 MobileIMSDK服务器成功后的事情在此实现即可
                 ToastUtil.showToastShort(getString(R.string.tip_im_login_error) + code);
+                //重新进入登陆页
+                showLoginView();
             }else{
                 //进入主页面
                 enterMainView();

@@ -18,7 +18,7 @@ package gaozhi.online.peoplety.im.event;
 
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.s.PKickoutInfo;
+import net.x52im.mobileimsdk.protocol.s.PKickoutInfo;
 
 import java.util.Iterator;
 import java.util.Map;

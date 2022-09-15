@@ -1,6 +1,6 @@
 package gaozhi.online.peoplety.im.io;
 
-import net.x52im.mobileimsdk.protocal.s.PKickoutInfo;
+import net.x52im.mobileimsdk.protocol.s.PKickoutInfo;
 
 import java.util.List;
 
@@ -10,13 +10,6 @@ import gaozhi.online.peoplety.entity.Message;
  * 消息接收者
  */
 public interface IMReceiver {
-    /**
-     * 接收器者的身份标识，推荐使用类名
-     *
-     * @return
-     */
-    String tag();
-
     /**
      * 收到消息
      *

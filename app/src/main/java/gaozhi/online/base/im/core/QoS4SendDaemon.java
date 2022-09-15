@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import android.os.Handler;
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.Protocal;
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 import gaozhi.online.base.im.ClientCoreSDK;
 import gaozhi.online.base.im.utils.MBThreadPoolExecutor;
@@ -36,7 +36,7 @@ public class QoS4SendDaemon {
     public final static int MESSAGES_JUST$NOW_TIME = 3 * 1000;
     public final static int QOS_TRY_COUNT = 2;// since 3.0 (20160918): 为了降低服务端负载，本参数由原3调整为2
 
-    private ConcurrentHashMap<String, Protocal> sentMessages = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Protocol> sentMessages = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> sendMessagesTimestamp = new ConcurrentHashMap<>();
     private Handler handler = null;
     private Runnable runnable = null;
@@ -64,9 +64,9 @@ public class QoS4SendDaemon {
         handler = new Handler();
         runnable = () -> {
             if (!_excuting) {
-                final ArrayList<Protocal> lostMessages = new ArrayList<>();
+                final ArrayList<Protocol> lostMessages = new ArrayList<>();
                 MBThreadPoolExecutor.runInBackground(() -> {
-                    final ArrayList<Protocal> ret = doRetryCheck(lostMessages);
+                    final ArrayList<Protocol> ret = doRetryCheck(lostMessages);
                     MBThreadPoolExecutor.runOnMainThread(() -> onRetryCheck(ret));
                 });
             }
@@ -75,21 +75,21 @@ public class QoS4SendDaemon {
         init = true;
     }
 
-    private ArrayList<Protocal> doRetryCheck(ArrayList<Protocal> lostMessages) {
+    private ArrayList<Protocol> doRetryCheck(ArrayList<Protocol> lostMessages) {
         _excuting = true;
         try {
             if (ClientCoreSDK.DEBUG && sentMessages.size() > 0)
                 Log.d(TAG, "【IMCORE-TCP】【QoS】====== 消息发送质量保证线程运行中, 当前需要处理的列表长度为" + sentMessages.size() + "...");
 
             for (String key : sentMessages.keySet()) {
-                final Protocal p = sentMessages.get(key);
+                final Protocol p = sentMessages.get(key);
                 if (p != null && p.isQoS()) {
                     if (p.getRetryCount() >= QOS_TRY_COUNT) {
                         if (ClientCoreSDK.DEBUG)
                             Log.d(TAG, "【IMCORE-TCP】【QoS】指纹为" + p.getFp()
                                     + "的消息包重传次数已达" + p.getRetryCount() + "(最多" + QOS_TRY_COUNT + "次)上限，将判定为丢包！");
 
-                        lostMessages.add((Protocal) p.clone());
+                        lostMessages.add((Protocol) p.clone());
                         remove(p.getFp());
                     } else {
                         //### 2015103 Bug Fix: 解决了无线网络延较大时，刚刚发出的消息在其应答包还在途中时被错误地进行重传
@@ -127,7 +127,7 @@ public class QoS4SendDaemon {
         return lostMessages;
     }
 
-    private void onRetryCheck(ArrayList<Protocal> al) {
+    private void onRetryCheck(ArrayList<Protocol> al) {
         // for DEBUG
         if(this.debugObserver != null)
             this.debugObserver.update(null, 2);
@@ -139,7 +139,7 @@ public class QoS4SendDaemon {
         handler.postDelayed(runnable, CHECH_INTERVAL);
     }
 
-    protected void notifyMessageLost(ArrayList<Protocal> lostMessages) {
+    protected void notifyMessageLost(ArrayList<Protocol> lostMessages) {
         if (ClientCoreSDK.getInstance().getMessageQoSEvent() != null)
             ClientCoreSDK.getInstance().getMessageQoSEvent().messagesLost(lostMessages);
     }
@@ -175,7 +175,7 @@ public class QoS4SendDaemon {
         return sentMessages.get(fingerPrint) != null;
     }
 
-    public void put(Protocal p) {
+    public void put(Protocol p) {
         if (p == null) {
             Log.w(TAG, "Invalid arg p==null.");
             return;
@@ -201,7 +201,7 @@ public class QoS4SendDaemon {
         sendMessagesTimestamp.remove(fingerPrint);
         Object removedObj = sentMessages.remove(fingerPrint);
         Log.w(TAG, "【IMCORE-TCP】【QoS】指纹为" + fingerPrint + "的消息已成功从发送质量保证队列中移除(可能是收到接收方的应答也可能是达到了重传的次数上限)，重试次数="
-                + (removedObj != null ? ((Protocal) removedObj).getRetryCount() : "none呵呵."));
+                + (removedObj != null ? ((Protocol) removedObj).getRetryCount() : "none呵呵."));
     }
 
     public void clear() {

@@ -21,10 +21,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.ErrorCode;
-import net.x52im.mobileimsdk.protocal.Protocal;
-import net.x52im.mobileimsdk.protocal.ProtocalFactory;
-import net.x52im.mobileimsdk.protocal.c.PLoginInfo;
+import net.x52im.mobileimsdk.protocol.ErrorCode;
+import net.x52im.mobileimsdk.protocol.Protocol;
+import net.x52im.mobileimsdk.protocol.ProtocolFactory;
+import net.x52im.mobileimsdk.protocol.c.PLoginInfo;
 
 import gaozhi.online.base.im.ClientCoreSDK;
 import gaozhi.online.base.im.utils.MBAsyncTask;
@@ -71,7 +71,7 @@ public class LocalDataSender {
     }
 
     int sendLoginImpl(PLoginInfo loginInfo) {
-        byte[] b = ProtocalFactory.createPLoginInfo(loginInfo).toBytes();
+        byte[] b = ProtocolFactory.createPLoginInfo(loginInfo).toBytes();
         int code = send(b, b.length);
         if (code == 0) {
             ClientCoreSDK.getInstance().setCurrentLoginInfo(loginInfo);
@@ -83,7 +83,7 @@ public class LocalDataSender {
     public int sendLoginOut() {
         int code = ErrorCode.COMMON_CODE_OK;
         if (ClientCoreSDK.getInstance().isLoginHasInit()) {
-			byte[] b = ProtocalFactory.createPLoginoutInfo(ClientCoreSDK.getInstance().getCurrentLoginUserId()).toBytes();
+			byte[] b = ProtocolFactory.createPLoginoutInfo(ClientCoreSDK.getInstance().getCurrentLoginUserId()).toBytes();
             code = send(b, b.length);
             if (code == 0) {
                 // do nothing
@@ -94,7 +94,7 @@ public class LocalDataSender {
     }
 
     int sendKeepAlive() {
-        byte[] b = ProtocalFactory.createPKeepAlive(ClientCoreSDK.getInstance().getCurrentLoginUserId()).toBytes();
+        byte[] b = ProtocolFactory.createPKeepAlive(ClientCoreSDK.getInstance().getCurrentLoginUserId()).toBytes();
         return send(b, b.length);
     }
 
@@ -111,11 +111,11 @@ public class LocalDataSender {
     }
 
     public int sendCommonData(String dataContentWidthStr, String to_user_id, boolean QoS, String fingerPrint, int typeu) {
-        return sendCommonData(ProtocalFactory.createCommonData(dataContentWidthStr
+        return sendCommonData(ProtocolFactory.createCommonData(dataContentWidthStr
                 , ClientCoreSDK.getInstance().getCurrentLoginUserId(), to_user_id, QoS, fingerPrint, typeu));
     }
 
-    public int sendCommonData(Protocal p) {
+    public int sendCommonData(Protocol p) {
         if (p != null) {
             byte[] b = p.toBytes();
             int code = send(b, b.length);
@@ -128,7 +128,7 @@ public class LocalDataSender {
             return ErrorCode.COMMON_INVALID_PROTOCAL;
     }
 
-    private int send(byte[] fullProtocalBytes, int dataLen) {
+    private int send(byte[] fullProtocolBytes, int dataLen) {
 
         int codeForCheck = this.checkBeforeSend();
         if (codeForCheck != ErrorCode.COMMON_CODE_OK)
@@ -136,7 +136,7 @@ public class LocalDataSender {
 
         Channel ds = LocalSocketProvider.getInstance().getLocalSocket();
         if (ds != null && ds.isActive()) {// && [ClientCoreSDK sharedInstance].connectedToServer)
-            return TCPUtils.send(ds, fullProtocalBytes, dataLen) ? ErrorCode.COMMON_CODE_OK : ErrorCode.COMMON_DATA_SEND_FAILD;
+            return TCPUtils.send(ds, fullProtocolBytes, dataLen) ? ErrorCode.COMMON_CODE_OK : ErrorCode.COMMON_DATA_SEND_FAILD;
         } else {
             Log.d(TAG, "【IMCORE-TCP】scocket未连接，无法发送，本条将被忽略（dataLen=" + dataLen + "）!");
             return ErrorCode.COMMON_CODE_OK;
@@ -152,7 +152,7 @@ public class LocalDataSender {
     //------------------------------------------------------------------------------------------ utilities class
 
     public static abstract class SendCommonDataAsync extends MBAsyncTask {
-        protected Protocal p = null;
+        protected Protocol p = null;
 
         public SendCommonDataAsync(String dataContentWidthStr, String to_user_id) {
             this(dataContentWidthStr, to_user_id, null, -1);
@@ -163,11 +163,11 @@ public class LocalDataSender {
         }
 
         public SendCommonDataAsync(String dataContentWidthStr, String to_user_id, String fingerPrint, int typeu) {
-            this(ProtocalFactory.createCommonData(dataContentWidthStr
+            this(ProtocolFactory.createCommonData(dataContentWidthStr
                     , ClientCoreSDK.getInstance().getCurrentLoginUserId(), to_user_id, true, fingerPrint, typeu));
         }
 
-        public SendCommonDataAsync(Protocal p) {
+        public SendCommonDataAsync(Protocol p) {
             if (p == null) {
                 Log.w(TAG, "【IMCORE-TCP】无效的参数p==null!");
                 return;

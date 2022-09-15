@@ -23,7 +23,7 @@ import java.util.Map;
 
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.Protocal;
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 import gaozhi.online.base.im.event.MessageQoSEvent;
 import gaozhi.online.peoplety.PeopletyApplication;
@@ -50,11 +50,11 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
      *                     以UI上将其标记为”发送失败“以便即时告之用户
      */
     @Override
-    public void messagesLost(ArrayList<Protocal> lostMessages) {
+    public void messagesLost(ArrayList<Protocol> lostMessages) {
         Log.d(TAG, "【DEBUG_UI】收到系统的未实时送达事件通知，当前共有" + lostMessages.size() + "个包QoS保证机制结束，判定为【无法实时送达】！");
         //"[消息未成功送达]共" + lostMessages.size() + "条!(网络状况不佳或对方id不存在)"
         List<Message> lostMsg = new ArrayList<>(lostMessages.size());
-        for (Protocal protocal : lostMessages) {
+        for (Protocol protocal : lostMessages) {
             lostMsg.add(MessageUtils.toMessage(protocal));
         }
         //通知给接收者

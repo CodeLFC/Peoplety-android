@@ -17,7 +17,7 @@
 package gaozhi.online.base.im.event;
 
 
-import net.x52im.mobileimsdk.protocal.s.PKickoutInfo;
+import net.x52im.mobileimsdk.protocol.s.PKickoutInfo;
 
 public interface ChatBaseEvent {
 	void onLoginResponse(int errorCode);

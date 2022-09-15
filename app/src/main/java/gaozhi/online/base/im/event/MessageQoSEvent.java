@@ -16,11 +16,11 @@
  */
 package gaozhi.online.base.im.event;
 
-import net.x52im.mobileimsdk.protocal.Protocal;
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 import java.util.ArrayList;
 
 public interface MessageQoSEvent {
-	void messagesLost(ArrayList<Protocal> lostMessages);
+	void messagesLost(ArrayList<Protocol> lostMessages);
 	void messagesBeReceived(String theFingerPrint);
 }

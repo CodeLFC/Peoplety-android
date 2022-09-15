@@ -16,9 +16,10 @@
  */
 package gaozhi.online.base.im.event;
 
-import net.x52im.mobileimsdk.protocal.Protocal;
+
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 public interface ChatMessageEvent {
-	void onReceiveMessage(Protocal protocal);
+	void onReceiveMessage(Protocol protocol);
 	void onErrorResponse(int errorCode, String errorMsg);
 }

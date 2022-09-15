@@ -18,8 +18,8 @@ package gaozhi.online.peoplety.im.event;
 
 import android.util.Log;
 
-import net.x52im.mobileimsdk.protocal.ErrorCode;
-import net.x52im.mobileimsdk.protocal.Protocal;
+import net.x52im.mobileimsdk.protocol.ErrorCode;
+import net.x52im.mobileimsdk.protocol.Protocol;
 
 
 import java.util.Iterator;
@@ -50,7 +50,7 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
      */
 
     @Override
-    public void onReceiveMessage(Protocal protocal) {
+    public void onReceiveMessage(Protocol protocal) {
         Log.d(TAG, "收到消息：" + protocal.getDataContent());
         Message message = MessageUtils.toMessage(protocal);
         Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
