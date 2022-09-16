@@ -216,6 +216,7 @@ public class PeopletyApplication extends Application implements Application.Acti
 
     public UserDTO getLoginUser() {
         UserDTO loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
+        if (loginUser == null) return null;
         //build一个没有Realm绑定的副本
         loginUser = realm.copyFromRealm(loginUser);
         return loginUser;
