@@ -94,7 +94,10 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
         while (entryIterator.hasNext()) {
             Map.Entry<String, IMReceiver> next = entryIterator.next();
             IMReceiver value = next.getValue();
-            value.onKickOut(kickOutInfo);
+            boolean res = value.onKickOut(kickOutInfo);
+            if (res){
+                break;
+            }
         }
     }
 

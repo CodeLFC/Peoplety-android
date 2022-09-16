@@ -72,9 +72,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     }
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        if (loginUser != null)
-            loginUser = realm.copyFromRealm(loginUser);
+        loginUser =getLoginUser();
     }
 
     @Override

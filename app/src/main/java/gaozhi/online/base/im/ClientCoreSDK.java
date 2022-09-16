@@ -41,7 +41,7 @@ import gaozhi.online.base.im.event.MessageQoSEvent;
 public class ClientCoreSDK {
     private final static String TAG = ClientCoreSDK.class.getSimpleName();
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     public static boolean autoReLogin = true;
 
     private static ClientCoreSDK instance = null;

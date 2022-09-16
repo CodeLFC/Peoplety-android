@@ -52,8 +52,8 @@ public class FavoritePopWindow extends DBBasePopWindow implements DataHelper.OnD
             message.setType(Message.Type.NEW_FAVORITE.getType());
             message.setToId(record.getUserid());
             message.setMsg(new Gson().toJson(record));
-            message.setRemark(getContext().getString(R.string.id) + loginUser.getUserInfo().getId() + getContext().getString(R.string.favorite) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) + record.getTitle());
-            new IMSender(message).execute();
+            message.setRemark(getContext().getString(R.string.favorite) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) + record.getTitle());
+            new IMSender(message).send();
             dismiss();
             if (itemConsumer != null) {
                 itemConsumer.accept(data);

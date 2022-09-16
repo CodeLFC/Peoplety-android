@@ -132,6 +132,9 @@ public abstract class ApiRequest<T> implements HttpRunnable.HttpHandler, DataHel
             dataListener.start(getId());
             T data = initLocalData(headers, params, body);
             dataListener.handle(getId(), data, true);
+            if(onlyLocal()){
+                return;
+            }
         }
         HttpRunnable httpRunnable = new HttpRunnable(type.getType(), UrlFactory.appendParams(baseURL + api, params), this);
         httpRunnable.setHeaderParams(headers);

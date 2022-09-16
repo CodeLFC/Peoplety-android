@@ -34,6 +34,7 @@ import androidx.core.app.NotificationCompat;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
+import gaozhi.online.peoplety.ui.base.NotificationBuilder;
 
 /**
  * 一个用于演示的前台服务实现类（本类代码，来自于RainbowChat产品：http://www.52im.net/thread-19-1-1.html）。
@@ -48,8 +49,7 @@ import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 public class GeniusService extends Service {
 
     final static String TAG = GeniusService.class.getSimpleName();
-
-    private NotificationManager mNM;
+    private NotificationBuilder notificationBuilder;
 
     /**
      * Class for clients to access. Because we know this service always runs in
@@ -63,7 +63,7 @@ public class GeniusService extends Service {
 
     @Override
     public void onCreate() {
-        mNM = getNotificationManager(this);
+        notificationBuilder = new NotificationBuilder(this, NotificationBuilder.NChannel.ALIVE_SERVICE_CHANNEL);
         // Display a notification about us starting. We put an icon in the status bar.
         showNotification(getString(R.string.app_name), getString(R.string.tip_app_slogan));
     }
@@ -88,65 +88,8 @@ public class GeniusService extends Service {
      * Show a notification while this service is running.
      */
     public void showNotification(String title, String content) {
-        Application app = (Application) this.getApplicationContext();
-
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setClass(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        // 创建一个Notification
-        Notification notification = createNotification(app, contentIntent, title, content, R.drawable.app_logo);
+        Notification notification = notificationBuilder.buildMessageNotification(title, content, notificationBuilder.buildPendingIntent(MainActivity.class));
         // 让service在前台执行
         this.startForeground(999, notification);
-    }
-
-    public static NotificationManager getNotificationManager(Context context) {
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // 以下代码，解决在Android 8及以上代码中，无法正常显示Notification或报"Bad notification for startForeground"等问题
-        NotificationChannel notificationChannel = null;
-        notificationChannel = new NotificationChannel("default_1", "Default Channel", NotificationManager.IMPORTANCE_HIGH);
-        notificationChannel.enableLights(true);
-
-        notificationChannel.setLightColor(Color.RED);
-        notificationChannel.setShowBadge(true);
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-        manager.createNotificationChannel(notificationChannel);
-
-        return manager;
-    }
-
-    /**
-     * 兼容地方法创建Notification方法。
-     *
-     * @param context
-     * @param pendingIntent
-     * @param title
-     * @param text
-     * @param iconId
-     * @return
-     */
-    public static Notification createNotification(Context context, PendingIntent pendingIntent, String title, String text, int iconId) {
-        // 创建一个Notification Builder，使用NotificationCompat可以更好的兼容Android各系统版本，
-        // 有关Android Notitication的兼容性、详细设置等，参见：https://www.cnblogs.com/travellife/p/Android-Notification-xiang-jie.html
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default_1")
-                .setContentTitle(title)
-                .setContentText(text)
-                .setContentIntent(pendingIntent)
-                // 设置显示在手机最上边的状态栏的图标
-                .setSmallIcon(iconId);
-
-        // 通知的显示等级（Android5.0开始，通知可以显示在锁屏上）：
-        // - VISIBILITY_PRIVATE : 显示基本信息，如通知的图标，但隐藏通知的全部内容
-        // - VISIBILITY_PUBLIC : 显示通知的全部内容
-        // - VISIBILITY_SECRET : 不显示任何内容，包括图标
-        builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-
-        // 创建一个Notification
-
-        return builder.build();
     }
 }

@@ -22,13 +22,20 @@ public interface DataHelper<T> {
      * @param result
      * @return
      */
-   // T getNetData(Result result);
+    // T getNetData(Result result);
 
     /**
      * @param result 结果
      */
     void getNetData(Result result, Consumer<T> consumer);
 
+    /**
+     * 仅获取本地数据
+     * @return
+     */
+    default boolean onlyLocal() {
+        return false;
+    }
 
     /**
      * 数据监听

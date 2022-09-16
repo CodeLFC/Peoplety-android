@@ -22,9 +22,15 @@ import java.util.function.Consumer;
  * @date 2022/4/2 19:06
  */
 public class GetUserInfoService extends BaseApiRequest<UserDTO> {
+    private boolean onlyLocal;
 
     public GetUserInfoService(OnDataListener<UserDTO> resultHandler) {
+        this(resultHandler, false);
+    }
+
+    public GetUserInfoService(OnDataListener<UserDTO> resultHandler, boolean onlyLocal) {
         super(NetConfig.userBaseURL, Type.GET);
+        this.onlyLocal = onlyLocal;
         setDataListener(resultHandler);
     }
 
@@ -83,5 +89,15 @@ public class GetUserInfoService extends BaseApiRequest<UserDTO> {
         });
         userDTO.setStatus(getRealm().where(Status.class).equalTo("id", userDTO.getUserInfo().getStatus()).findFirst());
         consumer.accept(userDTO);
+    }
+
+    /**
+     * 仅获取本地数据
+     *
+     * @return
+     */
+    @Override
+    public boolean onlyLocal() {
+        return onlyLocal;
     }
 }

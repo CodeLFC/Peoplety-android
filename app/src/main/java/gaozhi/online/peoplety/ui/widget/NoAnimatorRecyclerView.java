@@ -77,7 +77,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * 处理加载数据的逻辑
      */
     private void loadData() {
-        Log.i(getClass().getName(),"recyclerView 上拉加载数据...");
+        Log.i(getClass().getName(), "recyclerView 上拉加载数据...");
         if (mOnLoadListener != null) {
             // 设置加载状态，让布局显示出来
             setLoading(true);
@@ -193,6 +193,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
 
         /**
          * 初始化item
+         *
          * @param finalSortedListAdapterCallback
          */
         protected void init(BaseSortedListAdapterCallback<V> finalSortedListAdapterCallback) {
@@ -319,10 +320,14 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         public BaseViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(v -> {
-                if (onItemSelectedListener != null) {
-                    onItemSelectedListener.accept(getBindingAdapterPosition());
-                }
+                onItemCLicked(getBindingAdapterPosition());
             });
+        }
+
+        protected void onItemCLicked(int position) {
+            if (onItemSelectedListener != null) {
+                onItemSelectedListener.accept(position);
+            }
         }
 
         public void setOnItemSelectedListener(Consumer<Integer> onItemSelectedListener) {

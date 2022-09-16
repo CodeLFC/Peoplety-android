@@ -59,7 +59,7 @@ public class LocalDataReceiver {
     private void handleProtocolImpl(byte[] fullProtocalOfBody) {
 
         if (fullProtocalOfBody == null || fullProtocalOfBody.length == 0) {
-            Log.d(TAG, "【IMCORE-TCP】无效的fullProtocalOfBody（null 或 .length == 0）！");
+            Log.d(TAG, "【IMCORE-TCP】无效的fullProtocolOfBody（null 或 .length == 0）！");
             return;
         }
 
@@ -78,19 +78,19 @@ public class LocalDataReceiver {
                             Log.d(TAG, "【IMCORE-TCP】【QoS机制】" + pFromServer.getFp() + "已经存在于发送列表中，这是重复包，通知应用层收到该包罗！");
 
                         QoS4ReciveDaemon.getInstance().addRecieved(pFromServer);
-                        sendRecievedBack(pFromServer);
+                        sendReceivedBack(pFromServer);
 
                         return;
                     }
 
                     QoS4ReciveDaemon.getInstance().addRecieved(pFromServer);
-                    sendRecievedBack(pFromServer);
+                    sendReceivedBack(pFromServer);
                 }
             }
 
             switch (pFromServer.getType()) {
                 case ProtocolType.C.FROM_CLIENT_TYPE_OF_COMMON$DATA: {
-                    onRecievedCommonData(pFromServer);
+                    onReceivedCommonData(pFromServer);
                     break;
                 }
                 case ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$KEEP$ALIVE: {
@@ -122,7 +122,7 @@ public class LocalDataReceiver {
         }
     }
 
-    protected void onRecievedCommonData(Protocol pFromServer) {
+    protected void onReceivedCommonData(Protocol pFromServer) {
 //		Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>收到"+pFromServer.getFrom()+"发过来的消息："+pFromServer.getDataContent()+".["+pFromServer.getTo()+"]");
         if (ClientCoreSDK.getInstance().getChatMessageEvent() != null) {
             ClientCoreSDK.getInstance().getChatMessageEvent().onReceiveMessage(pFromServer);
@@ -222,7 +222,7 @@ public class LocalDataReceiver {
         AutoReLoginDaemon.getInstance().start(true);// 建议：此参数可由true改为false，防止服务端重启等情况下，客户端立即重连等
     }
 
-    private void sendRecievedBack(final Protocol pFromServer) {
+    private void sendReceivedBack(final Protocol pFromServer) {
         if (pFromServer.getFp() != null) {
             new LocalDataSender.SendCommonDataAsync(ProtocolFactory.createRecivedBack(pFromServer.getTo(), pFromServer.getFrom(), pFromServer.getFp(), pFromServer.isBridge())) {
                 @Override

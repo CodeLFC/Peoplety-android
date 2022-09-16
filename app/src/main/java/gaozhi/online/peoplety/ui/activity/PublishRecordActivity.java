@@ -220,9 +220,7 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        //build一个没有Realm绑定的副本
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
         if (parent != null)
             recordType = realm.where(RecordType.class).equalTo("id", parent.getRecordTypeId()).findFirst();
     }
@@ -427,13 +425,12 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
             Gson gson = new Gson();
             record = gson.fromJson(result.getData(),Record.class);
             if(parent!=null) {
-                Token token = loginUser.getToken();
                 gaozhi.online.peoplety.entity.Message message = new gaozhi.online.peoplety.entity.Message();
                 message.setType(gaozhi.online.peoplety.entity.Message.Type.NEW_EXTEND.getType());
                 message.setToId(parent.getUserid());
                 message.setMsg(gson.toJson(record));
-                message.setRemark(getString(R.string.id) + token.getUserid() + getString(R.string.child_record) + parent.getId() + getString(R.string.floor) + getString(R.string.record) + parent.getTitle());
-                new IMSender(message).execute();
+                message.setRemark(getString(R.string.child_record) + parent.getId() + getString(R.string.floor) + getString(R.string.record) + parent.getTitle());
+                new IMSender(message).send();
             }
             ToastUtil.showToastLong(R.string.tip_publish_success);
             finish();

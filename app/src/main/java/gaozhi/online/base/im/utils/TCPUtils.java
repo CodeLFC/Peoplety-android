@@ -51,7 +51,7 @@ public class TCPUtils {
 
                     cf.addListener((ChannelFutureListener) future -> {
                         if (future.isSuccess()) {
-                            Log.i(TAG, "[IMCORE-netty-send异步回调] >> 数据已成功发出[dataLen=" + dataLen + "].");
+                            Log.d(TAG, "[IMCORE-netty-send异步回调] >> 数据已成功发出[dataLen=" + dataLen + "].");
                         } else {
                             Log.w(TAG, "[IMCORE-netty-send异步回调] >> 数据发送失败！[dataLen=" + dataLen + "].");
                         }
@@ -80,7 +80,7 @@ public class TCPUtils {
         return sendSucess;
     }
 
-    public static String getSocketAdressInfo(SocketAddress s) {
+    public static String getSocketAddressInfo(SocketAddress s) {
         return (s != null) ? s.toString() : null;
     }
 }

@@ -62,7 +62,10 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
         while (entryIterator.hasNext()) {
             Map.Entry<String, IMReceiver> next = entryIterator.next();
             IMReceiver value = next.getValue();
-            value.onFail(lostMsg);
+            boolean res = value.onFail(lostMsg);
+            if (res){
+                break;
+            }
         }
     }
 
@@ -88,7 +91,10 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
             while (entryIterator.hasNext()) {
                 Map.Entry<String, IMReceiver> next = entryIterator.next();
                 IMReceiver value = next.getValue();
-                value.onSuccess(msgId);
+                boolean res = value.onSuccess(msgId);
+                if (res){
+                    break;
+                }
             }
         }
     }

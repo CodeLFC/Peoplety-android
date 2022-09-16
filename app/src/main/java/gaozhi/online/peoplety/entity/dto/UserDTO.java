@@ -33,4 +33,8 @@ public class UserDTO extends RealmObject {
     private Area area;
     //用户的身份
     private Status status;
+
+    public String getDescriptionString(){
+        return getUserInfo().getNick() +"["+getUserInfo().getId()+"]";
+    }
 }

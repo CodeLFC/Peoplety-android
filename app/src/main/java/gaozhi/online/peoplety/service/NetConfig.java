@@ -26,6 +26,11 @@ public class NetConfig {
     public static final String recordBaseURL = recordServiceBaseURL + "/record/";
     //收藏夹服务
     public static final String favoriteBaseURL = recordServiceBaseURL + "/favorite/";
+
+    //消息微服务
+    public static final String imBaseURL = baseURL+"/im";
+    public static final String messageIMURL = imBaseURL+"/general/message/";
+
     //官方网站
     public static final String officialURL = "http://gaozhi.online?userid=";
 }

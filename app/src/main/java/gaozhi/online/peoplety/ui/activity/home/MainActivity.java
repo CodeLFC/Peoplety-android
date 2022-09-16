@@ -114,9 +114,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        //build一个没有Realm绑定的副本
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
     }
 
     @Override

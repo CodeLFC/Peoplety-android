@@ -74,7 +74,7 @@ public class CommentPopWindow extends DBBasePopWindow implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == btnComment.getId()) {
-            editTextPopWindow.showPopupWindow(v, loginUser.getToken(), record);
+            editTextPopWindow.showPopupWindow(v, loginUser, record);
         }
     }
 

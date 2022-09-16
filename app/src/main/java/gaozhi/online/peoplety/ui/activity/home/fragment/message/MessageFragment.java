@@ -16,12 +16,13 @@ import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.user.GetMessageService;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
 import io.realm.Realm;
+import io.realm.Sort;
 
 /**
  * create an instance of this fragment.
  * 消息页
  */
-public class MessageFragment extends DBBaseFragment implements DataHelper.OnDataListener<List<Message>> {
+public class MessageFragment extends DBBaseFragment {
     private View commentView;
     private View friendView;
     private ImageView redDotComment;
@@ -29,10 +30,7 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
 
     //当前登陆用户
     private UserDTO loginUser;
-    //service
-    private final GetMessageService getMessageService = new GetMessageService(this);
 
-    //
     @Override
     public int bindLayout() {
         return R.layout.fragment_message;
@@ -90,11 +88,11 @@ public class MessageFragment extends DBBaseFragment implements DataHelper.OnData
     @Override
     public void onResume() {
         super.onResume();
-        getMessageService.request(loginUser.getToken());
+        List<Message> unread = getRealm().where(Message.class).equalTo("toId", loginUser.getUserInfo().getId()).equalTo("read", false).sort("time", Sort.DESCENDING).findAll();
+        handle(unread);
     }
 
-    @Override
-    public void handle(int id, List<Message> data, boolean local) {
+    public void handle(List<Message> data) {
         Stream<Message> newFan = Message.filter(data, Message.Type.NEW_FANS, true);
         Stream<Message> newComment = Message.filter(data, new Message.Type[]{Message.Type.NEW_COMMENT, Message.Type.NEW_FAVORITE, Message.Type.NEW_EXTEND}, true);
         redDotFriend.setVisibility(newFan.count() > 0 ? View.VISIBLE : View.INVISIBLE);

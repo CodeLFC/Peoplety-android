@@ -45,19 +45,22 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
      * 收到普通消息的回调事件通知。
      * <br>应用层可以将此消息进一步按自已的IM协议进行定义，从而实现完整的即时通信软件逻辑。
      *
-     * @param protocal 当该消息
+     * @param protocol 当该消息
      * @see <a href="http://docs.52im.net/extend/docs/api/mobileimsdk/server_netty/net/openmob/mobileimsdk/server/protocal/Protocal.html" target="_blank">Protocal</a>
      */
 
     @Override
-    public void onReceiveMessage(Protocol protocal) {
-        Log.d(TAG, "收到消息：" + protocal.getDataContent());
-        Message message = MessageUtils.toMessage(protocal);
+    public void onReceiveMessage(Protocol protocol) {
+        Log.d(TAG, "收到消息：" + protocol.getDataContent());
+        Message message = MessageUtils.toMessage(protocol);
         Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
         while (entryIterator.hasNext()) {
             Map.Entry<String, IMReceiver> next = entryIterator.next();
             IMReceiver value = next.getValue();
-            value.onReceive(message);
+            boolean res = value.onReceive(message);
+            if (res){
+                break;
+            }
         }
     }
 
@@ -80,7 +83,10 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
         while (entryIterator.hasNext()) {
             Map.Entry<String, IMReceiver> next = entryIterator.next();
             IMReceiver value = next.getValue();
-            value.onError(errorCode, errorMsg);
+            boolean res = value.onError(errorCode, errorMsg);
+            if (res){
+                break;
+            }
         }
     }
 }

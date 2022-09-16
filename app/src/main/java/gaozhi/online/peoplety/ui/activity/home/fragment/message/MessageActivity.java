@@ -5,27 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Friend;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
-import gaozhi.online.peoplety.service.user.GetMessageService;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.activity.record.RecordDetailActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
@@ -33,7 +24,7 @@ import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 
-public class MessageActivity extends DBBaseActivity implements DataHelper.OnDataListener<List<Message>>, Consumer<Message> {
+public class MessageActivity extends DBBaseActivity implements Consumer<Message> {
     private static final String INTENT_TYPES = "types";
 
     public static void startActivity(Context context, int[] types) {
@@ -44,11 +35,17 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
 
     // 消息类型
     private Message.Type[] msgTypes;
-    //当前登陆用户
-    private UserDTO loginUser;
+    private List<Message> messageList;
+
+    private Integer[] getMsgTypes() {
+        Integer[] type = new Integer[msgTypes.length];
+        for (int i = 0; i < type.length; i++) {
+            type[i] = msgTypes[i].getType();
+        }
+        return type;
+    }
+
     private final Gson gson = new Gson();
-    //service
-    private final GetMessageService getMessageService = new GetMessageService(this);
 
     @Override
     protected void initParams(Intent intent) {
@@ -63,6 +60,8 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
     private TextView titleRight;
     private NoAnimatorRecyclerView recyclerView;
     private MessageAdapter messageAdapter;
+    //user
+    private UserDTO loginUser;
 
     @Override
     protected int bindLayout() {
@@ -76,7 +75,6 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
         messageAdapter = new MessageAdapter();
         recyclerView.setAdapter(messageAdapter);
         messageAdapter.setOnItemClickedListener(this);
-
         titleRight = $(R.id.title_text_right);
 
         titleRight.setOnClickListener(this);
@@ -89,31 +87,25 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
 
     @Override
     protected void doBusiness(Context mContext) {
-
-    }
-
-    private void refreshData() {
-        getMessageService.request(loginUser.getToken());
+        if (messageList != null) {
+            messageAdapter.add(messageList);
+        }
     }
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
+        realm.executeTransaction(realm1 -> {
+            List<Message> messages = realm1.where(Message.class).equalTo("toId", loginUser.getUserInfo().getId()).in("type", getMsgTypes()).equalTo("read", false).findAll();
+            messageList = realm1.copyFromRealm(messages);
+        });
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == titleRight.getId()) {
-            getRealm().executeTransaction(realm -> realm.where(Message.class).findAll().setBoolean("read", true));
-            refreshData();
+            getRealm().executeTransaction(realm -> realm.where(Message.class).equalTo("toId", loginUser.getUserInfo().getId()).in("type", getMsgTypes()).findAll().deleteAllFromRealm());
         }
-    }
-
-    @Override
-    public void handle(int id, List<Message> data, boolean local) {
-        Stream<Message> messageStream = Message.filter(data, msgTypes, false);
-        messageAdapter.add(messageStream.collect(Collectors.toList()));
     }
 
     /**
@@ -124,10 +116,8 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
     @Override
     public void accept(Message message) {
         Log.i(TAG, "查阅消息：" + message);
-        Message msg = getRealm().copyFromRealm(message);
         getRealm().executeTransaction(realm -> {
-            msg.setRead(true);
-            realm.copyToRealmOrUpdate(msg);
+            realm.where(Message.class).equalTo("id", message.getId()).findAll().deleteAllFromRealm();
         });
         handleMsg(message);
     }
@@ -149,11 +139,5 @@ public class MessageActivity extends DBBaseActivity implements DataHelper.OnData
                 RecordDetailActivity.startActivity(this, record.getId());
                 return;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        refreshData();
     }
 }

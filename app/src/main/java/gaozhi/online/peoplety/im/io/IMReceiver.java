@@ -15,32 +15,40 @@ public interface IMReceiver {
      *
      * @param message
      */
-    void onReceive(Message message);
+    boolean onReceive(Message message);
 
     /**
      * 消息已成功送达
      *
      * @param msgId
      */
-    void onSuccess(long msgId);
+    default boolean onSuccess(long msgId){
+        return false;
+    }
 
     /**
      * 发送失败，ID经过再次转发后会失效，但可以留在本地，作为发送失败的聊天记录
      *
      * @param message
      */
-    void onFail(List<Message> message);
+    default boolean onFail(List<Message> message){
+        return false;
+    }
 
     /**
      * 错误
      * @param errorCode
      * @param errorMsg
      */
-    void onError(int errorCode, String errorMsg);
+    default boolean onError(int errorCode, String errorMsg){
+        return false;
+    }
 
     /**
      * 踢出
      * @param kickOutInfo
      */
-    void onKickOut(PKickoutInfo kickOutInfo);
+    default boolean onKickOut(PKickoutInfo kickOutInfo){
+        return false;
+    }
 }

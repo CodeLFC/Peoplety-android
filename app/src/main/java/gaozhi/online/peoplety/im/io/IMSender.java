@@ -1,8 +1,14 @@
 package gaozhi.online.peoplety.im.io;
 
+import android.util.Log;
+
 import gaozhi.online.base.im.core.LocalDataSender;
+import gaozhi.online.base.net.Result;
+import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.entity.Message;
+import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.im.MessageUtils;
+import gaozhi.online.peoplety.service.msg.GetMessageIdService;
 
 /**
  * 消息发送者
@@ -23,7 +29,28 @@ public class IMSender extends LocalDataSender.SendCommonDataAsync {
     }
 
     public IMSender(Message message) {
+
         super(MessageUtils.toCommonProtocol(message));
+    }
+
+    /**
+     * 发送消息
+     */
+    public void send() {
+        new GetMessageIdService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, Result data) {
+                p.setFp(data.getData());
+                execute();
+            }
+
+            @Override
+            public void error(int id, int code, String message, String data) {
+                if(onIMSendListener!=null){
+                    onIMSendListener.onFail(MessageUtils.toMessage(p));
+                }
+            }
+        }).request();
     }
 
     public OnIMSendListener getOnIMSendListener() {
@@ -36,7 +63,10 @@ public class IMSender extends LocalDataSender.SendCommonDataAsync {
 
     @Override
     protected void onPostExecute(Integer code) {
-        if (onIMSendListener == null) return;
+        if (onIMSendListener == null) {
+            Log.i(getClass().getName(), "发送消息结果：" + code + ":" + p.getFp());
+            return;
+        }
         if (code == 0) {
             onIMSendListener.onSuccess(MessageUtils.toMessage(p));
         } else {

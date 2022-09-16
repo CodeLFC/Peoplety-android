@@ -17,8 +17,6 @@
 package gaozhi.online.base.im.core;
 
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import net.x52im.mobileimsdk.protocol.ErrorCode;

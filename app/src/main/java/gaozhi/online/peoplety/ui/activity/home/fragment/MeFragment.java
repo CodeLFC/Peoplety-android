@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import gaozhi.online.base.im.core.LocalDataSender;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
@@ -13,6 +14,7 @@ import gaozhi.online.peoplety.entity.Status;
 import gaozhi.online.peoplety.entity.UserInfo;
 import gaozhi.online.peoplety.entity.UserRecordCount;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.im.IMClient;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
 import gaozhi.online.peoplety.ui.activity.AboutActivity;
 import gaozhi.online.peoplety.ui.activity.personal.FavoriteActivity;
@@ -158,7 +160,8 @@ public class MeFragment extends DBBaseFragment {
     public void doBusiness() {
 
     }
-    private void refreshData(){
+
+    private void refreshData() {
         getRecordCountByUseridService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
         GlideUtil.loadRoundRectangleImage(getContext(), loginUser.getUserInfo().getHeadUrl(), R.drawable.app_logo, imageHead);
         textName.setText(loginUser.getUserInfo().getNick());
@@ -178,6 +181,7 @@ public class MeFragment extends DBBaseFragment {
         textAttentionNum.setText(StringUtil.numLong2Str(loginUser.getAttentionNum()));
         textFansNum.setText(StringUtil.numLong2Str(loginUser.getFanNum()));
     }
+
     @Override
     public void onPageScrolled(float positionOffset, int positionOffsetPixels) {
 
@@ -199,6 +203,8 @@ public class MeFragment extends DBBaseFragment {
             return;
         }
         if (v.getId() == viewChangeAccount.getId()) {
+            //退出登录
+            IMClient.getInstance(getContext()).release();
             LoginActivity.startActivity(getContext());
             getActivity().finish();
             return;

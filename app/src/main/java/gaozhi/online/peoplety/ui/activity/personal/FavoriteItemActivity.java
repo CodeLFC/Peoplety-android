@@ -86,8 +86,7 @@ public class FavoriteItemActivity extends DBBaseActivity implements DataHelper.O
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
     }
 
     @Override
