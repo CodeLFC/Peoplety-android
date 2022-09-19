@@ -117,7 +117,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
      * @param <V>
      */
     public abstract static class BaseAdapter<T extends BaseViewHolder<V>, V extends BaseAdapter.BaseItem> extends Adapter<T> implements Consumer<Integer> {
-        private final Class<V> klass;
+        private Class<V> klass;
 
         //item必须实现的接口
         public interface BaseItem {
@@ -174,6 +174,7 @@ public class NoAnimatorRecyclerView extends RecyclerView {
         private Consumer<V> onItemClickedListener;
         //列表
         private SortedList<V> itemList;
+
 
         public BaseAdapter(Class<V> klass) {
             this(klass, null);

@@ -1,5 +1,6 @@
 package gaozhi.online.base.ui;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,4 +74,15 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public abstract void onPageScrolled(float positionOffset, int positionOffsetPixels);
 
     public abstract void onPageSelected();
+
+    /**
+     * 获取 Application
+     *
+     * @param tClass
+     * @param <T>
+     * @return
+     */
+    public <T extends Application> T getApplication(Class<T> tClass) {
+        return (T) getActivity().getApplicationContext();
+    }
 }

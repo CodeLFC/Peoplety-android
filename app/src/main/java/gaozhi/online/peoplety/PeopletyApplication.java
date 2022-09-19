@@ -187,8 +187,11 @@ public class PeopletyApplication extends Application implements Application.Acti
     @Override
     public boolean onReceive(final Message message) {
         realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(message));
-        //显示通知
-        PendingIntent pendingIntent = imNotificationBuilder.buildPendingIntent(MainActivity.class);
+        //显示通知,点击进入消息页
+        Intent intent =new Intent();
+        intent.putExtra(MainActivity.INTENT_PAGE,MainActivity.MESSAGE);
+        PendingIntent pendingIntent = imNotificationBuilder.buildPendingIntent(MainActivity.class,intent);
+
         UserDTO loginUser = getLoginUser();
         new GetUserInfoService(new DataHelper.OnDataListener<>() {
             @Override

@@ -495,6 +495,15 @@
                 android:textSize="@dimen/font_size_title" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/personal_activity_btn_chat"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_big_height"
+            android:layout_marginHorizontal="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/chat"
+            android:textSize="@dimen/font_size_general"
+            android:visibility="visible" />
     </LinearLayout>
 
 </ScrollView>

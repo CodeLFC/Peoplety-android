@@ -39,9 +39,7 @@ public class PublishFragment extends DBBaseFragment implements Consumer<RecordTy
     //类型
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        //build一个没有Realm绑定的副本
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
         status = realm.where(Status.class).equalTo("id", loginUser.getUserInfo().getStatus()).findFirst();
     }
 

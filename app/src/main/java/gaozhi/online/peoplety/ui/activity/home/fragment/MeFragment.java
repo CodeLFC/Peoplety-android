@@ -81,8 +81,7 @@ public class MeFragment extends DBBaseFragment {
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser = getLoginUser();
         status = realm.where(Status.class).equalTo("id", loginUser.getUserInfo().getStatus()).findFirst();
     }
 

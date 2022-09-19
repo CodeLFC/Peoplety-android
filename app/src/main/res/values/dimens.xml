@@ -17,7 +17,7 @@
     <dimen name="logo_bigger_size">120dp</dimen>
     <dimen name="activity_margin">20dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
-    <dimen name="edit_padding">5dp</dimen>
+    <dimen name="edit_padding">4dp</dimen>
     <dimen name="btn_big_height">55dp</dimen>
 
     <dimen name="text_margin">16dp</dimen>

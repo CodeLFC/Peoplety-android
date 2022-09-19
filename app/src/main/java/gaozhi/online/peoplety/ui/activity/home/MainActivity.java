@@ -5,12 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,10 +19,8 @@ import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
-import gaozhi.online.peoplety.entity.Comment;
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
-import gaozhi.online.peoplety.entity.Record;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
@@ -38,7 +32,6 @@ import gaozhi.online.peoplety.ui.activity.home.fragment.publish.PublishFragment;
 import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
-import gaozhi.online.peoplety.ui.service.GeniusService;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 import gaozhi.online.peoplety.ui.util.pop.TipPopWindow;
 import gaozhi.online.peoplety.ui.util.scan.ScanActivity;
@@ -51,12 +44,12 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
-    private static final int HOME = 0;
-    private static final int ATTENTION = 1;
-    private static final int PUBLISH = 2;
-    private static final int MESSAGE = 3;
-    private static final int ME = 4;
-
+    public static final String INTENT_PAGE = "open_page";
+    public static final int HOME = 0;
+    public static final int ATTENTION = 1;
+    public static final int PUBLISH = 2;
+    public static final int MESSAGE = 3;
+    public static final int ME = 4;
     private BaseFragment[] fragments;
     //service
     private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
@@ -75,42 +68,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 //            Manifest.permission.ACCESS_COARSE_LOCATION,
 //            Manifest.permission.ACCESS_FINE_LOCATION
     };
-    //--------------------------------------------------------------- 前台服务相关代码 START
-    /**
-     * 前台服务对象（绑定MobileIMSDK的Demo后，确保Demo能常驻内存，因为Andriod高版本对于进程保活、网络保活现在限制非常严格）
-     */
-    private GeniusService boundService;
-
-    /**
-     * 绑定时需要使用的连接对象
-     */
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            boundService = ((GeniusService.LocalBinder) service).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            boundService = null;
-        }
-    };
-
-    /**
-     * 将本activity与后台服务绑定起来.
-     */
-    protected void doBindService() {
-        this.getApplicationContext().bindService(new Intent(this.getApplicationContext(), GeniusService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    /**
-     * 解绑服务（服务将失去功能，随时会被系统回收）.
-     */
-    protected void doUnbindService() {
-        try {
-            this.getApplicationContext().unbindService(serviceConnection);
-        } catch (Exception e) {
-			Log.w(TAG, e);
-        }
-    }
 
     @Override
     protected void doBusiness(Realm realm) {
@@ -119,7 +76,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 
     @Override
     protected void initParams(Intent intent) {
-        permissionUtil = new PermissionUtil(this, 100);
 
     }
 
@@ -151,23 +107,53 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         viewPager = $(R.id.main_view_pager);
         viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(this);
+
     }
 
     @Override
     protected void doBusiness(Context mContext) {
+        permissionUtil = new PermissionUtil(this, 100);
         permissionUtil.setPermissionListener(() -> {
             ToastUtil.showToastLong(R.string.not_permission);
         });
         //请求权限
         permissionUtil.requestPermission(authorities);
+        handleIntent(getIntent());
     }
 
+    public static void startActivity(Context context){
+        startActivity(context,HOME);
+    }
 
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, int page) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(INTENT_PAGE, page);
         context.startActivity(intent);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Handle onNewIntent() to inform the fragment manager that the
+     * state is not saved.  If you are handling new intents and may be
+     * making changes to the fragment state, you want to be sure to call
+     * through to the super-class here first.  Otherwise, if your state
+     * is saved but the activity is not stopped, you could get an
+     * onNewIntent() call which happens before onResume() and trying to
+     * perform fragment operations at that point will throw IllegalStateException
+     * because the fragment manager thinks the state is still saved.
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+         handleIntent(intent);
+    }
+    private void handleIntent(Intent intent){
+        int page =intent.getIntExtra(INTENT_PAGE,0);
+        viewPager.setCurrentItem(page);
+    }
     @Override
     public void onClick(View v) {
 

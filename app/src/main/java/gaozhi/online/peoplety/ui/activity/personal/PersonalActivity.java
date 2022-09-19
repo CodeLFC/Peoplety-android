@@ -4,6 +4,7 @@ package gaozhi.online.peoplety.ui.activity.personal;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import gaozhi.online.peoplety.service.friend.DeleteFriendService;
 import gaozhi.online.peoplety.service.friend.GetFriendService;
 import gaozhi.online.peoplety.service.record.GetRecordCountByUseridService;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.chat.ChatActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.QRCodeActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.EditUserInfoActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
@@ -75,6 +77,8 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
     private TextView textGender;
     private TextView textBirth;
     private EditFriendRemarkPopWindow editFriendRemarkPopWindow;
+    //聊天
+    private Button btnChat;
     //db
     private UserDTO loginUser;
     //service
@@ -188,6 +192,9 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
         viewFavoriteNum.setOnClickListener(this);
 
         editFriendRemarkPopWindow = new EditFriendRemarkPopWindow(this);
+
+        btnChat = view.findViewById(R.id.personal_activity_btn_chat);
+        btnChat.setOnClickListener(this);
     }
 
     @Override
@@ -200,6 +207,7 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
             textAttention.setVisibility(View.VISIBLE);
             getFriendService.request(loginUser.getToken(), userid);
             viewFriendRemark.setVisibility(View.VISIBLE);
+            btnChat.setVisibility(View.VISIBLE);
         }
     }
 
@@ -265,6 +273,10 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
                     ToastUtil.showToastShort(message + data);
                 }
             });
+            return;
+        }
+        if(v.getId() == btnChat.getId()){
+            ChatActivity.startActivity(this,friend.getFriendId());
         }
     }
 

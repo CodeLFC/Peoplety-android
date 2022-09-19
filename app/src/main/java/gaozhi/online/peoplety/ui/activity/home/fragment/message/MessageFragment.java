@@ -6,15 +6,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Message;
+import gaozhi.online.peoplety.entity.client.Conversation;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.service.user.GetMessageService;
+import gaozhi.online.peoplety.ui.activity.chat.conversation.ConversationCell;
+import gaozhi.online.peoplety.ui.activity.chat.conversation.ConversationRecyclerAdapter;
 import gaozhi.online.peoplety.ui.base.DBBaseFragment;
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import io.realm.Realm;
 import io.realm.Sort;
 
@@ -22,12 +29,15 @@ import io.realm.Sort;
  * create an instance of this fragment.
  * 消息页
  */
-public class MessageFragment extends DBBaseFragment {
+public class MessageFragment extends DBBaseFragment implements NoAnimatorRecyclerView.OnLoadListener {
     private View commentView;
     private View friendView;
     private ImageView redDotComment;
     private ImageView redDotFriend;
-
+    //会话列表
+    private ConversationRecyclerAdapter conversationRecyclerAdapter;
+    private NoAnimatorRecyclerView noAnimatorRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     //当前登陆用户
     private UserDTO loginUser;
 
@@ -46,6 +56,13 @@ public class MessageFragment extends DBBaseFragment {
         friendView.setOnClickListener(this);
         redDotFriend = view.findViewById(R.id.fragment_message_view_friends_new_friend_point);
         redDotComment = view.findViewById(R.id.fragment_message_view_friends_new_comment_point);
+        noAnimatorRecyclerView = view.findViewById(R.id.fragment_message_view_conversation_recycler);
+        noAnimatorRecyclerView.setLayoutManager(new NoAnimatorRecyclerView.BaseAdapter.DefaultLinearLayoutManager(getContext()));
+        swipeRefreshLayout = view.findViewById(R.id.fragment_message_view_conversation_swipe);
+        conversationRecyclerAdapter = new ConversationRecyclerAdapter(getContext());
+        noAnimatorRecyclerView.setAdapter(conversationRecyclerAdapter);
+        noAnimatorRecyclerView.setOnLoadListener(this);
+
     }
 
     @Override
@@ -69,8 +86,7 @@ public class MessageFragment extends DBBaseFragment {
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
-        loginUser = realm.copyFromRealm(loginUser);
+        loginUser =getLoginUser();
     }
 
     @Override
@@ -97,5 +113,10 @@ public class MessageFragment extends DBBaseFragment {
         Stream<Message> newComment = Message.filter(data, new Message.Type[]{Message.Type.NEW_COMMENT, Message.Type.NEW_FAVORITE, Message.Type.NEW_EXTEND}, true);
         redDotFriend.setVisibility(newFan.count() > 0 ? View.VISIBLE : View.INVISIBLE);
         redDotComment.setVisibility(newComment.count() > 0 ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onLoad() {
+
     }
 }

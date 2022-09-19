@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="@dimen/widget_margin"
+    >
+    <ImageView
+        android:id="@+id/chat_item_left_img_head"
+        android:src="@drawable/default_img_head"
+        android:layout_width="@dimen/logo_size"
+        android:layout_height="@dimen/logo_size"
+        android:padding="@dimen/edit_padding"
+        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/chat_item_left_text_content"
+            android:inputType="textMultiLine"
+            android:background="@drawable/message_text_receive"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            />
+        <TextView
+            android:id="@+id/chat_item_left_text_time"
+            android:textColor="@color/shallow_text_color"
+            android:textSize="@dimen/font_size_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_gravity="left|center"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="@dimen/logo_size"
+        android:layout_height="0dp"
+        />
+</LinearLayout>

@@ -1,4 +1,5 @@
 package gaozhi.online.peoplety.entity;
+
 import android.util.Log;
 
 import java.util.List;
@@ -41,6 +42,37 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
     private boolean read;
 
     //消息类型
+    public enum TypeMsg {
+        UNKNOWN(-1, "未知消息"),
+        STRING(0, "字符串消息"),
+        ;
+        private final int type;
+        private final String remark;
+
+        TypeMsg(int type, String remark) {
+            this.type = type;
+            this.remark = remark;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public static TypeMsg getType(int type) {
+            for (TypeMsg e : TypeMsg.values()) {
+                if (e.getType() == type) {
+                    return e;
+                }
+            }
+            return UNKNOWN;
+        }
+    }
+
+    //消息类型
     public enum Type {
         UNKNOWN(-1, "未知消息"),
         SYSTEM(0, "系统消息"),
@@ -48,7 +80,7 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
         NEW_FANS(2, "新的粉丝"),
         NEW_EXTEND(3, "新的派生"),
         NEW_FAVORITE(4, "新的收藏"),
-        NEW_FRIEND_MESSAGE(5,"新朋友消息");
+        NEW_FRIEND_MESSAGE(5, "新朋友消息");
         private final int type;
         private final String remark;
 

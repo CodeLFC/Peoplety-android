@@ -133,11 +133,17 @@ public class NotificationBuilder {
     }
 
     public <T extends Activity> PendingIntent buildPendingIntent(Class<T> activityClass) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
+        return buildPendingIntent(activityClass, null);
+    }
+
+    public <T extends Activity> PendingIntent buildPendingIntent(Class<T> activityClass, Intent intent) {
+        if(intent ==null){
+            intent = new Intent();
+        }
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.setClass(context, activityClass);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void notify(int id, Notification notification) {
