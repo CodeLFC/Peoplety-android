@@ -53,10 +53,9 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
     public void onReceiveMessage(Protocol protocol) {
         Log.d(TAG, "收到消息：" + protocol.getDataContent());
         Message message = MessageUtils.toMessage(protocol);
-        Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
+        Iterator<IMReceiver> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
         while (entryIterator.hasNext()) {
-            Map.Entry<String, IMReceiver> next = entryIterator.next();
-            IMReceiver value = next.getValue();
+            IMReceiver value = entryIterator.next();
             boolean res = value.onReceive(message);
             if (res){
                 break;
@@ -79,10 +78,9 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
         } else {
             //"Server反馈错误码：" + errorCode + ",errorMsg=" + errorMsg
         }
-        Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
+        Iterator<IMReceiver> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
         while (entryIterator.hasNext()) {
-            Map.Entry<String, IMReceiver> next = entryIterator.next();
-            IMReceiver value = next.getValue();
+            IMReceiver value = entryIterator.next();
             boolean res = value.onError(errorCode, errorMsg);
             if (res){
                 break;

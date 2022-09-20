@@ -1,5 +1,7 @@
 package gaozhi.online.peoplety.service.constant;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -10,6 +12,7 @@ import java.util.function.BiConsumer;
 
 import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
+import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.entity.Area;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.RecordType;
@@ -34,8 +37,7 @@ public class ResourceRequester implements DataHelper.OnDataListener<Result> {
     private final GetUserStatusService getUserStatusService = new GetUserStatusService(this);
     private final GetRecordAreaService getRecordAreaService = new GetRecordAreaService(this);
     private final GetRecordTypeService getRecordTypeService = new GetRecordTypeService(this);
-    //service
-    private final GetMessageService getMessageService = new GetMessageService(this);
+
 
     public ResourceRequester(@NonNull Realm realm, DataHelper.OnDataListener<UserDTO> resultHandler, @NonNull BiConsumer<Integer, Boolean> requestConsumer) {
         this.realm = realm;
@@ -104,18 +106,7 @@ public class ResourceRequester implements DataHelper.OnDataListener<Result> {
             });
             //资源更新完成
             requestConsumer.accept(count++, true);
-            //开始请求未读消息
-            getMessageService.request(loginUser.getToken());
             return;
-        }
-        if (id == getMessageService.getId()) {
-            List<Message> messages = gson.fromJson(result.getData(), new TypeToken<List<Message>>() {
-            }.getType());
-            realm.executeTransaction(realm -> {
-                realm.copyToRealmOrUpdate(messages);
-            });
-            //资源更新完成
-            requestConsumer.accept(count++, true);
         }
     }
 

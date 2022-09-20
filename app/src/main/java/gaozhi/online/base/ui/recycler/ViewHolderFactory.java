@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * ViewHolder工厂
  */
-public abstract class ViewHolderFactory<T>{
+public abstract class ViewHolderFactory<T,E extends BaseCell<T>>{
     protected final Context context;
 
     public ViewHolderFactory(Context context) {
@@ -33,7 +33,7 @@ public abstract class ViewHolderFactory<T>{
      * @param holder
      * @param cell
      */
-    public abstract void onBindViewHolder(RecyclerView.ViewHolder holder, BaseCell<T> cell);
+    public abstract void onBindViewHolder(RecyclerView.ViewHolder holder, E cell);
 
     /**
      * 根据layout ID反射出视图

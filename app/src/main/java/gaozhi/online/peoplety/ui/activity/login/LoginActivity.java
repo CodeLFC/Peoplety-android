@@ -12,23 +12,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import net.x52im.mobileimsdk.protocol.c.PLoginInfo;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import gaozhi.online.base.asynchronization.Handler;
 import gaozhi.online.base.im.core.LocalDataSender;
+import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Area;
+import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.Token;
 import gaozhi.online.peoplety.entity.UserAuth;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.im.IMClient;
 import gaozhi.online.peoplety.service.constant.ResourceRequester;
+import gaozhi.online.peoplety.service.user.GetMessageService;
 import gaozhi.online.peoplety.service.user.LoginService;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
@@ -66,13 +71,30 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
     private UserDTO loginUser;
     //资源请求服务
     private ResourceRequester resourceRequester;
-    public LoginActivity(){
+    //离线消息请求服务
+    private final GetMessageService getMessageService = new GetMessageService(new DataHelper.OnDataListener<Result>() {
+        @Override
+        public void handle(int id, Result result) {
+            Realm realm = getRealm();
+            List<Message> messages = new Gson().fromJson(result.getData(), new TypeToken<List<Message>>() {
+            }.getType());
+            realm.executeTransaction(realm1 -> {
+                realm1.copyToRealmOrUpdate(messages);
+            });
+            for (Message message : messages) {
+                ((PeopletyApplication) getApplicationContext()).onReceiveMessage(realm, message, true);
+            }
+        }
+    });
+
+    public LoginActivity() {
         setAllowFullScreen(true);
         setSteepStatusBar(true);
     }
+
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser =getLoginUser();
+        loginUser = getLoginUser();
     }
 
     @Override
@@ -209,7 +231,6 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             }
             loginUser.setCurrent(true);
             realm.copyToRealmOrUpdate(loginUser);
-            //loginUser = realm.copyFromRealm(loginUser);
         }, () -> {//success 登陆成功
             if (System.currentTimeMillis() > loginUser.getResourceValidateTime()) {
                 textProcess.setText(R.string.request_ing);
@@ -256,7 +277,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
                 ToastUtil.showToastShort(getString(R.string.tip_im_login_error) + code);
                 //重新进入登陆页
                 showLoginView();
-            }else{
+            } else {
                 //进入主页面
                 enterMainView();
             }
@@ -290,6 +311,7 @@ public class LoginActivity extends DBBaseActivity implements DataHelper.OnDataLi
             MainActivity.startActivity(LoginActivity.this);
             finish();
         });
+        getMessageService.request(loginUser.getToken());
         //延时进入主页面
         PeopletyApplication.getGlobalExecutor().executeInBackground(() -> handler.sendEmptyMessage(0), 200);
     }

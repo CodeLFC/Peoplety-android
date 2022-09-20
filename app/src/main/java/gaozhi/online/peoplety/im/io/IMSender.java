@@ -29,7 +29,6 @@ public class IMSender extends LocalDataSender.SendCommonDataAsync {
     }
 
     public IMSender(Message message) {
-
         super(MessageUtils.toCommonProtocol(message));
     }
 
@@ -46,7 +45,7 @@ public class IMSender extends LocalDataSender.SendCommonDataAsync {
 
             @Override
             public void error(int id, int code, String message, String data) {
-                if(onIMSendListener!=null){
+                if (onIMSendListener != null) {
                     onIMSendListener.onFail(MessageUtils.toMessage(p));
                 }
             }

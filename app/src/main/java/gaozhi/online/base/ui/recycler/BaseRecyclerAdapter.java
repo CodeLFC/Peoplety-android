@@ -19,11 +19,11 @@ import java.util.function.Predicate;
  * @param <T>
  */
 public abstract class BaseRecyclerAdapter<T, E extends BaseCell<T>> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected final ViewHolderFactory<T> viewHolderFactory;
+    protected final ViewHolderFactory<T, E> viewHolderFactory;
     //元素列表
     private final SortedList<E> itemList;
 
-    public BaseRecyclerAdapter(Class<E> klass, @NonNull ViewHolderFactory<T> viewHolderFactory) {
+    public BaseRecyclerAdapter(Class<E> klass, @NonNull ViewHolderFactory<T, E> viewHolderFactory) {
         this.viewHolderFactory = viewHolderFactory;
         itemList = new SortedList<>(klass, createSortedListAdapterCallback());
     }
@@ -94,7 +94,12 @@ public abstract class BaseRecyclerAdapter<T, E extends BaseCell<T>> extends Recy
     }
 
     public void add(E item) {
-        itemList.add(item);
+        int index = itemList.indexOf(item);
+        if (index == SortedList.INVALID_POSITION) {
+            itemList.add(item);
+        } else {
+            itemList.updateItemAt(index, item);
+        }
     }
 
     public void add(List<E> items) {

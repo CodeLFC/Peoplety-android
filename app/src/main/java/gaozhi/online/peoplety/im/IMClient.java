@@ -20,8 +20,8 @@ package gaozhi.online.peoplety.im;
 import android.content.Context;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import gaozhi.online.base.im.ClientCoreSDK;
 import gaozhi.online.base.im.conf.ConfigEntity;
@@ -59,7 +59,7 @@ public class IMClient {
     /**
      * 消息监听器
      */
-    private final Map<String, IMReceiver> receivers = new ConcurrentHashMap<>();
+    private final List<IMReceiver> receivers = new LinkedList<>();
 
     private Context context = null;
 
@@ -144,7 +144,7 @@ public class IMClient {
      * @param imReceiver
      */
     public void addIMReceiver(IMReceiver imReceiver) {
-        receivers.put(imReceiver.getClass().getName(), imReceiver);
+        receivers.add(imReceiver);
     }
 
     /**
@@ -153,10 +153,10 @@ public class IMClient {
      * @param imReceiver
      */
     public void removeIMReceiver(IMReceiver imReceiver) {
-        receivers.remove(imReceiver.getClass().getName());
+        receivers.remove(imReceiver);
     }
 
-    public Iterator<Map.Entry<String, IMReceiver>> iteratorIMReceiver() {
-        return receivers.entrySet().iterator();
+    public Iterator<IMReceiver> iteratorIMReceiver() {
+        return receivers.stream().sorted().iterator();
     }
 }

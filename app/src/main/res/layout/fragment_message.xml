@@ -11,102 +11,94 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height" />
 
-    <LinearLayout
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/widget_color"-->
+    <!--        android:baselineAligned="false"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:padding="@dimen/widget_margin">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/fragment_message_view_comment"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:gravity="center"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="@dimen/logo_size"-->
+    <!--                android:layout_height="@dimen/logo_size"-->
+    <!--                android:padding="@dimen/widget_margin"-->
+    <!--                android:src="@drawable/comment" />-->
+
+    <!--            <FrameLayout-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:gravity="center"-->
+    <!--                android:orientation="horizontal">-->
+
+    <!--                <TextView-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:text="@string/new_record_msg"-->
+    <!--                    android:textColor="@color/deep_text_color"-->
+    <!--                    android:textSize="@dimen/font_size_small" />-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/fragment_message_view_friends_new_comment_point"-->
+    <!--                    android:layout_width="@dimen/icon_size_smaller"-->
+    <!--                    android:layout_height="@dimen/icon_size_smaller"-->
+    <!--                    android:layout_gravity="center|end"-->
+    <!--                    android:src="@drawable/red_dot"-->
+    <!--                    android:visibility="gone" />-->
+    <!--            </FrameLayout>-->
+
+    <!--        </LinearLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/fragment_message_view_friends"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:gravity="center"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="@dimen/logo_size"-->
+    <!--                android:layout_height="@dimen/logo_size"-->
+    <!--                android:padding="@dimen/widget_margin"-->
+    <!--                android:src="@drawable/friends" />-->
+
+    <!--            <FrameLayout-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:gravity="center"-->
+    <!--                android:orientation="horizontal">-->
+
+    <!--                <TextView-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:text="@string/new_fans"-->
+    <!--                    android:textColor="@color/deep_text_color"-->
+    <!--                    android:textSize="@dimen/font_size_small" />-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/fragment_message_view_friends_new_friend_point"-->
+    <!--                    android:layout_width="@dimen/icon_size_smaller"-->
+    <!--                    android:layout_height="@dimen/icon_size_smaller"-->
+    <!--                    android:layout_gravity="center|end"-->
+    <!--                    android:src="@drawable/red_dot"-->
+    <!--                    android:visibility="gone" />-->
+    <!--            </FrameLayout>-->
+
+    <!--        </LinearLayout>-->
+    <!--    </LinearLayout>-->
+    <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
+        android:id="@+id/fragment_message_view_conversation_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/widget_color"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:padding="@dimen/widget_margin">
-
-        <LinearLayout
-            android:id="@+id/fragment_message_view_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/logo_size"
-                android:layout_height="@dimen/logo_size"
-                android:padding="@dimen/widget_margin"
-                android:src="@drawable/comment" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/new_record_msg"
-                    android:textColor="@color/deep_text_color"
-                    android:textSize="@dimen/font_size_small" />
-
-                <ImageView
-                    android:id="@+id/fragment_message_view_friends_new_comment_point"
-                    android:layout_width="@dimen/icon_size_smaller"
-                    android:layout_height="@dimen/icon_size_smaller"
-                    android:layout_gravity="center|end"
-                    android:src="@drawable/red_dot"
-                    android:visibility="gone" />
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/fragment_message_view_friends"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/logo_size"
-                android:layout_height="@dimen/logo_size"
-                android:padding="@dimen/widget_margin"
-                android:src="@drawable/friends" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/new_fans"
-                    android:textColor="@color/deep_text_color"
-                    android:textSize="@dimen/font_size_small" />
-
-                <ImageView
-                    android:id="@+id/fragment_message_view_friends_new_friend_point"
-                    android:layout_width="@dimen/icon_size_smaller"
-                    android:layout_height="@dimen/icon_size_smaller"
-                    android:layout_gravity="center|end"
-                    android:src="@drawable/red_dot"
-                    android:visibility="gone" />
-            </FrameLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/fragment_message_view_conversation_swipe"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
-            android:id="@+id/fragment_message_view_conversation_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent" />
 </LinearLayout>

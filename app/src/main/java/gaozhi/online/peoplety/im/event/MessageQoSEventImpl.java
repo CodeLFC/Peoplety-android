@@ -58,10 +58,9 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
             lostMsg.add(MessageUtils.toMessage(protocal));
         }
         //通知给接收者
-        Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
+        Iterator<IMReceiver> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
         while (entryIterator.hasNext()) {
-            Map.Entry<String, IMReceiver> next = entryIterator.next();
-            IMReceiver value = next.getValue();
+            IMReceiver value = entryIterator.next();
             boolean res = value.onFail(lostMsg);
             if (res){
                 break;
@@ -87,10 +86,9 @@ public class MessageQoSEventImpl implements MessageQoSEvent {
         if (theFingerPrint != null) {
             Log.d(TAG, "【DEBUG_UI】收到对方已收到消息事件的通知，fp=" + theFingerPrint);
             long msgId = Long.parseLong(theFingerPrint);
-            Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
+            Iterator<IMReceiver> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
             while (entryIterator.hasNext()) {
-                Map.Entry<String, IMReceiver> next = entryIterator.next();
-                IMReceiver value = next.getValue();
+                IMReceiver value = entryIterator.next();
                 boolean res = value.onSuccess(msgId);
                 if (res){
                     break;

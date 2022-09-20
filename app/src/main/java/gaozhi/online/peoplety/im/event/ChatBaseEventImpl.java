@@ -90,10 +90,9 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
             alertContent = "你已被踢出聊天，当前会话已断开（kickoutReason=" + kickOutInfo.getReason() + "）！";
         }
         Log.e(TAG, "【DEBUG_UI】alertContent：" + alertContent);
-        Iterator<Map.Entry<String, IMReceiver>> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
+        Iterator<IMReceiver> entryIterator = IMClient.getInstance(PeopletyApplication.getContext()).iteratorIMReceiver();
         while (entryIterator.hasNext()) {
-            Map.Entry<String, IMReceiver> next = entryIterator.next();
-            IMReceiver value = next.getValue();
+            IMReceiver value = entryIterator.next();
             boolean res = value.onKickOut(kickOutInfo);
             if (res){
                 break;

@@ -44,7 +44,6 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
-    public static final String INTENT_PAGE = "open_page";
     public static final int HOME = 0;
     public static final int ATTENTION = 1;
     public static final int PUBLISH = 2;
@@ -118,16 +117,10 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         });
         //请求权限
         permissionUtil.requestPermission(authorities);
-        handleIntent(getIntent());
     }
 
-    public static void startActivity(Context context){
-        startActivity(context,HOME);
-    }
-
-    public static void startActivity(Context context, int page) {
+    public static void startActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(INTENT_PAGE, page);
         context.startActivity(intent);
     }
 
@@ -148,12 +141,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-         handleIntent(intent);
     }
-    private void handleIntent(Intent intent){
-        int page =intent.getIntExtra(INTENT_PAGE,0);
-        viewPager.setCurrentItem(page);
-    }
+
     @Override
     public void onClick(View v) {
 

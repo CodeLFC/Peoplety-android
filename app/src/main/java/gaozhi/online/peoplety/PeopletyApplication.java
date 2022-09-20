@@ -23,13 +23,16 @@ import java.util.function.Consumer;
 import gaozhi.online.base.asynchronization.GlobalExecutor;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.peoplety.entity.*;
+import gaozhi.online.peoplety.entity.client.Conversation;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
 import gaozhi.online.peoplety.im.IMClient;
 import gaozhi.online.peoplety.im.io.IMReceiver;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
+import gaozhi.online.peoplety.ui.activity.chat.ChatActivity;
 import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.base.NotificationBuilder;
 import gaozhi.online.peoplety.ui.service.GeniusService;
+import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -186,30 +189,7 @@ public class PeopletyApplication extends Application implements Application.Acti
      */
     @Override
     public boolean onReceive(final Message message) {
-        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(message));
-        //显示通知,点击进入消息页
-        Intent intent =new Intent();
-        intent.putExtra(MainActivity.INTENT_PAGE,MainActivity.MESSAGE);
-        PendingIntent pendingIntent = imNotificationBuilder.buildPendingIntent(MainActivity.class,intent);
-
-        UserDTO loginUser = getLoginUser();
-        new GetUserInfoService(new DataHelper.OnDataListener<>() {
-            @Override
-            public void handle(int id, UserDTO data, boolean local) {
-                String user = data == null ? String.valueOf(message.getFromId()) : data.getUserInfo().getNick();
-                String title = Message.Type.getType(message.getType()).getRemark();
-                if (data == null) {
-                    imNotificationBuilder.buildMessageNotification(title, user);
-                } else {
-                    imNotificationBuilder.buildMessageNotification(title, user, message.getTime(), pendingIntent, data.getUserInfo().getHeadUrl(), new Consumer<Notification>() {
-                        @Override
-                        public void accept(Notification notification) {
-                            imNotificationBuilder.notify((int) message.getId(), notification);
-                        }
-                    });
-                }
-            }
-        }, true).request(loginUser.getToken(), message.getFromId());
+        onReceiveMessage(realm, message, true);
         return false;
     }
 
@@ -218,10 +198,52 @@ public class PeopletyApplication extends Application implements Application.Acti
     }
 
     public UserDTO getLoginUser() {
+        return getLoginUser(realm);
+    }
+
+    public UserDTO getLoginUser(Realm realm) {
         UserDTO loginUser = realm.where(UserDTO.class).equalTo("current", true).findFirst();
         if (loginUser == null) return null;
         //build一个没有Realm绑定的副本
         loginUser = realm.copyFromRealm(loginUser);
         return loginUser;
+    }
+
+    public void onReceiveMessage(Realm curRealm, final Message message, boolean notify) {
+        UserDTO loginUser = getLoginUser(curRealm);
+        //数据库操作
+        curRealm.executeTransaction(realm -> {
+            //保存
+            realm.copyToRealmOrUpdate(message);
+            //会话更新--
+            Conversation conversation = realm.where(Conversation.class)
+                    .equalTo("self", message.getToId())
+                    .equalTo("friend", message.getFromId())
+                    .findFirst();
+            if (conversation == null) {
+                //构造新的会话
+                conversation = new Conversation();
+                conversation.setId(message.getId());
+            }
+            conversation.wrapMessage(message, loginUser.getUserInfo().getId() == message.getFromId());
+            realm.copyToRealmOrUpdate(conversation);
+        });
+        if (!notify) return;
+        //显示通知,点击进入消息页
+        Intent intent = new Intent();
+        intent.putExtra(ChatActivity.INTENT_USER_ID, message.getFromId());
+        PendingIntent pendingIntent = imNotificationBuilder.buildPendingIntent(ChatActivity.class, intent);
+        new GetUserInfoService(new DataHelper.OnDataListener<>() {
+            @Override
+            public void handle(int id, UserDTO data) {
+                String user = data == null ? String.valueOf(message.getFromId()) : data.getUserInfo().getNick();
+                String title = Message.Type.getType(message.getType()).getRemark();
+                if (data == null) {
+                    imNotificationBuilder.buildMessageNotification(title, user);
+                } else {
+                    imNotificationBuilder.buildMessageNotification(title, user, message.getTime(), pendingIntent, data.getUserInfo().getHeadUrl(), notification -> imNotificationBuilder.notify((int) message.getId(), notification));
+                }
+            }
+        }).request(loginUser.getToken(), message.getFromId());
     }
 }

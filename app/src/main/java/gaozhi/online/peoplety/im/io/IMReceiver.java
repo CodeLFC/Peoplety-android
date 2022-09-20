@@ -9,7 +9,7 @@ import gaozhi.online.peoplety.entity.Message;
 /**
  * 消息接收者
  */
-public interface IMReceiver {
+public interface IMReceiver extends Comparable<IMReceiver> {
     /**
      * 收到消息
      *
@@ -22,7 +22,7 @@ public interface IMReceiver {
      *
      * @param msgId
      */
-    default boolean onSuccess(long msgId){
+    default boolean onSuccess(long msgId) {
         return false;
     }
 
@@ -31,24 +31,47 @@ public interface IMReceiver {
      *
      * @param message
      */
-    default boolean onFail(List<Message> message){
+    default boolean onFail(List<Message> message) {
         return false;
     }
 
     /**
      * 错误
+     *
      * @param errorCode
      * @param errorMsg
      */
-    default boolean onError(int errorCode, String errorMsg){
+    default boolean onError(int errorCode, String errorMsg) {
         return false;
     }
 
     /**
      * 踢出
+     *
      * @param kickOutInfo
      */
-    default boolean onKickOut(PKickoutInfo kickOutInfo){
+    default boolean onKickOut(PKickoutInfo kickOutInfo) {
         return false;
+    }
+
+    /**
+     * 优先级 ，处理的顺序
+     * @return
+     */
+    default int order() {
+        return 0;
+    }
+
+    /**
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    @Override
+    default int compareTo(IMReceiver o) {
+        return order() - o.order();
     }
 }

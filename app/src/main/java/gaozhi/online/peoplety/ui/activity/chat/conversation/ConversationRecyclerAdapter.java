@@ -2,6 +2,7 @@ package gaozhi.online.peoplety.ui.activity.chat.conversation;
 
 import android.content.Context;
 
+
 import gaozhi.online.base.ui.recycler.BaseRecyclerAdapter;
 import gaozhi.online.peoplety.entity.client.Conversation;
 
@@ -13,5 +14,4 @@ public class ConversationRecyclerAdapter extends BaseRecyclerAdapter<Conversatio
     public ConversationRecyclerAdapter(Context context) {
         super(ConversationCell.class, new ConversationFactory(context));
     }
-
 }

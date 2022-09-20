@@ -21,7 +21,8 @@
         android:theme="@style/Theme.Peoplety">
         <activity
             android:name=".ui.activity.chat.ChatActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".ui.activity.home.fragment.message.MessageActivity"
             android:exported="false" />
