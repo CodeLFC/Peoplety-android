@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import gaozhi.online.base.net.http.DataHelper;
+import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Message;
 import gaozhi.online.peoplety.entity.client.Conversation;
@@ -105,20 +106,31 @@ public class MessageFragment extends DBBaseFragment implements IMReceiver {
     @Override
     public void onResume() {
         super.onResume();
-        //绑定
-        IMClient.getInstance(getContext()).addIMReceiver(this);
         //  List<Message> unread = getRealm().where(Message.class).equalTo("toId", loginUser.getUserInfo().getId()).equalTo("read", false).sort("time", Sort.DESCENDING).findAll();
         //     handle(unread);
         refreshConversation();
     }
 
     /**
-     * Called when the Fragment is no longer resumed.  This is generally
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to {link Activity#onStart() Activity.onStart} of the containing
      * Activity's lifecycle.
      */
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStart() {
+        super.onStart();
+        //绑定
+        IMClient.getInstance(getContext()).addIMReceiver(this);
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //删除
         IMClient.getInstance(getContext()).removeIMReceiver(this);
     }
 
@@ -130,13 +142,13 @@ public class MessageFragment extends DBBaseFragment implements IMReceiver {
     }
 
     /**
-     * 加载会话
+     * 加载所有会话
      */
     private void refreshConversation() {
         conversations = getRealm().where(Conversation.class)
                 .equalTo("self", loginUser.getUserInfo().getId())
                 .findAll();
-        conversations =getRealm().copyFromRealm(conversations);
+        conversations = getRealm().copyFromRealm(conversations);
         for (Conversation conversation : conversations) {
             conversationRecyclerAdapter.add(new ConversationCell(conversation));
         }
@@ -159,7 +171,14 @@ public class MessageFragment extends DBBaseFragment implements IMReceiver {
      */
     @Override
     public boolean onReceive(Message message) {
-        refreshConversation();
+        Realm realm = getRealm();
+        Conversation conversation = realm.where(Conversation.class)
+                .equalTo("self", message.getToId())
+                .equalTo("friend", message.getFromId())
+                .findFirst();
+        if (conversation == null) return false;
+        conversation = realm.copyFromRealm(conversation);
+        conversationRecyclerAdapter.add(new ConversationCell(conversation));
         return false;
     }
 }

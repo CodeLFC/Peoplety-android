@@ -37,28 +37,32 @@ public class Conversation extends RealmObject {
         return Objects.hash(id, self, friend, remark, unread, time);
     }
 
-    public void wrapMessage(Message message, boolean isSelf){
-        if(isSelf) {
-            self = message.getFromId();
+    /**
+     * @param message
+     * @param isSelf
+     */
+    public void wrapMessage(Message message, boolean isSelf) {
+        if (isSelf) {
+            this.self = message.getFromId();
             friend = message.getToId();
-        }else{
-            self = message.getToId();
+        } else {
+            this.self = message.getToId();
             friend = message.getFromId();
         }
-        if(Message.Type.getType(message.getType()) == Message.Type.NEW_FRIEND_MESSAGE){
+        if (Message.Type.getType(message.getType()) == Message.Type.NEW_FRIEND_MESSAGE) {
             Message.TypeMsg typeMsg = Message.TypeMsg.getType(message.getTypeMsg());
-            switch (typeMsg){
+            switch (typeMsg) {
                 case STRING:
                     remark = message.getMsg();
                     break;
                 default:
                     remark = typeMsg.getRemark();
             }
-        }else{
+        } else {
             remark = Message.Type.getType(message.getType()).getRemark();
         }
+        unread += 1;
 
-        unread+=1;
         time = message.getTime();
     }
 }
