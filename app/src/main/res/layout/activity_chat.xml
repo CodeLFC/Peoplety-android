@@ -12,17 +12,17 @@
         android:layout_height="@dimen/header_height" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/chat_refresh"
+        android:id="@+id/chat_activity_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
+        <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
             android:id="@+id/chat_activity_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/widget_color"
+            android:background="@color/bg_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -47,6 +47,7 @@
             android:layout_marginHorizontal="@dimen/widget_margin"
             android:layout_weight="1"
             android:background="@drawable/edit_bg"
+            android:maxEms="1000"
             android:hint="@string/tip_please_enter_content"
             android:imeActionLabel="@string/send"/>
         <Button

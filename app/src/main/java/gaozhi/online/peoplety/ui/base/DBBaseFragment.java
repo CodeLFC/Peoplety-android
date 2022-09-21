@@ -13,18 +13,28 @@ public abstract class DBBaseFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        doBusiness(getRealm());
+        realm = getApplication(PeopletyApplication.class).getRealm();
+        doBusiness(realm);
         super.onCreate(savedInstanceState);
-
     }
 
     protected abstract void doBusiness(Realm realm);
 
     public Realm getRealm() {
-        return getApplication(PeopletyApplication.class).getRealm();
+        return realm;
     }
 
     public UserDTO getLoginUser() {
         return getApplication(PeopletyApplication.class).getLoginUser();
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }

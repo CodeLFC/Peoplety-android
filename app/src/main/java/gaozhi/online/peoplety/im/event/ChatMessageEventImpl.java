@@ -57,6 +57,7 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
         while (entryIterator.hasNext()) {
             IMReceiver value = entryIterator.next();
             boolean res = value.onReceive(message);
+            Log.i(TAG,"职责链，是否提前处理了内容:"+res+",当前序列："+value.order());
             if (res){
                 break;
             }
@@ -83,6 +84,7 @@ public class ChatMessageEventImpl implements ChatMessageEvent {
             IMReceiver value = entryIterator.next();
             boolean res = value.onError(errorCode, errorMsg);
             if (res){
+                Log.i(TAG,"职责链，提前处理了内容");
                 break;
             }
         }

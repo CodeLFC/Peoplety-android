@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,7 +22,11 @@ import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
+import gaozhi.online.peoplety.entity.Message;
+import gaozhi.online.peoplety.entity.client.Conversation;
 import gaozhi.online.peoplety.entity.dto.UserDTO;
+import gaozhi.online.peoplety.im.IMClient;
+import gaozhi.online.peoplety.im.io.IMReceiver;
 import gaozhi.online.peoplety.service.NetConfig;
 import gaozhi.online.peoplety.service.user.GetUserInfoService;
 import gaozhi.online.peoplety.ui.activity.home.fragment.AttentionFragment;
@@ -39,8 +44,9 @@ import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.PermissionUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
-public class MainActivity extends DBBaseActivity implements NavigationBarView.OnItemSelectedListener, ViewPager.OnPageChangeListener, DataHelper.OnDataListener<UserDTO> {
+public class MainActivity extends DBBaseActivity implements NavigationBarView.OnItemSelectedListener, ViewPager.OnPageChangeListener, DataHelper.OnDataListener<UserDTO>, IMReceiver {
     //ui
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
@@ -67,6 +73,19 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
 //            Manifest.permission.ACCESS_COARSE_LOCATION,
 //            Manifest.permission.ACCESS_FINE_LOCATION
     };
+
+    //消息监听器的注册和删除
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IMClient.getInstance(this).addIMReceiver(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IMClient.getInstance(this).removeIMReceiver(this);
+    }
 
     @Override
     protected void doBusiness(Realm realm) {
@@ -215,6 +234,13 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         super.onResume();
         //更新信息
         getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
+        //查找未读消息
+        int count = getRealm().where(Conversation.class).equalTo("self", loginUser.getUserInfo().getId()).greaterThan("unread",0).findAll().size();
+        if (count > 0) {
+            bottomNavigationView.getMenu().getItem(MESSAGE).setIcon(R.drawable.bottom_message_red_dot);
+        } else {
+            bottomNavigationView.getMenu().getItem(MESSAGE).setIcon(R.drawable.bottom_message);
+        }
     }
 
     @Override
@@ -239,5 +265,16 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
                 WebActivity.startActivity(this, qrContent, getString(R.string.tip_scan_result));
             }
         }
+    }
+
+    /**
+     * 收到消息
+     *
+     * @param message
+     */
+    @Override
+    public boolean onReceive(Message message) {
+        bottomNavigationView.getMenu().findItem(MESSAGE).setIcon(R.drawable.bottom_message_red_dot);
+        return false;
     }
 }

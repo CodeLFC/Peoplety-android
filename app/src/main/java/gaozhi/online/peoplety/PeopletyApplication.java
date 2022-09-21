@@ -82,7 +82,7 @@ public class PeopletyApplication extends Application implements Application.Acti
     @Override
     public void onTerminate() {
         super.onTerminate();
-
+        realm.close();
         IMClient.getInstance(this).release();
         //解绑服务
         doUnbindService();
@@ -216,16 +216,24 @@ public class PeopletyApplication extends Application implements Application.Acti
             //保存
             realm.copyToRealmOrUpdate(message);
             //会话更新--
+            long self, friend;
+            if (loginUser.getUserInfo().getId() == message.getToId()) {
+                self = message.getToId();
+                friend = message.getFromId();
+            } else {
+                self = message.getFromId();
+                friend = message.getToId();
+            }
             Conversation conversation = realm.where(Conversation.class)
-                    .equalTo("self", message.getToId())
-                    .equalTo("friend", message.getFromId())
+                    .equalTo("self", self)
+                    .equalTo("friend", friend)
                     .findFirst();
             if (conversation == null) {
                 //构造新的会话
                 conversation = new Conversation();
                 conversation.setId(message.getId());
             }
-            conversation.wrapMessage(message, loginUser.getUserInfo().getId() == message.getFromId());
+            conversation.wrapMessage(message, loginUser.getUserInfo().getId() == message.getFromId(), notify);
             realm.copyToRealmOrUpdate(conversation);
         });
         if (!notify) return;

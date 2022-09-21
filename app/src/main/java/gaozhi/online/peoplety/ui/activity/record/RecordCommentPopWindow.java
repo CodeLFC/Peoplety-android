@@ -53,13 +53,15 @@ public class RecordCommentPopWindow extends EditTextPopWindow implements DataHel
 
     @Override
     public void handle(int id, Comment data) {
-        //发送收藏消息
-        Message message = new Message();
-        message.setType(Message.Type.NEW_COMMENT.getType());
-        message.setToId(record.getUserid());
-        message.setMsg(new Gson().toJson(record));
-        message.setRemark(getContext().getString(R.string.comment) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) +":"+ record.getTitle()+data.getContent());
-        new IMSender(message).send();
+        //发送评论消息
+        if(record.getUserid()!=loginUser.getUserInfo().getId()) {
+            Message message = new Message();
+            message.setType(Message.Type.NEW_COMMENT.getType());
+            message.setToId(record.getUserid());
+            message.setMsg(new Gson().toJson(record));
+            message.setRemark(getContext().getString(R.string.comment) + record.getId() + getContext().getString(R.string.floor) + getContext().getString(R.string.record) + "《" + record.getTitle() + data.getContent()+"》");
+            new IMSender(message).send();
+        }
         ToastUtil.showToastShort(R.string.tip_publish_success);
         dismiss();
         getEditContent().setText("");

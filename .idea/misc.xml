@@ -57,6 +57,8 @@
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/fragment_publish.xml" value="0.1" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/fragment_related_record.xml" value="0.37395833333333334" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_add_image.xml" value="0.184375" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_chat_msg_notify.xml" value="0.24947916666666667" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_chat_msg_text.xml" value="0.15729166666666666" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_chat_msg_text_left.xml" value="0.1578125" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_chat_msg_text_right.xml" value="0.1578125" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_conversation_friend.xml" value="0.1578125" />
@@ -67,7 +69,7 @@
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_friend.xml" value="0.4583333333333333" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_label.xml" value="0.55" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_msg.xml" value="0.1578125" />
-        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_record.xml" value="0.6" />
+        <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_record.xml" value="0.47449768160741884" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_record_type.xml" value="0.221875" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_selected_image.xml" value="0.1328125" />
         <entry key="..\:/as-workspace/Peoplety/app/src/main/res/layout/item_recycler_text.xml" value="0.1" />

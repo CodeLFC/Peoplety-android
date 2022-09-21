@@ -95,6 +95,7 @@ public class ChatBaseEventImpl implements ChatBaseEvent {
             IMReceiver value = entryIterator.next();
             boolean res = value.onKickOut(kickOutInfo);
             if (res){
+                Log.i(TAG,"职责链，提前处理了内容");
                 break;
             }
         }

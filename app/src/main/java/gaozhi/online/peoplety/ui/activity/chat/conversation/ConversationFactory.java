@@ -51,7 +51,7 @@ public class ConversationFactory extends ViewHolderFactory<Conversation, Convers
     /**
      * 朋友会话 缓存
      */
-    static class FriendConversationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class FriendConversationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final Context context;
         ImageView img_left;
         TextView name;
@@ -107,6 +107,8 @@ public class ConversationFactory extends ViewHolderFactory<Conversation, Convers
             time = itemView.findViewById(R.id.conversation_friend_time);
             unread = itemView.findViewById(R.id.conversation_friend_unread);
             this.loginUser = loginUser;
+            //长按删除
+            itemView.setOnLongClickListener(this);
         }
 
         public void bindView(Conversation conversation) {
@@ -131,6 +133,26 @@ public class ConversationFactory extends ViewHolderFactory<Conversation, Convers
             if (conversation == null) return;
             //启动聊天界面
             ChatActivity.startActivity(context, conversation.getFriend());
+        }
+
+        /**
+         * Called when a view has been clicked and held.
+         *
+         * @param v The view that was clicked and held.
+         * @return true if the callback consumed the long click, false otherwise.
+         */
+        @Override
+        public boolean onLongClick(View v) {
+            ((ConversationRecyclerAdapter) getBindingAdapter()).remove(getBindingAdapterPosition());
+            Realm realm = ((PeopletyApplication) context.getApplicationContext()).getRealm();
+            realm.executeTransaction(realm1 -> {
+                Conversation c = realm1.where(Conversation.class).equalTo("id", conversation.getId()).findFirst();
+                if (c == null) {
+                    return;
+                }
+                c.deleteFromRealm();
+            });
+            return true;
         }
     }
 }

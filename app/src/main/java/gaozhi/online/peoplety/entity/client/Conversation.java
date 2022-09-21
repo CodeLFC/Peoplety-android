@@ -39,15 +39,17 @@ public class Conversation extends RealmObject {
 
     /**
      * @param message
-     * @param isSelf
+     * @param isSelf  是不是自己发送的
      */
-    public void wrapMessage(Message message, boolean isSelf) {
+    public void wrapMessage(Message message, boolean isSelf, boolean notify) {
         if (isSelf) {
             this.self = message.getFromId();
             friend = message.getToId();
         } else {
             this.self = message.getToId();
             friend = message.getFromId();
+            if (notify)
+                unread += 1;
         }
         if (Message.Type.getType(message.getType()) == Message.Type.NEW_FRIEND_MESSAGE) {
             Message.TypeMsg typeMsg = Message.TypeMsg.getType(message.getTypeMsg());
@@ -61,7 +63,6 @@ public class Conversation extends RealmObject {
         } else {
             remark = Message.Type.getType(message.getType()).getRemark();
         }
-        unread += 1;
 
         time = message.getTime();
     }

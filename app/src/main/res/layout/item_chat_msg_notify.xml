@@ -4,41 +4,40 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/widget_margin"
     android:orientation="horizontal">
-
-    <View
+    <ImageView
+        android:id="@+id/chat_item_notify_img_head"
         android:layout_width="@dimen/logo_size"
-        android:layout_height="0dp" />
+        android:layout_height="@dimen/logo_size"
+        android:padding="@dimen/edit_padding"
+        android:src="@drawable/default_img_head" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="end"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/chat_item_right_text_content"
+            android:id="@+id/chat_item_notify_text_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/message_text_send"
+            android:background="@drawable/message_text_receive"
             android:text="@string/app_name"
+            android:gravity="center"
             android:textColor="@color/deep_text_color"
             android:textSize="@dimen/font_size_general" />
 
         <TextView
-            android:id="@+id/chat_item_right_text_time"
+            android:id="@+id/chat_item_notify_text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center"
+            android:layout_gravity="start|center"
             android:text="@string/app_name"
             android:textColor="@color/shallow_text_color"
             android:textSize="@dimen/font_size_small" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/chat_item_right_img_head"
+    <View
         android:layout_width="@dimen/logo_size"
-        android:layout_height="@dimen/logo_size"
-        android:padding="@dimen/edit_padding"
-        android:src="@drawable/default_img_head" />
+        android:layout_height="0dp" />
 </LinearLayout>

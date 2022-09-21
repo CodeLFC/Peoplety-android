@@ -39,15 +39,22 @@ import io.realm.Realm;
  */
 public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDataListener<Friend> {
     private static final String INTENT_USER_ID = "user_id";
+    private static final String INTENT_SHOW_CHAT = "show_chat";
 
     public static void startActivity(Context context, long userid) {
+        startActivity(context, userid, true);
+    }
+
+    public static void startActivity(Context context, long userid, boolean showChat) {
         Intent intent = new Intent(context, PersonalActivity.class);
         intent.putExtra(INTENT_USER_ID, userid);
+        intent.putExtra(INTENT_SHOW_CHAT, showChat);
         context.startActivity(intent);
     }
 
     //intent
     private long userid;
+    private boolean showChat;
     //ui
     private TextView textAttentionNum;
     private View viewAttentionNum;
@@ -86,7 +93,7 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
     private final GetIPInfoService getIPInfoService = new GetIPInfoService(new DataHelper.OnDataListener<>() {
         @Override
         public void handle(int id, IPInfo data, boolean local) {
-            if(data ==null)return;
+            if (data == null) return;
             textIp.setVisibility(View.VISIBLE);
             textIp.setText(data.getShowArea());
         }
@@ -119,7 +126,7 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
             textEmail.setText(userInfo.getEmail());
             textWechat.setText(userInfo.getWechat());
             textQQ.setText(userInfo.getQq());
-            getIPInfoService.request(loginUser.getToken(),userInfo.getIp());
+            getIPInfoService.request(loginUser.getToken(), userInfo.getIp());
             textVip.setText(Integer.toString(userInfo.getVip()));
             textAttentionNum.setText(StringUtil.numLong2Str(data.getAttentionNum()));
             textFansNum.setText(StringUtil.numLong2Str(data.getFanNum()));
@@ -137,10 +144,14 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
     private final GetFriendService getFriendService = new GetFriendService(this);
     private final AddAttentionService addAttentionService = new AddAttentionService(this);
     private final DeleteFriendService deleteFriendService = new DeleteFriendService(this);
-
+    //非沉浸式状态栏
+    public PersonalActivity(){
+        setSteepStatusBar(false);
+    }
     @Override
     protected void initParams(Intent intent) {
         userid = intent.getLongExtra(INTENT_USER_ID, 0);
+        showChat = intent.getBooleanExtra(INTENT_SHOW_CHAT, true);
     }
 
     @Override
@@ -208,12 +219,19 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
             getFriendService.request(loginUser.getToken(), userid);
             viewFriendRemark.setVisibility(View.VISIBLE);
             btnChat.setVisibility(View.VISIBLE);
+        }else{
+            btnChat.setVisibility(View.INVISIBLE);
+        }
+        if (!showChat) {
+            btnChat.setOnClickListener((v -> {
+                finish();
+            }));
         }
     }
 
     @Override
     protected void doBusiness(Realm realm) {
-        loginUser =getLoginUser();
+        loginUser = getLoginUser();
     }
 
     @Override
@@ -275,8 +293,8 @@ public class PersonalActivity extends DBBaseActivity implements DataHelper.OnDat
             });
             return;
         }
-        if(v.getId() == btnChat.getId()){
-            ChatActivity.startActivity(this,friend.getFriendId());
+        if (v.getId() == btnChat.getId()) {
+            ChatActivity.startActivity(this, friend.getFriendId());
         }
     }
 

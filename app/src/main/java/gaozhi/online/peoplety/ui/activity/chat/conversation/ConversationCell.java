@@ -29,6 +29,6 @@ public class ConversationCell extends BaseCell<Conversation> {
      */
     @Override
     public long getItemId() {
-        return data.getFriend();
+        return data.getId();
     }
 }

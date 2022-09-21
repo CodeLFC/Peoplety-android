@@ -3,6 +3,7 @@ package gaozhi.online.peoplety.entity;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -107,31 +108,22 @@ public class Message extends RealmObject implements NoAnimatorRecyclerView.BaseA
         }
     }
 
-    public static Stream<Message> filter(List<Message> messages, Type type, boolean onlyUnread) {
-        return filter(messages, new Type[]{type}, onlyUnread);
-    }
-
-    public static Stream<Message> filter(List<Message> messages, Type[] type, boolean onlyUnread) {
-        Stream<Message> stream = messages.stream().filter(message -> {
-            Log.i(Message.class.getName(), " message: " + message);
-            boolean filter = false;
-            for (Type e : type) {
-                if (message.getType() == e.getType()) {//通过断言
-                    filter = true;
-                    break;
-                }
-            }
-            return filter;
-        });
-        if (onlyUnread) {
-            stream = stream.filter(message -> !message.isRead());
-        }
-        return stream;
-    }
-
     //排序规则
     @Override
     public long getItemId() {
-        return time;
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return id == message.id && type == message.type && typeMsg == message.typeMsg && fromId == message.fromId && toId == message.toId && time == message.time && read == message.read && Objects.equals(msg, message.msg) && Objects.equals(remark, message.remark);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, typeMsg, fromId, toId, msg, remark, time, read);
     }
 }

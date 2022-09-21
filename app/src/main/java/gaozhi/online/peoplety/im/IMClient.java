@@ -19,6 +19,7 @@ package gaozhi.online.peoplety.im;
 
 import android.content.Context;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -157,6 +158,6 @@ public class IMClient {
     }
 
     public Iterator<IMReceiver> iteratorIMReceiver() {
-        return receivers.stream().sorted().iterator();
+        return receivers.stream().sorted((o1, o2) -> o2.order() - o1.order()).iterator();
     }
 }

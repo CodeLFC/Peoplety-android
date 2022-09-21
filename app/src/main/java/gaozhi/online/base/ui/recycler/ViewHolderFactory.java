@@ -6,12 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 
 /**
  * ViewHolder工厂
  */
-public abstract class ViewHolderFactory<T,E extends BaseCell<T>>{
+public abstract class ViewHolderFactory<T, E extends BaseCell<T>> {
     protected final Context context;
 
     public ViewHolderFactory(Context context) {
@@ -46,4 +49,17 @@ public abstract class ViewHolderFactory<T,E extends BaseCell<T>>{
         return LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
     }
 
+    /**
+     * view holder
+     *
+     * @param <E>
+     */
+    public static abstract class BaseViewHolder<E> extends RecyclerView.ViewHolder {
+
+        public BaseViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public abstract void bindView(E e);
+    }
 }

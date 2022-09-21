@@ -424,12 +424,12 @@ public class PublishRecordActivity extends DBBaseActivity implements Consumer<Im
         if (id == publishRecordService.getId()) {
             Gson gson = new Gson();
             record = gson.fromJson(result.getData(),Record.class);
-            if(parent!=null) {
+            if(parent!=null&&parent.getUserid()!=loginUser.getUserInfo().getId()) {
                 gaozhi.online.peoplety.entity.Message message = new gaozhi.online.peoplety.entity.Message();
                 message.setType(gaozhi.online.peoplety.entity.Message.Type.NEW_EXTEND.getType());
                 message.setToId(parent.getUserid());
                 message.setMsg(gson.toJson(record));
-                message.setRemark(getString(R.string.child_record) + parent.getId() + getString(R.string.floor) + getString(R.string.record) + parent.getTitle());
+                message.setRemark(getString(R.string.child_record) + parent.getId() + getString(R.string.floor) + getString(R.string.record) +"《"+ parent.getTitle()+"》");
                 new IMSender(message).send();
             }
             ToastUtil.showToastLong(R.string.tip_publish_success);

@@ -158,4 +158,5 @@
     <string name="default_ad"><![CDATA[http://gaozhi.online]]></string>
     <string name="tip_im_login_error">IM系统登陆失败</string>
     <string name="chat">发消息</string>
+    <string name="send_fail">发送失败</string>
 </resources>
