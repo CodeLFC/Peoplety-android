@@ -242,7 +242,7 @@ public class ChatActivity extends DBBaseActivity implements IMReceiver {
             Log.i(TAG, "添加:" + message.getId() + " : " + message.getMsg());
             chatMsgRecyclerAdapter.add(new ChatCell(this, message));
         }
-        noAnimatorRecyclerView.scrollToPosition(messages.size()/2);
+        noAnimatorRecyclerView.scrollToPosition(messages.size()*4/5);
     }
 
     /**
