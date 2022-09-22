@@ -159,4 +159,8 @@
     <string name="tip_im_login_error">IM系统登陆失败</string>
     <string name="chat">发消息</string>
     <string name="send_fail">发送失败</string>
+    <string name="tip_if_exit">再按一次退出软件</string>
+    <string name="save_image">保存图片</string>
+    <string name="image_save_success">图片保存成功</string>
+    <string name="image_save_error">图片保存失败</string>
 </resources>

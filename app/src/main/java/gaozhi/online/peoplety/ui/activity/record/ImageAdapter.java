@@ -27,7 +27,7 @@ public class ImageAdapter extends NoAnimatorRecyclerView.BaseAdapter<ImageAdapte
         super(ImageModel.class, new BaseSortedListAdapterCallback<>() {
             @Override
             public int compare(ImageModel o1, ImageModel o2) {
-                return (int) (o1.getId() - o2.getId());
+                return o1.getId() - o2.getId();
             }
         });
     }

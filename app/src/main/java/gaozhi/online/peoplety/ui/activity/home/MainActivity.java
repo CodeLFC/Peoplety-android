@@ -5,9 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,6 +21,7 @@ import gaozhi.online.base.net.Result;
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.BaseFragment;
 import gaozhi.online.base.ui.FragmentAdapter;
+import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.entity.Favorite;
 import gaozhi.online.peoplety.entity.Item;
@@ -56,6 +59,8 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     public static final int MESSAGE = 3;
     public static final int ME = 4;
     private BaseFragment[] fragments;
+    //返回次数
+    private volatile boolean isBack = false;
     //service
     private final GetUserInfoService getUserInfoService = new GetUserInfoService(this);
     private UserDTO loginUser;
@@ -79,6 +84,29 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IMClient.getInstance(this).addIMReceiver(this);
+    }
+
+    /**
+     * 退出提示
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    //监听BACK按键，有可以返回的页面时返回页面
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!isBack) {
+                isBack = true;
+                ToastUtil.showToastShort(R.string.tip_if_exit);
+                PeopletyApplication.getGlobalExecutor().execute(() -> isBack = false, 1000);
+                return true;
+            } else {
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -235,7 +263,7 @@ public class MainActivity extends DBBaseActivity implements NavigationBarView.On
         //更新信息
         getUserInfoService.request(loginUser.getToken(), loginUser.getUserInfo().getId());
         //查找未读消息
-        int count = getRealm().where(Conversation.class).equalTo("self", loginUser.getUserInfo().getId()).greaterThan("unread",0).findAll().size();
+        int count = getRealm().where(Conversation.class).equalTo("self", loginUser.getUserInfo().getId()).greaterThan("unread", 0).findAll().size();
         if (count > 0) {
             bottomNavigationView.getMenu().getItem(MESSAGE).setIcon(R.drawable.bottom_message_red_dot);
         } else {

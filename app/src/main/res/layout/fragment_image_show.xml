@@ -20,4 +20,15 @@
         android:text="@string/app_name"
         android:textColor="@color/deep_text_color"
         android:textSize="@dimen/font_size_general" />
+    <TextView
+        android:id="@+id/fragment_image_show_save"
+        android:layout_gravity="bottom|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_image"
+        android:textColor="@color/deep_text_color"
+        android:background="@drawable/radius_widget_theme_bg"
+        android:textSize="@dimen/font_size_title"
+        android:padding="@dimen/edit_padding"
+        android:layout_margin="@dimen/activity_margin"/>
 </FrameLayout>
