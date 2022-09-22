@@ -31,6 +31,7 @@ import java.util.List;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.activity.userinfo.ShowUpdateHeadActivity;
 import gaozhi.online.peoplety.util.ImageUtil;
 import gaozhi.online.peoplety.util.PermissionUtil;
@@ -128,6 +129,14 @@ public class ScanActivity extends BaseActivity implements TextureView.SurfaceTex
     @Override
     protected void doBusiness(Context mContext) {
 
+    }
+
+    /**
+     * 在仅剩一个Activity时救活应用
+     */
+    @Override
+    public void startLaunchActivity() {
+        MainActivity.startActivity(this);
     }
 
     @Override

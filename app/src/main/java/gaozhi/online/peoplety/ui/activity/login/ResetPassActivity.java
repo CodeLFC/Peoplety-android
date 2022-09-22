@@ -195,4 +195,9 @@ public class ResetPassActivity extends BaseActivity implements Handler.Worker, D
         super.onDestroy();
         timer.cancel();
     }
+
+    @Override
+    public void startLaunchActivity() {
+        LoginActivity.startActivity(this);
+    }
 }

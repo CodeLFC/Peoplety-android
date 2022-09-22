@@ -10,6 +10,7 @@ import gaozhi.online.peoplety.PeopletyApplication;
 import gaozhi.online.peoplety.R;
 import gaozhi.online.peoplety.Version;
 import gaozhi.online.peoplety.service.NetConfig;
+import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 import gaozhi.online.peoplety.ui.util.WebActivity;
 
 public class AboutActivity extends BaseActivity {
@@ -48,6 +49,11 @@ public class AboutActivity extends BaseActivity {
         textVersionName.setText(version.getVersionName());
         textVersionDescription.setText(version.getVersionDescription());
         textOfficial.setText(R.string.official_web);
+    }
+
+    @Override
+    public void startLaunchActivity() {
+        MainActivity.startActivity(this);
     }
 
     @Override

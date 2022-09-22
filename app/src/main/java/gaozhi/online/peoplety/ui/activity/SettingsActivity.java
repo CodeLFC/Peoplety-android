@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 
 public class SettingsActivity extends BaseActivity {
     private TextView title;
@@ -31,6 +32,11 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void doBusiness(Context mContext) {
 
+    }
+
+    @Override
+    public void startLaunchActivity() {
+        MainActivity.startActivity(this);
     }
 
     @Override

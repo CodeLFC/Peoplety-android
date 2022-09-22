@@ -16,13 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        >
+        android:background="@color/bg_color">
 
         <gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView
             android:id="@+id/chat_activity_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bg_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -33,36 +32,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/bg_color"
         android:paddingHorizontal="@dimen/widget_margin"
-        android:paddingVertical="@dimen/edit_padding"
-        android:background="@color/bg_color">
+        android:paddingVertical="@dimen/edit_padding">
 
         <EditText
             android:id="@+id/chat_activity_edit_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_size_title"
-            android:padding="@dimen/edit_widget_margin"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/widget_margin"
             android:layout_weight="1"
             android:background="@drawable/edit_bg"
-            android:maxEms="1000"
             android:hint="@string/tip_please_enter_content"
-            android:imeActionLabel="@string/send"/>
+            android:maxEms="200"
+            android:padding="@dimen/edit_widget_margin"
+            android:textSize="@dimen/font_size_title"
+            android:inputType="none"
+            />
+
         <Button
             android:id="@+id/chat_activity_btn_send"
-            android:textColor="@color/deep_text_color"
-            android:text="@string/send"
-            android:textSize="@dimen/font_size_title"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_margin="0dp"
-            android:minHeight="0dp"
             android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingHorizontal="@dimen/activity_margin"
             android:paddingVertical="@dimen/edit_padding"
-            />
+            android:text="@string/send"
+            android:textColor="@color/deep_text_color"
+            android:textSize="@dimen/font_size_title" />
     </LinearLayout>
 </LinearLayout>

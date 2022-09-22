@@ -11,8 +11,8 @@ android {
         applicationId "gaozhi.online.peoplety"
         minSdk 26
         targetSdk 31
-        versionCode 20220816
-        versionName "1.1"
+        versionCode 20220921
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

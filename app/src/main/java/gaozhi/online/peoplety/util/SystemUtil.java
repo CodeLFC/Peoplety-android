@@ -5,7 +5,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -27,6 +29,7 @@ public class SystemUtil {
 
     /**
      * 打开相册
+     *
      * @param activity
      * @param REQUEST_CODE_PHOTO
      */
@@ -70,8 +73,25 @@ public class SystemUtil {
         }
     }
 
+    /**
+     * 判断键盘是否开启
+     *
+     * @return
+     */
+    public static boolean isSoftInputShowing(Activity context) {
+        //获取当前屏幕内容的高度
+        int screenHeight = context.getWindow().getDecorView().getHeight();
+        //获取View可见区域的bottom
+        Rect rect = new Rect();
+        context.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+
+        return screenHeight - rect.bottom != 0;
+    }
+
+
     public static void callKeyBoard(Activity context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
     }
 }

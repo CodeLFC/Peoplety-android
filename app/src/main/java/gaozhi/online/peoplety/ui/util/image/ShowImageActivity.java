@@ -15,6 +15,7 @@ import java.util.List;
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.base.ui.FragmentAdapter;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.ui.activity.home.MainActivity;
 
 public class ShowImageActivity extends BaseActivity {
     //intent
@@ -59,6 +60,11 @@ public class ShowImageActivity extends BaseActivity {
     protected void doBusiness(Context mContext) {
         //当前显示内容
         viewPager.setCurrentItem(current);
+    }
+
+    @Override
+    public void startLaunchActivity() {
+        MainActivity.startActivity(this);
     }
 
     @Override

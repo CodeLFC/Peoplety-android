@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import gaozhi.online.base.ui.BaseActivity;
 import gaozhi.online.peoplety.R;
+import gaozhi.online.peoplety.ui.activity.login.LoginActivity;
 import gaozhi.online.peoplety.util.PatternUtil;
 import gaozhi.online.peoplety.util.StringUtil;
 import gaozhi.online.peoplety.util.SystemUtil;
@@ -105,6 +106,14 @@ public class WebActivity extends BaseActivity implements DownloadListener {
             webView.destroy();
         }
         super.onDestroy();
+    }
+
+    /**
+     * 在仅剩一个Activity时救活应用
+     */
+    @Override
+    public void startLaunchActivity() {
+        LoginActivity.startActivity(this);
     }
 
     @Override

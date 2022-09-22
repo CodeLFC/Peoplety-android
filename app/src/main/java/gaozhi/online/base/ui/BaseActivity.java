@@ -193,23 +193,23 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         this.isAllowScreenRotate = isAllowScreenRotate;
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {//取消EditText 焦点
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    v.setFocusable(false);
-                    v.setFocusableInTouchMode(true);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent event) {//取消EditText 焦点
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            View v = getCurrentFocus();
+//            if (v instanceof EditText) {
+//                Rect outRect = new Rect();
+//                v.getGlobalVisibleRect(outRect);
+//                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+//                    v.setFocusable(false);
+//                    v.setFocusableInTouchMode(true);
+//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                }
+//            }
+//        }
+//        return super.dispatchTouchEvent(event);
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -235,5 +235,25 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      */
     public <T extends Application> T getApplication(Class<T> tClass) {
         return (T) getApplicationContext();
+    }
+
+    /**
+     * Call this when your activity is done and should be closed.  The
+     * ActivityResult is propagated back to whoever launched you via
+     * onActivityResult().
+     */
+    @Override
+    public void finish() {
+        super.finish();
+        if(ActivityManager.getInstance().size()<=1){
+            startLaunchActivity();
+        }
+    }
+
+    /**
+     * 在仅剩一个Activity时救活应用
+     */
+    public void startLaunchActivity(){
+        //TODO 救活应用
     }
 }

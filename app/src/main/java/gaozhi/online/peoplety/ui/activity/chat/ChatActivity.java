@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,9 +13,7 @@ import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import gaozhi.online.base.net.http.DataHelper;
 import gaozhi.online.base.ui.ActivityManager;
@@ -35,6 +34,7 @@ import gaozhi.online.peoplety.ui.activity.personal.PersonalActivity;
 import gaozhi.online.peoplety.ui.base.DBBaseActivity;
 import gaozhi.online.peoplety.ui.widget.NoAnimatorRecyclerView;
 import gaozhi.online.peoplety.util.StringUtil;
+import gaozhi.online.peoplety.util.SystemUtil;
 import gaozhi.online.peoplety.util.ToastUtil;
 import io.realm.Realm;
 import io.realm.Sort;

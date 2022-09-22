@@ -29,6 +29,10 @@ public class ActivityManager {
         baseActivityMap.put(baseActivity.getClass().getName(), baseActivity);
     }
 
+    public int size() {
+        return baseActivityMap.size();
+    }
+
     public <T extends BaseActivity> T get(Class<T> klass) {
         return (T) baseActivityMap.get(klass.getName());
     }
